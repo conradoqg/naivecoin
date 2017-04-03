@@ -1,7 +1,7 @@
 {
-  "name": "naivechain",
+  "name": "notsonaivechain",
   "version": "1.0.0",
-  "description": "Naive blockchain demonstration",
+  "description": "Not So Naive blockchain demonstration",
   "scripts": {
     "start": "node main.js",
     "lint": "standard",

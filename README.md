@@ -1,4 +1,4 @@
-# Naivechain - a blockchain implementation in 200 lines of code
+# Notsonaivechain - a blockchain implementation in more than 200 lines of code
 
 ### Motivation
 All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This makes understanding blockchains a necessarily harder task, than it must be. Especially source-code-wisely. This project is an attempt to provide as concise and simple implementation of a blockchain as possible.
@@ -16,9 +16,9 @@ Check also [this blog post](https://medium.com/@lhartikk/a-blockchain-in-200-lin
 * No proof-of-work or proof-of-stake: a block can be added to the blockchain without competition
 
 
-![alt tag](naivechain_blockchain.png)
+![alt tag](img/naivechain_blockchain.png)
 
-![alt tag](naivechain_components.png)
+![alt tag](img/naivechain_components.png)
 
 ### Quick start
 (set up two connected nodes and mine 1 block)
