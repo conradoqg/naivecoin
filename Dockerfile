@@ -1,9 +1,7 @@
-FROM node:alpine
-
-CMD npm install
-ADD . /naivechain
-
-EXPOSE 3001
-EXPOSE 6001
-
-ENTRYPOINT cd /naivechain && PEERS=$PEERS npm start
+ RUN cd /notsonaivechain && npm install
+  		  
+ RUN mkdir /data1
+ VOLUME /data1
+ 
+ EXPOSE 3001
+ EXPOSE 6001

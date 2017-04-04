@@ -4,20 +4,22 @@
             "name": "node 1",
             "script": "./main.js",
             "watch": true,
-            "interpreter_args": "--debug=7001",
+            "interpreter_args": "--debug=7001",            
             "env": {
                 "HTTP_PORT": "3001",
-                "P2P_PORT": "6001"
+                "P2P_PORT": "6001",
+                "NAME": "1"
             }
         },
         {
             "name": "node 2",
             "script": "./main.js",
             "watch": true,
-            "interpreter_args": "--debug=7002",
+            "interpreter_args": "--debug=7002",            
             "env": {
                 "HTTP_PORT": "3002",
                 "P2P_PORT": "6002",
+                "NAME": "2",
                 "PEERS": "ws://localhost:6001"
             }
         }

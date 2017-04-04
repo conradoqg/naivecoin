@@ -9,6 +9,7 @@ const argv = require('yargs')
     .describe('p', 'HTTP port.')
     .describe('n', 'P2P port.')
     .describe('peers', 'Peers list.')
+    .describe('name', 'Peers list.')
     .array('peers')    
     .help('h')
     .alias('h', 'help')
@@ -17,7 +18,8 @@ const argv = require('yargs')
 let httpPort = process.env.PORT || process.env.HTTP_PORT || argv.httpPort || 3001;
 let p2pPort = process.env.P2P_PORT || argv.p2pPort || 6001;
 let peers = (process.env.PEERS ? process.env.PEERS.split(',') : argv.peers || []);
+let name = process.env.NAME || argv.name || '1';
 
-let blockchain = new Blockchain();
+let blockchain = new Blockchain(name);
 let peerToPeer = new PeerToPeer(p2pPort, peers, blockchain);
 let httpServer = new HttpServer(httpPort, peerToPeer, blockchain);
