@@ -6,8 +6,7 @@
             "watch": true,
             "interpreter_args": "--debug=7001",            
             "env": {
-                "HTTP_PORT": "3001",
-                "P2P_PORT": "6001",
+                "HTTP_PORT": "3001",                
                 "NAME": "1"
             }
         },
@@ -17,10 +16,9 @@
             "watch": true,
             "interpreter_args": "--debug=7002",            
             "env": {
-                "HTTP_PORT": "3002",
-                "P2P_PORT": "6002",
+                "HTTP_PORT": "3002",                
                 "NAME": "2",
-                "PEERS": "ws://localhost:6001"
+                "PEERS": "http://localhost:3001"
             }
         }
     ]

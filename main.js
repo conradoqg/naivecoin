@@ -5,23 +5,27 @@ const BlockChainRepository = require('./lib/repository/blockchain');
 
 const argv = require('yargs')
     .usage('Usage: $0 [options]')
-    .alias('p', 'http-port')
-    .alias('n', 'p2p-port')
-    .describe('p', 'HTTP port.')
-    .describe('n', 'P2P port.')
+    .alias('p', 'http-port')    
+    .describe('p', 'HTTP port.')    
     .describe('peers', 'Peers list.')
     .describe('name', 'Peers list.')
-    .array('peers')    
+    .array('peers')
     .help('h')
     .alias('h', 'help')
     .argv;
 
 let httpPort = process.env.PORT || process.env.HTTP_PORT || argv.httpPort || 3001;
-let p2pPort = process.env.P2P_PORT || argv.p2pPort || 6001;
 let peers = (process.env.PEERS ? process.env.PEERS.split(',') : argv.peers || []);
-let name = process.env.NAME || argv.name || '1';
+var name = process.env.NAME || argv.name || '1';
+
+const clc = require('cli-color');
+let origConsole = {};
+origConsole.log = console.log;
+console.log = function(...args) {
+    origConsole.log(new Date().toISOString() + ' - ' + clc.green('info') + ' - ' + name + ': ', ...args);
+};
 
 let repository = new BlockChainRepository(name);
 let blockchain = new Blockchain(repository);
-let peerToPeer = new PeerToPeer(p2pPort, peers, blockchain);
+let peerToPeer = new PeerToPeer(httpPort, peers, blockchain);
 let httpServer = new HttpServer(httpPort, peerToPeer, blockchain);
