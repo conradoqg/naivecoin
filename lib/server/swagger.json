@@ -1,0 +1,172 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "",
+        "version": "0.0.1",
+        "title": "Not So Naive Chain API"
+    },
+    "basePath": "/",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/blocks": {
+            "get": {
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Get all blocks from blockchain.",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Block"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/blocks/new": {
+            "post": {
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Creates a new block",
+                "description": "Creates a new block and add it to the end of blockchain. This is done by mining it.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Block"
+                        }
+                    }
+                }
+            }
+        },
+        "/blocks/latest": {
+            "get": {
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Get the latest block from blockchain.",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Block"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Creates the latest block from blockchain.",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "block to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Block"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/peers": {
+            "get": {
+                "tags": [
+                    "peers"
+                ],
+                "summary": "Get all peers connected to node.",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Peer"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/peers/new": {
+            "post": {
+                "tags": [
+                    "peers"
+                ],
+                "summary": "Connects a new peer to node",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "peer to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Peer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Block": {
+            "type": "object",
+            "properties": {
+                "index": {
+                    "type": "integer"
+                },
+                "previousHash": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "hash": {
+                    "type": "string"
+                }
+            }
+        },
+        "Peer": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
