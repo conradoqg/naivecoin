@@ -22,7 +22,7 @@ Check also [this blog post](https://medium.com/@lhartikk/a-blockchain-in-200-lin
 npm install
 HTTP_PORT=3001 npm start
 HTTP_PORT=3002 PEERS=http://localhost:3001 npm start
-curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/mineBlock
+curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/blocks/mine
 ```
 
 ### Quick start with Docker
@@ -30,7 +30,7 @@ curl -H "Content-type:application/json" --data '{"data" : "Some data to the firs
 ###
 ```sh
 docker-compose up
-curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/mineBlock
+curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/blocks/mine
 ```
 
 ### HTTP API
@@ -40,7 +40,7 @@ curl http://localhost:3001/blocks
 ```
 ##### Create block
 ```
-curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/blocks/new
+curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/blocks/mine
 ``` 
 ##### Add peer
 ```

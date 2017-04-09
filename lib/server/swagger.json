@@ -36,19 +36,77 @@
                 }
             }
         },
-        "/blocks/new": {
+        "/blocks/mine": {
             "post": {
                 "tags": [
                     "blocks"
                 ],
-                "summary": "Creates a new block",
-                "description": "Creates a new block and add it to the end of blockchain. This is done by mining it.",
+                "summary": "Mine a new block",
+                "description": "Mine a new block and add it to the end of blockchain.",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/Block"
                         }
+                    }
+                }
+            }
+        },
+        "/blocks/{index}": {
+            "get": {
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Get block by index.",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "index",
+                        "description": "Index of the block",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Block"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/blocks/{hash}": {
+            "get": {
+                "tags": [
+                    "blocks"
+                ],
+                "summary": "Get block by hash.",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "hash",
+                        "description": "Hash of the block",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Block"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
                     }
                 }
             }
@@ -73,13 +131,13 @@
                 "tags": [
                     "blocks"
                 ],
-                "summary": "Creates the latest block from blockchain.",
+                "summary": "Suggests the latest block of the blockchain.",
                 "description": "",
                 "parameters": [
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "block to be added",
+                        "description": "block to be evaluated",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/Block"
