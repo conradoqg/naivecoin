@@ -1,7 +1,9 @@
 const HttpServer = require('./lib/server');
 const Blockchain = require('./lib/blockchain');
-const PeerToPeer = require('./lib/p2p');
+const Node = require('./lib/node');
+const Operator = require('./lib/operator');
 const BlockChainRepository = require('./lib/repository/blockchain');
+const OperatorRepository = require('./lib/repository/operator');
 
 const argv = require('yargs')
     .usage('Usage: $0 [options]')
@@ -21,7 +23,11 @@ var name = process.env.NAME || argv.name || '1';
 
 require('./lib/util/consoleWrapper.js')(name);
 
-let repository = new BlockChainRepository(name);
-let blockchain = new Blockchain(repository);
-let peerToPeer = new PeerToPeer(httpPort, peers, blockchain);
-let httpServer = new HttpServer(httpPort, peerToPeer, blockchain);
+let blockchainRepository = new BlockChainRepository(name);
+let operatorRepository = new OperatorRepository(name);
+
+let blockchain = new Blockchain(blockchainRepository);
+let node = new Node(httpPort, peers, blockchain);
+let operator = new Operator(operatorRepository, blockchain);
+
+let httpServer = new HttpServer(httpPort, node, blockchain, operator);

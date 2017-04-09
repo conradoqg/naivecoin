@@ -22,7 +22,7 @@ Check also [this blog post](https://medium.com/@lhartikk/a-blockchain-in-200-lin
 npm install
 HTTP_PORT=3001 npm start
 HTTP_PORT=3002 PEERS=http://localhost:3001 npm start
-curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/blocks/mine
+curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/blockchain/blocks/mine
 ```
 
 ### Quick start with Docker
@@ -30,7 +30,7 @@ curl -H "Content-type:application/json" --data '{"data" : "Some data to the firs
 ###
 ```sh
 docker-compose up
-curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/blocks/mine
+curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/blockchain/blocks/mine
 ```
 
 ### HTTP API
@@ -40,13 +40,13 @@ curl http://localhost:3001/blocks
 ```
 ##### Create block
 ```
-curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/blocks/mine
+curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/blockchain/blocks/mine
 ``` 
 ##### Add peer
 ```
-curl -H "Content-type:application/json" --data '{"peer" : "ws://localhost:6001"}' http://localhost:3001/peers/new
+curl -H "Content-type:application/json" --data '{"peer" : "ws://localhost:6001"}' http://localhost:3001/node/peers/new
 ```
 #### Query connected peers
 ```
-curl http://localhost:3001/peers
+curl http://localhost:3001/node/peers
 ```

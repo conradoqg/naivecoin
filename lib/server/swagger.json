@@ -16,7 +16,7 @@
         "application/json"
     ],
     "paths": {
-        "/blocks": {
+        "/blockchain/blocks": {
             "get": {
                 "tags": [
                     "blocks"
@@ -36,7 +36,7 @@
                 }
             }
         },
-        "/blocks/mine": {
+        "/blockchain/blocks/mine": {
             "post": {
                 "tags": [
                     "blocks"
@@ -53,7 +53,7 @@
                 }
             }
         },
-        "/blocks/{index}": {
+        "/blockchain/blocks/{index}": {
             "get": {
                 "tags": [
                     "blocks"
@@ -82,7 +82,7 @@
                 }
             }
         },
-        "/blocks/{hash}": {
+        "/blockchain/blocks/{hash}": {
             "get": {
                 "tags": [
                     "blocks"
@@ -111,7 +111,7 @@
                 }
             }
         },
-        "/blocks/latest": {
+        "/blockchain/blocks/latest": {
             "get": {
                 "tags": [
                     "blocks"
@@ -151,7 +151,7 @@
                 }
             }
         },
-        "/peers": {
+        "/node/peers": {
             "get": {
                 "tags": [
                     "peers"
@@ -171,7 +171,7 @@
                 }
             }
         },
-        "/peers/new": {
+        "/node/peers/new": {
             "post": {
                 "tags": [
                     "peers"
