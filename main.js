@@ -18,12 +18,7 @@ let httpPort = process.env.PORT || process.env.HTTP_PORT || argv.httpPort || 300
 let peers = (process.env.PEERS ? process.env.PEERS.split(',') : argv.peers || []);
 var name = process.env.NAME || argv.name || '1';
 
-const clc = require('cli-color');
-let origConsole = {};
-origConsole.log = console.log;
-console.log = function(...args) {
-    origConsole.log(new Date().toISOString() + ' - ' + clc.green('info') + ' - ' + name + ': ', ...args);
-};
+require('./lib/util/consoleWrapper.js')(name);
 
 let repository = new BlockChainRepository(name);
 let blockchain = new Blockchain(repository);
