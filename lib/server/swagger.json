@@ -373,7 +373,7 @@
                 },
                 "keyPairs": {
                     "type": "object",
-                    "properties:": {
+                    "properties": {
                         "index": {
                             "type": "integer"
                         },
