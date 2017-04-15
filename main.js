@@ -1,5 +1,6 @@
 const HttpServer = require('./lib/server');
 const Blockchain = require('./lib/blockchain');
+const Operator = require('./lib/operator');
 const Node = require('./lib/node');
 
 const argv = require('yargs')
@@ -20,7 +21,8 @@ var name = process.env.NAME || argv.name || '1';
 
 require('./lib/util/consoleWrapper.js')(name);
 
+let operator = new Operator(name);
 let blockchain = new Blockchain(name);
 let node = new Node(httpPort, peers, blockchain);
 
-let httpServer = new HttpServer(httpPort, node, blockchain);
+let httpServer = new HttpServer(httpPort, node, blockchain, operator);

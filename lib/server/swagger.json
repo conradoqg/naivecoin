@@ -19,7 +19,7 @@
         "/blockchain/blocks": {
             "get": {
                 "tags": [
-                    "blocks"
+                    "blockchain"
                 ],
                 "summary": "Get all blocks from blockchain.",
                 "description": "",
@@ -39,7 +39,7 @@
         "/blockchain/blocks/mine": {
             "post": {
                 "tags": [
-                    "blocks"
+                    "blockchain"
                 ],
                 "summary": "Mine a new block",
                 "description": "Mine a new block and add it to the end of blockchain.",
@@ -56,7 +56,7 @@
         "/blockchain/blocks/{index}": {
             "get": {
                 "tags": [
-                    "blocks"
+                    "blockchain"
                 ],
                 "summary": "Get block by index.",
                 "description": "",
@@ -85,7 +85,7 @@
         "/blockchain/blocks/{hash}": {
             "get": {
                 "tags": [
-                    "blocks"
+                    "blockchain"
                 ],
                 "summary": "Get block by hash.",
                 "description": "",
@@ -114,7 +114,7 @@
         "/blockchain/blocks/latest": {
             "get": {
                 "tags": [
-                    "blocks"
+                    "blockchain"
                 ],
                 "summary": "Get the latest block from blockchain.",
                 "description": "",
@@ -129,7 +129,7 @@
             },
             "post": {
                 "tags": [
-                    "blocks"
+                    "blockchain"
                 ],
                 "summary": "Suggests the latest block of the blockchain.",
                 "description": "",
@@ -151,10 +151,146 @@
                 }
             }
         },
+        "/operator/wallets": {
+            "get": {
+                "tags": [
+                    "operator"
+                ],
+                "summary": "Get all wallets.",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Wallet"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/operator/wallets/new/{password}": {
+            "post": {
+                "tags": [
+                    "operator"
+                ],
+                "summary": "Create a wallet from a password.",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "password",
+                        "description": "Password",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Wallet"
+                        }
+                    }
+                }
+            }
+        },
+        "/operator/wallets/{id}": {
+            "get": {
+                "tags": [
+                    "operator"
+                ],
+                "summary": "Get wallet by id.",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Wallet id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Wallet"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/operator/wallets/{id}/addresses/new": {
+            "post": {
+                "tags": [
+                    "operator"
+                ],
+                "summary": "Create a new address.",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Wallet id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Address"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/operator/wallets/{id}/addresses": {
+            "get": {
+                "tags": [
+                    "operator"
+                ],
+                "summary": "Get the addresses.",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Wallet id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Address"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/node/peers": {
             "get": {
                 "tags": [
-                    "peers"
+                    "node"
                 ],
                 "summary": "Get all peers connected to node.",
                 "description": "",
@@ -174,7 +310,7 @@
         "/node/peers/new": {
             "post": {
                 "tags": [
-                    "peers"
+                    "node"
                 ],
                 "summary": "Connects a new peer to node",
                 "description": "",
@@ -225,6 +361,34 @@
                     "type": "string"
                 }
             }
+        },
+        "Wallet": {
+            "type": "object",
+            "properties": {
+                "passwordHash": {
+                    "type": "string"
+                },
+                "secret": {
+                    "type": "string"
+                },
+                "keyPairs": {
+                    "type": "object",
+                    "properties:": {
+                        "index": {
+                            "type": "integer"
+                        },
+                        "secretKey": {
+                            "type": "string"
+                        },
+                        "publicKey": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "Address": {
+            "type": "string"
         }
     }
 }
