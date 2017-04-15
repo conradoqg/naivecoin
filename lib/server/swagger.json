@@ -35,24 +35,7 @@
                     }
                 }
             }
-        },
-        "/blockchain/blocks/mine": {
-            "post": {
-                "tags": [
-                    "blockchain"
-                ],
-                "summary": "Mine a new block",
-                "description": "Mine a new block and add it to the end of blockchain.",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/Block"
-                        }
-                    }
-                }
-            }
-        },
+        },        
         "/blockchain/blocks/{index}": {
             "get": {
                 "tags": [
@@ -331,6 +314,34 @@
                     }
                 }
             }
+        },
+        "/miner/mine": {
+            "post": {
+                "tags": [
+                    "miner"
+                ],
+                "summary": "Mine a new block",
+                "description": "Mine a new block and add it to the end of blockchain.",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "mine request",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MineRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Block"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -389,6 +400,14 @@
         },
         "Address": {
             "type": "string"
+        },
+        "MineRequest": {
+            "type": "object",
+            "properties": {
+                "minerAddress": {
+                    "type": "string"
+                }
+            }
         }
     }
 }
