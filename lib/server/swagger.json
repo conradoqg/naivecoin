@@ -180,7 +180,7 @@
                 }
             }
         },
-        "/operator/wallets/{id}": {
+        "/operator/wallets/{walletId}": {
             "get": {
                 "tags": [
                     "operator"
@@ -190,7 +190,7 @@
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "id",
+                        "name": "walletId",
                         "description": "Wallet id",
                         "required": true,
                         "type": "string"
@@ -209,7 +209,7 @@
                 }
             }
         },
-        "/operator/wallets/{id}/addresses/new": {
+        "/operator/wallets/{walletId}/addresses/new": {
             "post": {
                 "tags": [
                     "operator"
@@ -219,7 +219,7 @@
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "id",
+                        "name": "walletId",
                         "description": "Wallet id",
                         "required": true,
                         "type": "string"
@@ -238,7 +238,7 @@
                 }
             }
         },
-        "/operator/wallets/{id}/addresses": {
+        "/operator/wallets/{walletId}/addresses": {
             "get": {
                 "tags": [
                     "operator"
@@ -248,7 +248,7 @@
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "id",
+                        "name": "walletId",
                         "description": "Wallet id",
                         "required": true,
                         "type": "string"
@@ -270,6 +270,45 @@
                 }
             }
         },
+        "/operator/wallets/{walletId}/addresses/{addressId}/balance": {
+            "get": {
+                "tags": [
+                    "operator"
+                ],
+                "summary": "Get the balance for a given wallet and address.",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "walletId",
+                        "description": "Wallet id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "addressId",
+                        "description": "Address id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Address"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },        
         "/node/peers": {
             "get": {
                 "tags": [
