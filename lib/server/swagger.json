@@ -209,6 +209,41 @@
                 }
             }
         },
+        "/operator/wallets/{walletId}/transaction": {
+            "post": {
+                "tags": [
+                    "operator"
+                ],
+                "summary": "Post a new transaction.",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "walletId",
+                        "description": "Wallet id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "transaction to be created",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TransactionCreationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Transaction"
+                        }
+                    }
+                }
+            }
+        },
         "/operator/wallets/{walletId}/addresses/new": {
             "post": {
                 "tags": [
@@ -445,6 +480,37 @@
             "properties": {
                 "minerAddress": {
                     "type": "string"
+                }
+            }
+        },
+        "TransactionCreationRequest": {
+            "type": "object",
+            "properties": {                
+                "fromAddress": {
+                    "type": "string"
+                },
+                "toAddress": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "changeAddress": {
+                    "type": "string"
+                }
+            }
+        },
+        "Transaction": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "confirmations": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object"
                 }
             }
         }
