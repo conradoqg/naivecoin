@@ -21,7 +21,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Get all blocks from blockchain.",
+                "summary": "Get all blocks.",
                 "description": "",
                 "responses": {
                     "200": {
@@ -35,7 +35,7 @@
                     }
                 }
             }
-        },        
+        },
         "/blockchain/blocks/{index}": {
             "get": {
                 "tags": [
@@ -99,7 +99,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Get the latest block from blockchain.",
+                "summary": "Get the latest block.",
                 "description": "",
                 "responses": {
                     "200": {
@@ -107,6 +107,9 @@
                         "schema": {
                             "$ref": "#/definitions/Block"
                         }
+                    },
+                    "404": {
+                        "description": "Not found"
                     }
                 }
             },
@@ -114,13 +117,13 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Suggests the latest block of the blockchain.",
+                "summary": "Suggests the latest block.",
                 "description": "",
                 "parameters": [
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "block to be evaluated",
+                        "description": "Block to be evaluated",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/Block"
@@ -227,7 +230,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "transaction to be created",
+                        "description": "Transaction to be created",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/TransactionCreationRequest"
@@ -240,35 +243,9 @@
                         "schema": {
                             "$ref": "#/definitions/Transaction"
                         }
-                    }
-                }
-            }
-        },
-        "/operator/wallets/{walletId}/addresses/new": {
-            "post": {
-                "tags": [
-                    "operator"
-                ],
-                "summary": "Create a new address.",
-                "description": "",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "walletId",
-                        "description": "Wallet id",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/Address"
-                        }
                     },
-                    "404": {
-                        "description": "Not Found"
+                    "400": {
+                        "description": "Bad request"
                     }
                 }
             }
@@ -299,8 +276,37 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not Found"
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/operator/wallets/{walletId}/addresses/new": {
+            "post": {
+                "tags": [
+                    "operator"
+                ],
+                "summary": "Create a new address.",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "walletId",
+                        "description": "Wallet id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Address"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
                     }
                 }
             }
@@ -310,7 +316,7 @@
                 "tags": [
                     "operator"
                 ],
-                "summary": "Get the balance for a given wallet and address.",
+                "summary": "Get the balance.",
                 "description": "",
                 "parameters": [
                     {
@@ -338,12 +344,12 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not Found"
+                    "400": {
+                        "description": "Bad request"
                     }
                 }
             }
-        },        
+        },
         "/node/peers": {
             "get": {
                 "tags": [
@@ -375,7 +381,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "peer to be added",
+                        "description": "Peer to be added",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/Peer"
@@ -400,7 +406,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "mine request",
+                        "description": "Mine request",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/MineRequest"
@@ -485,7 +491,7 @@
         },
         "TransactionCreationRequest": {
             "type": "object",
-            "properties": {                
+            "properties": {
                 "fromAddress": {
                     "type": "string"
                 },
