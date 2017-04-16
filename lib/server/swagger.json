@@ -137,6 +137,49 @@
                 }
             }
         },
+        "/blockchain/transactions": {
+            "get": {
+                "tags": [
+                    "blockchain"
+                ],
+                "summary": "Get all transactions.",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Transaction"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/blockchain/transactions/{transactionId}": {
+            "put": {
+                "tags": [
+                    "blockchain"
+                ],
+                "summary": "Put a transaction.",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Transaction"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    }
+                }
+            }
+        },
         "/operator/wallets": {
             "get": {
                 "tags": [
@@ -246,6 +289,9 @@
                     },
                     "400": {
                         "description": "Bad request"
+                    },
+                    "409": {
+                        "description": "Conflict"
                     }
                 }
             }
@@ -375,7 +421,7 @@
                 "tags": [
                     "node"
                 ],
-                "summary": "Connects a new peer to node",
+                "summary": "Connects a new peer to node.",
                 "description": "",
                 "parameters": [
                     {
@@ -400,7 +446,7 @@
                 "tags": [
                     "miner"
                 ],
-                "summary": "Mine a new block",
+                "summary": "Mine a new block.",
                 "description": "Mine a new block and add it to the end of blockchain.",
                 "parameters": [
                     {
@@ -512,11 +558,44 @@
                 "id": {
                     "type": "string"
                 },
-                "confirmations": {
-                    "type": "integer"
-                },
                 "data": {
-                    "type": "object"
+                    "type": "object",
+                    "properties": {
+                        "inputs": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "transaction": {
+                                        "type": "string"
+                                    },
+                                    "index": {
+                                        "type": "integer"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "signature": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "outputs": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "integer"
+                                    },
+                                    "address": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
