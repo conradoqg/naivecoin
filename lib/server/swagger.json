@@ -21,7 +21,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Get all blocks.",
+                "summary": "Get all blocks",
                 "description": "",
                 "responses": {
                     "200": {
@@ -41,7 +41,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Get block by index.",
+                "summary": "Get block by index",
                 "description": "",
                 "parameters": [
                     {
@@ -70,7 +70,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Get block by hash.",
+                "summary": "Get block by hash",
                 "description": "",
                 "parameters": [
                     {
@@ -99,7 +99,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Get the latest block.",
+                "summary": "Get the latest block",
                 "description": "",
                 "responses": {
                     "200": {
@@ -113,11 +113,11 @@
                     }
                 }
             },
-            "post": {
+            "put": {
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Suggests the latest block.",
+                "summary": "Create/Update the latest block",
                 "description": "",
                 "parameters": [
                     {
@@ -142,7 +142,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Get all transactions.",
+                "summary": "Get all transactions",
                 "description": "",
                 "responses": {
                     "200": {
@@ -162,7 +162,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Put a transaction.",
+                "summary": "Create/Update a transaction",
                 "description": "",
                 "responses": {
                     "200": {
@@ -185,7 +185,7 @@
                 "tags": [
                     "operator"
                 ],
-                "summary": "Get all wallets.",
+                "summary": "Get all wallets",
                 "description": "",
                 "responses": {
                     "200": {
@@ -198,22 +198,28 @@
                         }
                     }
                 }
-            }
-        },
-        "/operator/wallets/new/{password}": {
+            },
             "post": {
                 "tags": [
                     "operator"
                 ],
-                "summary": "Create a wallet from a password.",
+                "summary": "Create a wallet from a password",
                 "description": "",
                 "parameters": [
                     {
-                        "in": "path",
-                        "name": "password",
-                        "description": "Password",
+                        "in": "body",
+                        "name": "body",
+                        "description": "Wallet request",
                         "required": true,
-                        "type": "string"
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "password": {
+                                    "type": "string",
+                                    "description": "Password"
+                                }
+                            }
+                        }
                     }
                 ],
                 "responses": {
@@ -231,7 +237,7 @@
                 "tags": [
                     "operator"
                 ],
-                "summary": "Get wallet by id.",
+                "summary": "Get wallet by id",
                 "description": "",
                 "parameters": [
                     {
@@ -255,12 +261,12 @@
                 }
             }
         },
-        "/operator/wallets/{walletId}/transaction": {
+        "/operator/wallets/{walletId}/transactions": {
             "post": {
                 "tags": [
                     "operator"
                 ],
-                "summary": "Post a new transaction.",
+                "summary": "Create a new transaction",
                 "description": "",
                 "parameters": [
                     {
@@ -276,7 +282,25 @@
                         "description": "Transaction to be created",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TransactionCreationRequest"
+                            "type": "object",
+                            "properties": {
+                                "fromAddress": {
+                                    "type": "string",
+                                    "description": "From address"
+                                },
+                                "toAddress": {
+                                    "type": "string",
+                                    "description": "To address"
+                                },
+                                "amount": {
+                                    "type": "integer",
+                                    "description": "Amount (in satoshis)"
+                                },
+                                "changeAddress": {
+                                    "type": "string",
+                                    "description": "Change address"
+                                }
+                            }
                         }
                     }
                 ],
@@ -301,7 +325,7 @@
                 "tags": [
                     "operator"
                 ],
-                "summary": "Get the addresses.",
+                "summary": "Get all addresses of a wallet",
                 "description": "",
                 "parameters": [
                     {
@@ -326,14 +350,12 @@
                         "description": "Bad request"
                     }
                 }
-            }
-        },
-        "/operator/wallets/{walletId}/addresses/new": {
+            },
             "post": {
                 "tags": [
                     "operator"
                 ],
-                "summary": "Create a new address.",
+                "summary": "Create a new address",
                 "description": "",
                 "parameters": [
                     {
@@ -362,7 +384,7 @@
                 "tags": [
                     "operator"
                 ],
-                "summary": "Get the balance.",
+                "summary": "Get the balance of a given address and wallet",
                 "description": "",
                 "parameters": [
                     {
@@ -401,7 +423,7 @@
                 "tags": [
                     "node"
                 ],
-                "summary": "Get all peers connected to node.",
+                "summary": "Get all peers connected to node",
                 "description": "",
                 "responses": {
                     "200": {
@@ -414,14 +436,12 @@
                         }
                     }
                 }
-            }
-        },
-        "/node/peers/new": {
+            },
             "post": {
                 "tags": [
                     "node"
                 ],
-                "summary": "Connects a new peer to node.",
+                "summary": "Connects a new peer to node",
                 "description": "",
                 "parameters": [
                     {
@@ -446,7 +466,7 @@
                 "tags": [
                     "miner"
                 ],
-                "summary": "Mine a new block.",
+                "summary": "Mine a new block",
                 "description": "Mine a new block and add it to the end of blockchain.",
                 "parameters": [
                     {
@@ -455,7 +475,13 @@
                         "description": "Mine request",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/MineRequest"
+                            "type": "object",
+                            "properties": {
+                                "rewardAddress": {
+                                    "description": "Address to reward",
+                                    "type": "string"
+                                }
+                            }
                         }
                     }
                 ],
@@ -526,31 +552,6 @@
         },
         "Address": {
             "type": "string"
-        },
-        "MineRequest": {
-            "type": "object",
-            "properties": {
-                "minerAddress": {
-                    "type": "string"
-                }
-            }
-        },
-        "TransactionCreationRequest": {
-            "type": "object",
-            "properties": {
-                "fromAddress": {
-                    "type": "string"
-                },
-                "toAddress": {
-                    "type": "string"
-                },
-                "amount": {
-                    "type": "integer"
-                },
-                "changeAddress": {
-                    "type": "string"
-                }
-            }
         },
         "Transaction": {
             "type": "object",
