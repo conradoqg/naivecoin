@@ -531,24 +531,13 @@
         "Wallet": {
             "type": "object",
             "properties": {
-                "passwordHash": {
+                "id": {
                     "type": "string"
                 },
-                "secret": {
-                    "type": "string"
-                },
-                "keyPairs": {
-                    "type": "object",
-                    "properties": {
-                        "index": {
-                            "type": "integer"
-                        },
-                        "secretKey": {
-                            "type": "string"
-                        },
-                        "publicKey": {
-                            "type": "string"
-                        }
+                "addresses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
                     }
                 }
             }
