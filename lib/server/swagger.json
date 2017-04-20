@@ -133,6 +133,9 @@
                 "responses": {
                     "200": {
                         "description": "OK"
+                    },
+                    "409": {
+                        "description": "Conflict"
                     }
                 }
             }
@@ -223,8 +226,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/Wallet"
                         }
@@ -305,8 +308,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/Transaction"
                         }
@@ -367,8 +370,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/Address"
                         }
@@ -455,8 +458,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "201": {
+                        "description": "Created"
                     }
                 }
             }
@@ -486,8 +489,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/Block"
                         }
