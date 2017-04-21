@@ -160,6 +160,35 @@
                 }
             }
         },
+        "/blockchain/transactions/unspent": {
+            "get": {
+                "tags": [
+                    "blockchain"
+                ],
+                "summary": "Get unspent transactions",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "address",
+                        "description": "Address id",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Transaction"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/blockchain/transactions/{transactionId}": {
             "put": {
                 "tags": [
