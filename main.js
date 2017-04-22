@@ -22,6 +22,8 @@ var name = process.env.NAME || argv.name || '1';
 
 require('./lib/util/consoleWrapper.js')(name);
 
+// TODO: Rethink log messages
+
 let blockchain = new Blockchain(name);
 let operator = new Operator(name, blockchain);
 let miner = new Miner(blockchain);
