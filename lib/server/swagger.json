@@ -400,6 +400,14 @@
                 "description": "",
                 "parameters": [
                     {
+                        "in": "header",
+                        "name": "password",
+                        "description": "Wallet password",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
                         "in": "path",
                         "name": "walletId",
                         "description": "Wallet id",
