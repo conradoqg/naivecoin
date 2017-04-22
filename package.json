@@ -24,6 +24,7 @@
     "superagent": "^3.5.2",
     "swagger-tools": "^0.10.1",
     "swagger-ui-express": "^1.0.7",
+    "threads": "^0.7.2",
     "yargs": "^7.0.2"
   },
   "engines": {
