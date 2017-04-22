@@ -1,1 +1,1 @@
-# Naivecoin - a cryptocurrency implementation in around than 1500 lines of code
+# Naivecoin - a cryptocurrency implementation in less than 1500 lines of code
