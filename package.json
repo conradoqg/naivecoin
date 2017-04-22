@@ -1,11 +1,11 @@
 {
-  "name": "notsonaivechain",
+  "name": "naivecoin",
   "version": "0.0.1",
-  "description": "Not So Naive blockchain demonstration",
+  "description": "Naivecoin, a cryptocurrency demonstration",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/conradoqg/notsonaivechain.git"
+    "url": "https://github.com/conradoqg/naivecoin.git"
   },
   "scripts": {
     "start": "node main.js",

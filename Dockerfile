@@ -1,4 +1,4 @@
- RUN cd /notsonaivechain && npm install
+ RUN cd /naivecoin && npm install
   		  
  RUN mkdir /data1
  VOLUME /data1
