@@ -257,7 +257,7 @@
                             "properties": {
                                 "password": {
                                     "type": "string",
-                                    "description": "Password"
+                                    "description": "Password (must contain more than 4 words)"
                                 }
                             }
                         }
@@ -269,7 +269,10 @@
                         "schema": {
                             "$ref": "#/definitions/Wallet"
                         }
-                    }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }                   
                 }
             }
         },
@@ -318,6 +321,14 @@
                         "type": "string"
                     },
                     {
+                        "in": "header",
+                        "name": "password",
+                        "description": "Wallet password",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
                         "in": "body",
                         "name": "body",
                         "description": "Transaction to be created",
@@ -353,10 +364,13 @@
                         }
                     },
                     "400": {
-                        "description": "Bad request"
+                        "description": "Bad Request"
                     },
-                    "409": {
-                        "description": "Conflict"
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 }
             }
@@ -388,7 +402,7 @@
                         }
                     },
                     "400": {
-                        "description": "Bad request"
+                        "description": "Bad Request"
                     }
                 }
             },
@@ -423,7 +437,13 @@
                         }
                     },
                     "400": {
-                        "description": "Bad request"
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 }
             }
@@ -462,7 +482,7 @@
                         }
                     },
                     "400": {
-                        "description": "Bad request"
+                        "description": "Bad Request"
                     }
                 }
             }
