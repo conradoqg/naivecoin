@@ -117,7 +117,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Create/Update the latest block",
+                "summary": "Update the latest block",
                 "description": "",
                 "parameters": [
                     {
@@ -158,6 +158,38 @@
                         }
                     }
                 }
+            },
+            "post": {
+                "tags": [
+                    "blockchain"
+                ],
+                "summary": "Create a transaction",
+                "description": "",
+                "parameters": [                    
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Transacqion",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Transaction"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/Transaction"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    }
+                }
             }
         },
         "/blockchain/transactions/unspent": {
@@ -188,30 +220,7 @@
                     }
                 }
             }
-        },
-        "/blockchain/transactions/{transactionId}": {
-            "put": {
-                "tags": [
-                    "blockchain"
-                ],
-                "summary": "Create/Update a transaction",
-                "description": "",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/Transaction"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "409": {
-                        "description": "Conflict"
-                    }
-                }
-            }
-        },
+        },        
         "/operator/wallets": {
             "get": {
                 "tags": [
