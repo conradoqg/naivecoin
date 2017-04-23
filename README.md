@@ -19,7 +19,7 @@ Cryptocurrencies and smart-contracts on top of a blockchain aren't the most triv
 * Addresses creation using a deterministic approach [EdDSA](https://en.wikipedia.org/wiki/EdDSA)
 * Data is persisted to a folder
 
-> Naivechain uses websocket to p2p communication, but it was droped to simplify the understanding of message exchange. It is realying only on REST comunication.
+> Naivechain uses websocket to p2p communication, but it was dropped to simplify the understanding of message exchange. It is relying only on REST communication.
 
 #### Components communication
 ```
@@ -97,7 +97,7 @@ The node rebroadcast every information it receives unless it doesn't do anything
 
 #### Blockchain
 
-The blockchain holds two information, the block list and the transactions list. Its responsability is to verify arrinving blocks, transactions and to keep the blockchain coherent.
+The blockchain holds two information, the block list, and the transactions list. Its responsibility is to verify arriving blocks, transactions and to keep the blockchain coherent.
 
 Blockchain is a sequence of correlated blocks by hash
 ```
@@ -119,7 +119,7 @@ Transactions is a list of pending transactions (to be added to a block by a mine
 
 ##### Block structure:
 
-```json
+```javascript
 {
     "index": 0, // (first block: 0)
     "previousHash": "0", // (id of the previous hash, first block is 0)
@@ -140,7 +140,7 @@ Transactions is a list of pending transactions (to be added to a block by a mine
 ```
 
 ##### Transaction structure:
-```json
+```javascript
 {
     "id": "84286bba8da2571582b42707d84f19fbf94e21e13fc2eebb6135fb7477efdae1", // random id
     "hash": "f697d4ae63bc49f4c85a05e066d67df86de8332db8700f801b6fb0c1e85f0ac3", // hash taken from the contents of the transaction: sha256 (id + data)
@@ -174,7 +174,7 @@ Transactions is a list of pending transactions (to be added to a block by a mine
 
 ### Quick start
 
-<instructions of how to run a nodes>
+<instructions of how to run a node>
 <instructions of how to run two nodes>
 <how to access the swagger API>
 
