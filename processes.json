@@ -2,7 +2,7 @@
     "apps": [
         {
             "name": "node 1",
-            "script": "./main.js",
+            "script": "./bin/naivecoin.js",
             "watch": true,
             "interpreter_args": "--debug=7001",            
             "env": {
@@ -12,7 +12,7 @@
         },
         {
             "name": "node 2",
-            "script": "./main.js",
+            "script": "./bin/naivecoin.js",
             "watch": true,
             "interpreter_args": "--debug=7002",            
             "env": {

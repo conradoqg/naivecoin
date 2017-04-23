@@ -2,14 +2,17 @@
   "name": "naivecoin",
   "version": "0.0.1",
   "description": "Naivecoin, a cryptocurrency demonstration",
+  "homepage": "https://github.com/conradoqg/naivecoin",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/conradoqg/naivecoin.git"
   },
+   "bin": {
+    "naivecoin": "bin/naivecoin.js"
+  },
   "scripts": {
-    "start": "node main.js",
-    "lint": "standard",
+    "start": "node bin/naivecoin.js",    
     "compose:up": "docker-compose up"
   },
   "dependencies": {
