@@ -72,7 +72,7 @@ Bellow the endpoint list:
 |POST|/operator/wallets/{walletId}/addresses|Create a new address|
 |GET|/operator/wallets/{walletId}/addresses/{addressId}/balance|Get the balance of a given address and wallet|
 
-##### Operator
+##### Node
 
 |Method|URL|Description|
 |------|---|-----------|
@@ -85,15 +85,6 @@ Bellow the endpoint list:
 |------|---|-----------|
 |POST|/miner/mine|Mine a new block|
 |POST|/miner/mineInAnotherThread|Mine a new block (in another thread)|
-
-#### Node
-
-The node contains a list of connected peers, and do all the data exchange between nodes, including:
-1. Receive new peers and check what to do with it
-1. Receive new blocks and check what to do with it
-2. Receive new transactions and check what to do with it
-
-The node rebroadcast every information it receives unless it doesn't do anything with it
 
 #### Blockchain
 
@@ -122,46 +113,46 @@ Transactions is a list of pending transactions (to be added to a block by a mine
 ```javascript
 {
     "index": 0, // (first block: 0)
-    "previousHash": "0", // (id of the previous hash, first block is 0)
+    "previousHash": "0", // (id of the previous hash, first block is 0) (64 bytes)
     "timestamp": 1465154705,
     "nonce": 0, // nonce used to identify the prove-of-work step.
     "transactions": [ // list of transactions inside the blockchain
         {
-            "id": "63ec3ac02f822450039df13ddf7c3c0f19bab4acd4dc928c62fcd78d5ebc6dba", // random id
-            "hash": "563b8aa3501448eeca29de9c6cf9f080a3cb3985c14f642be7b49a3eecfbd26b", // hash taken from the contents of the transaction: sha256 (id + data)
+            "id": "63ec3ac02f...8d5ebc6dba", // random id (64 bytes)
+            "hash": "563b8aa350...3eecfbd26b", // hash taken from the contents of the transaction: sha256 (id + data) (64 bytes)
             "data": {
                 "inputs": [], // list of input transactions
                 "outputs": [] // list of output transactions
             }
         }
     ],
-    "hash": "c4e0b8df46ce5cb2bcb0379ab0840228536cf4cd489783532a7c9d199754d1ed" // hash taken from the contents of the block: sha256 (index + previousHash + timestamp + nonce + transactions)
+    "hash": "c4e0b8df46...199754d1ed" // hash taken from the contents of the block: sha256 (index + previousHash + timestamp + nonce + transactions) (64 bytes)
 }
 ```
 
 ##### Transaction structure:
 ```javascript
 {
-    "id": "84286bba8da2571582b42707d84f19fbf94e21e13fc2eebb6135fb7477efdae1", // random id
-    "hash": "f697d4ae63bc49f4c85a05e066d67df86de8332db8700f801b6fb0c1e85f0ac3", // hash taken from the contents of the transaction: sha256 (id + data)
+    "id": "84286bba8d...7477efdae1", // random id (64 bytes)
+    "hash": "f697d4ae63...c1e85f0ac3", // hash taken from the contents of the transaction: sha256 (id + data) (64 bytes)
     "data": {
         "inputs": [
             {
-                "transaction": "9e765ad30cbc2f611aa9b29e37a88a25d54c78926ec2f5a8927286e908b32f0c", // transaction hash taken from a previous unspent transaction output
+                "transaction": "9e765ad30c...e908b32f0c", // transaction hash taken from a previous unspent transaction output (64 bytes)
                 "index": "0", // index of the transaction taken from a previous unspent transaction output
                 "amount": 5000000000, // amount of sathosis
-                "address": "dda3ce5aa50028c787664ed16b3d459373123f3e711b70e19196b4b409bf3fdc", // from address
-                "signature": "27d911cac0c38449092250509c053c953a24aed258b0a53de3bf93727223195825f3dd3c176beff1c7f276420ef7964213c0e031a935ad0c1613fc6486adbf05" // transaction input hash: sha256 (transaction + index + amount + address) signed with owner address's secret key
+                "address": "dda3ce5aa5...b409bf3fdc", // from address (64 bytes)
+                "signature": "27d911cac0...6486adbf05" // transaction input hash: sha256 (transaction + index + amount + address) signed with owner address's secret key (128 bytes)
             }
         ],
         "outputs": [
             {
                 "amount": 10000, // amount of sathosis
-                "address": "4f8293356d7472365d313faa607b6b1a1a9404285d0a62db9ec7acb53e8c5b25" // to address
+                "address": "4f8293356d...b53e8c5b25" // to address (64 bytes)
             },
             {
                 "amount": 4999989999, // amount of sathosis
-                "address": "dda3ce5aa50028c787664ed16b3d459373123f3e711b70e19196b4b409bf3fdc" // change address
+                "address": "dda3ce5aa5...b409bf3fdc" // change address (64 bytes)
             }
         ]
     }
@@ -170,21 +161,82 @@ Transactions is a list of pending transactions (to be added to a block by a mine
 
 #### Operator
 
-<todo>
+The operator handles wallet and addresses as well the transaction creation. Most of its operation are CRUD related.
+
+```javascript
+[
+    { // Wallet
+        "id": "884d3e0407...f29af094fd", // random id (64 bytes)
+        "passwordHash": "5ba9151d1c...1424be8e2c", // hash taken from password: sha256 (password) (64 bytes)
+        "secret": "6acb83e364...c1a04b6ee6", // pbkdf2 secret taken from password hash: sha512 (salt + passwordHash + random factor)
+        "keyPairs": [
+            {
+                "index": 1,
+                "secretKey": "6acb83e364...ee6bcdbc73", // EdDSA secret key generated from the secret (1024 bytes)
+                "publicKey": "dda3ce5aa5...b409bf3fdc" // EdDSA public key generated from the secret (64 bytes) (also known as address)
+            },
+            {
+                "index": 2,
+                "secretKey": "072ab010ed...246ed16d26", // EdDSA secret key generated from pbkdf2 (sha512 (salt + passwordHash + random factor)) over last address secret key (1024 bytes)
+                "publicKey": "4f8293356d...b53e8c5b25"  // EdDSA public key generated from the secret (64 bytes) (also known as address)
+            }     
+        ]
+    }
+]
+```
+
+#### Miner
+
+Miner gets the list of unconfirmed transactions and creates a new block containing the transactions. By configuration, every blockchain has at most 2 transactions in it. 
+The prove-of-work is done by calculating the 14 first hex values for a given transaction hash and increases the nonce util it reaches the minimal difficulty level required. The difficulty increases by a exponential value (power of 5) every 5 blocks created. Around the 70th block created it starts to spend around 50 seconds to generate a new block with this configuration. All these values can be tweaked.
+
+The mining also generates 50 coins to the miner and includes a fee of 1 satoshi per transaction.
+
+#### Node
+
+The node contains a list of connected peers, and do all the data exchange between nodes, including:
+1. Receive new peers and check what to do with it
+1. Receive new blocks and check what to do with it
+2. Receive new transactions and check what to do with it
+
+The node rebroadcast every information it receives unless it doesn't do anything with it, for example if it already have the peer/transaction/blockchain.
 
 ### Quick start
 
-<instructions of how to run a node>
-<instructions of how to run two nodes>
-<how to access the swagger API>
+```sh
+# Run a node
+$ node bin/naivecoin.js
+
+# Run two nodes
+$ node bin/naivecoin.js -p 3001 --name 1
+$ node bin/naivecoin.js -p 3002 --name 2 --peers http://localhost:3001
+
+# Access the swagger API
+http://localhost:3001/api-docs/
+```
 
 #### Docker
 
-<instructions of how to run three nodes>
+```sh
+# Run docker-compose
+$ docker-compose up
+```
 
 ### Client
 
-<show client options>
+```sh
+$ node bin/naivecoin.js -h
+Usage: bin\naivecoin.js [options]
+
+Options:
+  -a, --host       Host address. (localhost by default)
+  -p, --port       HTTP port. (3001 by default)
+  -l, --log-level  Log level (7=dir, debug, time and trace, 6=log and info,
+                   4=warn, 3=error, assert, 6 by default).
+  --peers          Peers list.                                           [array]
+  --name           Node name/identifier.
+  -h, --help       Show help                                           [boolean]
+```
 
 ### Contribution and License Agreement
 
