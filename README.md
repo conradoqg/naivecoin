@@ -1,7 +1,7 @@
 # Naivecoin - a cryptocurrency implementation in less than 1500 lines of code
 
 ### Motivation
-Cryptocurrencies and smart-contracts on top of a blockchain aren't the most trivial concepts to understand, things like wallets, addresses, block prove-of-work, transactions, and its signatures are ease to understand when they are in a broad context. Inspired by [naivechain](https://github.com/lhartikk/naivechain), this project is an attempt to provide as concise and simple implementation of a cryptocurrencies as possible.
+Cryptocurrencies and smart-contracts on top of a blockchain aren't the most trivial concepts to understand, things like wallets, addresses, block prove-of-work, transactions, and its signatures are ease to understand when they are in a broad context. Inspired by [naivechain](https://github.com/lhartikk/naivechain), this project is an attempt to provide as concise and simple implementation of a cryptocurrency as possible.
 
 ### What is cryptocurrency
 [From Wikipedia](https://en.wikipedia.org/wiki/Cryptocurrency) : A cryptocurrency (or crypto currency) is a digital asset designed to work as a medium of exchange using cryptography to secure the transactions and to control the creation of additional units of the currency.
@@ -194,7 +194,7 @@ The mining also generates 50 coins to the miner and includes a fee of 1 satoshi 
 
 #### Node
 
-The node contains a list of connected peers, and do all the data exchange between nodes, including:
+The node contains a list of connected peers, and does all the data exchange between nodes, including:
 1. Receive new peers and check what to do with it
 1. Receive new blocks and check what to do with it
 2. Receive new transactions and check what to do with it
