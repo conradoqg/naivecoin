@@ -90,7 +90,7 @@ Bellow the endpoint list:
 
 The blockchain holds two information, the block list, and the transactions list. Its responsibility is to verify arriving blocks, transactions and to keep the blockchain coherent.
 
-Blockchain is a sequence of correlated blocks by hash
+Blockchain is a sequence of correlated blocks by hash:
 ```
 +-----------+                +-----------+                +-----------+
 |           |  previousHash  |           |  previousHash  |           |
@@ -113,7 +113,7 @@ Transactions is a list of pending transactions (to be added to a block by a mine
 ```javascript
 {
     "index": 0, // (first block: 0)
-    "previousHash": "0", // (id of the previous hash, first block is 0) (64 bytes)
+    "previousHash": "0", // (hash of previous block, first block is 0) (64 bytes)
     "timestamp": 1465154705,
     "nonce": 0, // nonce used to identify the prove-of-work step.
     "transactions": [ // list of transactions inside the blockchain
