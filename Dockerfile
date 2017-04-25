@@ -1,7 +1,9 @@
- RUN cd /naivecoin && npm install
-  		  
- RUN mkdir /data
- VOLUME /data
- 
- EXPOSE 3001
- EXPOSE 6001
+FROM node:6
+
+VOLUME /naivecoin
+
+WORKDIR /naivecoin
+
+ENTRYPOINT node bin/naivecoin.js
+
+EXPOSE 3001

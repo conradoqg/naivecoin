@@ -1,7 +1,7 @@
 {
     "apps": [
         {
-            "name": "node 1",
+            "name": "1",
             "script": "./bin/naivecoin.js",
             "watch": true,
             "interpreter_args": "--debug=7001",            
@@ -11,7 +11,7 @@
             }
         },
         {
-            "name": "node 2",
+            "name": "2",
             "script": "./bin/naivecoin.js",
             "watch": true,
             "interpreter_args": "--debug=7002",            
