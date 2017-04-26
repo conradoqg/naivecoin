@@ -58,6 +58,7 @@ Bellow the endpoint list:
 |PUT|/blockchain/blocks/latest|Update the latest block|
 |GET|/blockchain/transactions|Get all transactions|
 |POST|/blockchain/transactions|Create a transaction|
+|GET|/blockchain/blocks/transactions/{transactionId}|Get a transaction from blocks|
 |GET|/blockchain/transactions/unspent|Get unspent transactions|
 
 ##### Operator
@@ -78,6 +79,7 @@ Bellow the endpoint list:
 |------|---|-----------|
 |GET|/node/peers|Get all peers connected to node|
 |POST|/node/peers|Connects a new peer to node|
+|GET|/node/transactions/{transactionId}/confirmations|Get how many confirmations a block has|
 
 ##### Miner
 
@@ -200,6 +202,8 @@ The node contains a list of connected peers, and does all the data exchange betw
 2. Receive new transactions and check what to do with it
 
 The node rebroadcast every information it receives unless it doesn't do anything with it, for example if it already have the peer/transaction/blockchain.
+
+An extra responsability is to get the amount of confirmations for a given transaction. It does that by asking every node if it has that transactions in its blockchain.
 
 ### Quick start
 

@@ -140,6 +140,35 @@
                 }
             }
         },
+        "/blockchain/blocks/transactions/{transactionId}": {
+            "get": {
+                "tags": [
+                    "blockchain"
+                ],
+                "summary": "Get a transaction from blocks",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "transactionId",
+                        "description": "Transaction id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Block"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/blockchain/transactions": {
             "get": {
                 "tags": [
@@ -272,7 +301,7 @@
                     },
                     "400": {
                         "description": "Bad Request"
-                    }                   
+                    }
                 }
             }
         },
@@ -475,10 +504,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Address"
-                            }
+                            "type": "integer"
                         }
                     },
                     "400": {
@@ -526,6 +552,32 @@
                 "responses": {
                     "201": {
                         "description": "Created"
+                    }
+                }
+            }
+        },
+        "/node/transactions/{transactionId}/confirmations": {
+            "get": {
+                "tags": [
+                    "node"
+                ],
+                "summary": "Get how many confirmations a block has",
+                "description": "",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "transactionId",
+                        "description": "Transaction id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
                 }
             }
