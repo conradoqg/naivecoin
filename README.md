@@ -218,8 +218,18 @@ http://localhost:3001/api-docs/
 #### Docker
 
 ```sh
-# Run docker with 1 node
+# Build the image
+$ docker build . -t naivecoin
+
+# Run naivecoin in a docker
 $ ./dockerExec.sh
+
+# Run naivecoin in a docker using port 3002
+$ ./dockerExec.sh -p 3002
+
+# Run naivecoin in a docker options
+$ ./dockerExec.sh -h
+Usage: ./dockerExec.sh -a HOST -p PORT -l LOG_LEVEL -e PEERS -n NAME
 
 # Run docker-compose with 3 nodes
 $ docker-compose up
@@ -228,6 +238,7 @@ $ docker-compose up
 ### Client
 
 ```sh
+# Command-line options
 $ node bin/naivecoin.js -h
 Usage: bin\naivecoin.js [options]
 
