@@ -145,7 +145,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Get a transaction from blocks",
+                "summary": "Get a transaction from some block",
                 "description": "",
                 "parameters": [
                     {

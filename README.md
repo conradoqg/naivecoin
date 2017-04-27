@@ -1,7 +1,7 @@
 # Naivecoin - a cryptocurrency implementation in less than 1500 lines of code
 
 ### Motivation
-Cryptocurrencies and smart-contracts on top of a blockchain aren't the most trivial concepts to understand, things like wallets, addresses, block prove-of-work, transactions, and its signatures are ease to understand when they are in a broad context. Inspired by [naivechain](https://github.com/lhartikk/naivechain), this project is an attempt to provide as concise and simple implementation of a cryptocurrency as possible.
+Cryptocurrencies and smart-contracts on top of a blockchain aren't the most trivial concepts to understand, things like wallets, addresses, block prove-of-work, transactions and its signatures, makes more sense when they are in a broad context. Inspired by [naivechain](https://github.com/lhartikk/naivechain), this project is an attempt to provide as concise and simple implementation of a cryptocurrency as possible.
 
 ### What is cryptocurrency
 [From Wikipedia](https://en.wikipedia.org/wiki/Cryptocurrency) : A cryptocurrency (or crypto currency) is a digital asset designed to work as a medium of exchange using cryptography to secure the transactions and to control the creation of additional units of the currency.
@@ -45,7 +45,7 @@ Cryptocurrencies and smart-contracts on top of a blockchain aren't the most triv
 #### HTTP Server
 Provides an API interface to manage the blockchain, wallets, addresses, transaction creation, mining request and peer connectivity.
 
-Bellow the endpoint list:
+It's the starting point to interact with the naivecoin, and every node provides a swagger API interface to make this interaction easier. Available endpoints:
 
 ##### Blockchain
 
@@ -58,7 +58,7 @@ Bellow the endpoint list:
 |PUT|/blockchain/blocks/latest|Update the latest block|
 |GET|/blockchain/transactions|Get all transactions|
 |POST|/blockchain/transactions|Create a transaction|
-|GET|/blockchain/blocks/transactions/{transactionId}|Get a transaction from blocks|
+|GET|/blockchain/blocks/transactions/{transactionId}|Get a transaction from some block|
 |GET|/blockchain/transactions/unspent|Get unspent transactions|
 
 ##### Operator
@@ -88,11 +88,20 @@ Bellow the endpoint list:
 |POST|/miner/mine|Mine a new block|
 |POST|/miner/mineInAnotherThread|Mine a new block (in another thread)|
 
-#### Blockchain
+#### Characteristics and features
+Not all components in this implementation follow the complete requirement to a secure and scalable cryptocurrency. Inside the source-code, you can find comments with `INFO:` that describes what parts could be improved (and how) and what technics were used to solve that specific challenge.
 
-The blockchain holds two information, the block list, and the transactions list. Its responsibility is to verify arriving blocks, transactions and to keep the blockchain coherent.
+##### Blockchain
 
-Blockchain is a sequence of correlated blocks by hash:
+The blockchain holds two pieces of information, the block list (linked list), and the transactions list (hash map). 
+
+It is responsible for:
+* Verification of arriving blocks;
+* Verification of arriving transactions;
+* Synchronization of the transaction list;
+* Synchronization of the block list;
+
+The blockchain is a linked list where the hash of the next block is calculated based on the hash of the previous block plus the data inside the block itself:
 ```
 +-----------+                +-----------+                +-----------+
 |           |  previousHash  |           |  previousHash  |           |
@@ -101,7 +110,24 @@ Blockchain is a sequence of correlated blocks by hash:
 +-----------+                +-----------+                +-----------+
 ```
 
-Transactions is a list of pending transactions (to be added to a block by a miner and then if accepted to a blockchain)
+A block is added to the block list:
+1. If the block is the last one (previous index + 1);
+2. If previous block is correct (previous hash == block.previousHash);
+3. The hash is correct (calculated block hash == block.hash);
+4. The difficulty level of the prove-of-work challenge is correct (difficulty at blockchain index _n_ < block difficulty);
+5. All transactions inside the block are valid;
+6. The sum of input transactions are equal the sum of output transactions + 50 bitcoin representing the award for the block miner;
+
+A transaction inside a block is valid:
+1. If the transaction hash is correct (calculated transaction hash == transaction.hash);
+2. Signature of all input transactions are correct (transaction data is signed by the public key of the address);
+3. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
+4. If all input transactions are unspent in the blockchain;
+
+You can read this [post](https://medium.com/@lhartikk/a-blockchain-in-200-lines-of-code-963cc1cc0e54#.dttbm9afr5) from [naivechain](https://github.com/lhartikk/naivechain) for more details about how the blockchain works.
+
+Transactions is a list of pending transactions. Nothing special about it. In this implementation, the list of transactions contains only the unconfirmed transactions. As soon as a transaction is confirmed, the blockchain removes it from this list.
+
 ```
 [
     transaction 1,
@@ -110,16 +136,25 @@ Transactions is a list of pending transactions (to be added to a block by a mine
 ]
 ```
 
-##### Block structure:
+A transaction is added to the transaction list:
+1. If the transaction hash is correct (calculated transaction hash == transaction.hash);
+2. Signature of all input transactions are correct (transaction data is signed by the public key of the address);
+3. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
+4. If all input transactions are unspent in the blockchain;
+5. If it's not already in the transaction list;
+
+###### Block structure:
+
+A block represents a group of transactions and contains information that links it to a previous block.
 
 ```javascript
-{
+{ // block
     "index": 0, // (first block: 0)
     "previousHash": "0", // (hash of previous block, first block is 0) (64 bytes)
-    "timestamp": 1465154705,
+    "timestamp": 1465154705, // number of seconds since January 1, 1970
     "nonce": 0, // nonce used to identify the prove-of-work step.
-    "transactions": [ // list of transactions inside the blockchain
-        {
+    "transactions": [ // list of transactions inside the block
+        { // transaction 0
             "id": "63ec3ac02f...8d5ebc6dba", // random id (64 bytes)
             "hash": "563b8aa350...3eecfbd26b", // hash taken from the contents of the transaction: sha256 (id + data) (64 bytes)
             "data": {
@@ -132,7 +167,12 @@ Transactions is a list of pending transactions (to be added to a block by a mine
 }
 ```
 
-##### Transaction structure:
+The details about the nonce and the prove-of-work algorithm used to generate the block will be described somewhere ahead.
+
+###### Transaction structure:
+
+A transaction contains a list of inputs and outputs representing a transfer of coins between the coin owner and an address. The input array contains a list of existing unspent output transactions and it is signed by the address owner. The output array contains amounts to other addresses, including or not a change to the owner address.
+
 ```javascript
 {
     "id": "84286bba8d...7477efdae1", // random id (64 bytes)
@@ -161,7 +201,7 @@ Transactions is a list of pending transactions (to be added to a block by a mine
 }
 ```
 
-#### Operator
+##### Operator
 
 The operator handles wallet and addresses as well the transaction creation. Most of its operation are CRUD related.
 
@@ -187,23 +227,23 @@ The operator handles wallet and addresses as well the transaction creation. Most
 ]
 ```
 
-#### Miner
+##### Miner
 
 Miner gets the list of unconfirmed transactions and creates a new block containing the transactions. By configuration, every blockchain has at most 2 transactions in it. 
-The prove-of-work is done by calculating the 14 first hex values for a given transaction hash and increases the nonce util it reaches the minimal difficulty level required. The difficulty increases by a exponential value (power of 5) every 5 blocks created. Around the 70th block created it starts to spend around 50 seconds to generate a new block with this configuration. All these values can be tweaked.
+The prove-of-work is done by calculating the 14 first hex values for a given transaction hash and increases the nonce until it reaches the minimal difficulty level required. The difficulty increases by an exponential value (power of 5) every 5 blocks created. Around the 70th block created it starts to spend around 50 seconds to generate a new block with this configuration. All these values can be tweaked.
 
 The mining also generates 50 coins to the miner and includes a fee of 1 satoshi per transaction.
 
-#### Node
+##### Node
 
-The node contains a list of connected peers, and does all the data exchange between nodes, including:
+The node contains a list of connected peers and does all the data exchange between nodes, including:
 1. Receive new peers and check what to do with it
 1. Receive new blocks and check what to do with it
 2. Receive new transactions and check what to do with it
 
-The node rebroadcast every information it receives unless it doesn't do anything with it, for example if it already have the peer/transaction/blockchain.
+The node rebroadcasts every information it receives unless it doesn't do anything with it, for example, if it already has the peer/transaction/blockchain.
 
-An extra responsability is to get the amount of confirmations for a given transaction. It does that by asking every node if it has that transactions in its blockchain.
+An extra responsibility is to get a number of confirmations for a given transaction. It does that by asking every node if it has that transaction in its blockchain.
 
 ### Quick start
 
