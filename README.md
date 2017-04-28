@@ -116,7 +116,8 @@ A block is added to the block list:
 3. The hash is correct (calculated block hash == block.hash);
 4. The difficulty level of the prove-of-work challenge is correct (difficulty at blockchain index _n_ < block difficulty);
 5. All transactions inside the block are valid;
-6. The sum of input transactions are equal the sum of output transactions + 50 bitcoin representing the award for the block miner;
+6. The sum of output transactions are equal the sum of input transactions + 50 bitcoin representing the award for the block miner;
+7. If there is only 1 type of fee transaction and 1 type of award transaction;
 
 A transaction inside a block is valid:
 1. If the transaction hash is correct (calculated transaction hash == transaction.hash);
@@ -157,6 +158,7 @@ A block represents a group of transactions and contains information that links i
         { // transaction 0
             "id": "63ec3ac02f...8d5ebc6dba", // random id (64 bytes)
             "hash": "563b8aa350...3eecfbd26b", // hash taken from the contents of the transaction: sha256 (id + data) (64 bytes)
+            "type": "regular", // transaction type (regular, fee, award)
             "data": {
                 "inputs": [], // list of input transactions
                 "outputs": [] // list of output transactions
@@ -177,6 +179,7 @@ A transaction contains a list of inputs and outputs representing a transfer of c
 {
     "id": "84286bba8d...7477efdae1", // random id (64 bytes)
     "hash": "f697d4ae63...c1e85f0ac3", // hash taken from the contents of the transaction: sha256 (id + data) (64 bytes)
+    "type": "regular", // transaction type (regular, fee, award)
     "data": {
         "inputs": [
             {
