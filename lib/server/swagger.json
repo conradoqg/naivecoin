@@ -615,40 +615,6 @@
                     }
                 }
             }
-        },
-        "/miner/mineInAnotherThread": {
-            "post": {
-                "tags": [
-                    "miner"
-                ],
-                "summary": "Mine a new block (in another thread)",
-                "description": "Mine a new block (in another thread) and add it to the end of blockchain.",
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Mine request",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "rewardAddress": {
-                                    "description": "Address to reward",
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/Block"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
