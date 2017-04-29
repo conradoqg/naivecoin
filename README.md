@@ -116,14 +116,15 @@ A block is added to the block list:
 3. The hash is correct (calculated block hash == block.hash);
 4. The difficulty level of the prove-of-work challenge is correct (difficulty at blockchain index _n_ < block difficulty);
 5. All transactions inside the block are valid;
-6. The sum of output transactions are equal the sum of input transactions + 50 bitcoin representing the award for the block miner;
-7. If there is only 1 type of fee transaction and 1 type of award transaction;
+6. The sum of output transactions are equal the sum of input transactions + 50 bitcoin representing the reward for the block miner;
+7. If there is only 1 type of fee transaction and 1 type of reward transaction;
 
 A transaction inside a block is valid:
 1. If the transaction hash is correct (calculated transaction hash == transaction.hash);
 2. Signature of all input transactions are correct (transaction data is signed by the public key of the address);
 3. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
-4. If all input transactions are unspent in the blockchain;
+4. If the transaction isn't already in the blockchain
+5. If all input transactions are unspent in the blockchain;
 
 You can read this [post](https://medium.com/@lhartikk/a-blockchain-in-200-lines-of-code-963cc1cc0e54#.dttbm9afr5) from [naivechain](https://github.com/lhartikk/naivechain) for more details about how the blockchain works.
 
@@ -138,18 +139,19 @@ Transactions is a list of pending transactions. Nothing special about it. In thi
 ```
 
 A transaction is added to the transaction list:
-1. If the transaction hash is correct (calculated transaction hash == transaction.hash);
-2. Signature of all input transactions are correct (transaction data is signed by the public key of the address);
-3. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
-4. If all input transactions are unspent in the blockchain;
-5. If it's not already in the transaction list;
+1. If it's not already in the transaction list;
+2. If the transaction hash is correct (calculated transaction hash == transaction.hash);
+3. Signature of all input transactions are correct (transaction data is signed by the public key of the address);
+4. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
+5. If the transaction isn't already in the blockchain
+6. If all input transactions are unspent in the blockchain;
 
 ###### Block structure:
 
 A block represents a group of transactions and contains information that links it to a previous block.
 
 ```javascript
-{ // block
+{ // Block
     "index": 0, // (first block: 0)
     "previousHash": "0", // (hash of previous block, first block is 0) (64 bytes)
     "timestamp": 1465154705, // number of seconds since January 1, 1970
@@ -158,7 +160,7 @@ A block represents a group of transactions and contains information that links i
         { // transaction 0
             "id": "63ec3ac02f...8d5ebc6dba", // random id (64 bytes)
             "hash": "563b8aa350...3eecfbd26b", // hash taken from the contents of the transaction: sha256 (id + data) (64 bytes)
-            "type": "regular", // transaction type (regular, fee, award)
+            "type": "regular", // transaction type (regular, fee, reward)
             "data": {
                 "inputs": [], // list of input transactions
                 "outputs": [] // list of output transactions
@@ -176,12 +178,12 @@ The details about the nonce and the prove-of-work algorithm used to generate the
 A transaction contains a list of inputs and outputs representing a transfer of coins between the coin owner and an address. The input array contains a list of existing unspent output transactions and it is signed by the address owner. The output array contains amounts to other addresses, including or not a change to the owner address.
 
 ```javascript
-{
+{ // Transaction
     "id": "84286bba8d...7477efdae1", // random id (64 bytes)
     "hash": "f697d4ae63...c1e85f0ac3", // hash taken from the contents of the transaction: sha256 (id + data) (64 bytes)
-    "type": "regular", // transaction type (regular, fee, award)
+    "type": "regular", // transaction type (regular, fee, reward)
     "data": {
-        "inputs": [
+        "inputs": [ // Transaction inputs
             {
                 "transaction": "9e765ad30c...e908b32f0c", // transaction hash taken from a previous unspent transaction output (64 bytes)
                 "index": "0", // index of the transaction taken from a previous unspent transaction output
@@ -190,7 +192,7 @@ A transaction contains a list of inputs and outputs representing a transfer of c
                 "signature": "27d911cac0...6486adbf05" // transaction input hash: sha256 (transaction + index + amount + address) signed with owner address's secret key (128 bytes)
             }
         ],
-        "outputs": [
+        "outputs": [ // Transaction outputs
             {
                 "amount": 10000, // amount of satoshis
                 "address": "4f8293356d...b53e8c5b25" // to address (64 bytes)
