@@ -88,7 +88,7 @@ It's the starting point to interact with the naivecoin, and every node provides 
 |POST|/miner/mine|Mine a new block|
 
 #### Characteristics and features
-Not all components in this implementation follow the complete requirement to a secure and scalable cryptocurrency. Inside the source-code, you can find comments with `INFO:` that describes what parts could be improved (and how) and what technics were used to solve that specific challenge.
+Not all components in this implementation follows the complete list of requirements for a secure and scalable cryptocurrency. Inside the source-code, you can find comments with `INFO:` that describes what parts could be improved (and how) and what technics were used to solve that specific challenge.
 
 ##### Blockchain
 
@@ -116,18 +116,18 @@ A block is added to the block list:
 4. The difficulty level of the prove-of-work challenge is correct (difficulty at blockchain index _n_ < block difficulty);
 5. All transactions inside the block are valid;
 6. The sum of output transactions are equal the sum of input transactions + 50 bitcoin representing the reward for the block miner;
-7. If there is only 1 type of fee transaction and 1 type of reward transaction;
+7. If there is only 1 fee transaction and 1 reward transaction;
 
 A transaction inside a block is valid:
 1. If the transaction hash is correct (calculated transaction hash == transaction.hash);
-2. Signature of all input transactions are correct (transaction data is signed by the public key of the address);
+2. The signature of all input transactions are correct (transaction data is signed by the public key of the address);
 3. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
 4. If the transaction isn't already in the blockchain
 5. If all input transactions are unspent in the blockchain;
 
 You can read this [post](https://medium.com/@lhartikk/a-blockchain-in-200-lines-of-code-963cc1cc0e54#.dttbm9afr5) from [naivechain](https://github.com/lhartikk/naivechain) for more details about how the blockchain works.
 
-Transactions is a list of pending transactions. Nothing special about it. In this implementation, the list of transactions contains only the unconfirmed transactions. As soon as a transaction is confirmed, the blockchain removes it from this list.
+Transactions is a list of pending transactions. Nothing special about it. In this implementation, the list of transactions contains only the pending transactions. As soon as a transaction is confirmed, the blockchain removes it from this list.
 
 ```
 [
@@ -140,14 +140,14 @@ Transactions is a list of pending transactions. Nothing special about it. In thi
 A transaction is added to the transaction list:
 1. If it's not already in the transaction list;
 2. If the transaction hash is correct (calculated transaction hash == transaction.hash);
-3. Signature of all input transactions are correct (transaction data is signed by the public key of the address);
+3. The signature of all input transactions are correct (transaction data is signed by the public key of the address);
 4. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
 5. If the transaction isn't already in the blockchain
 6. If all input transactions are unspent in the blockchain;
 
 ###### Block structure:
 
-A block represents a group of transactions and contains information that links it to a previous block.
+A block represents a group of transactions and contains information that links it to the previous block.
 
 ```javascript
 { // Block
@@ -276,7 +276,8 @@ do {
 ```
 
 The `this.blockchain.getDifficulty()` returns the hex value of the current blockchain's index difficulty. This value is calculated by powering the initial difficulty by 5 every 5 blocks.
-The `block.getDifficulty()` returns the hex value of the first 14 bytes of block's hash and we compare it to the currently accepted difficulty. 
+
+The `block.getDifficulty()` returns the hex value of the first 14 bytes of block's hash and compares it to the currently accepted difficulty. 
 
 When the hash generated reaches the desired difficulty level, it returns the block as it is.
 
@@ -303,6 +304,177 @@ $ node bin/naivecoin.js -p 3002 --name 2 --peers http://localhost:3001
 
 # Access the swagger API
 http://localhost:3001/api-docs/
+```
+
+#### Example (wallet, address, transaction and mining)
+```sh
+# Create a wallet using password 't t t t t' (5 words)
+$ curl -X POST --header 'Content-Type: application/json' -d '{ "password": "t t t t t" }' 'http://localhost:3001/operator/wallets'
+{"id":"a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb","addresses":[]}
+
+# Create two addresses for the wallet created (replace walletId)
+$ curl -X POST --header 'Content-Type: application/json' --header 'password: t t t t t' 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses'
+e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c
+
+$ curl -X POST --header 'Content-Type: application/json' --header 'password: t t t t t' 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses'
+c3c96504e432e35caa94c30034e70994663988ab80f94e4b526829c99958afa8
+
+# Mine a block to the address 1 so we can have some coins
+$ curl -X POST --header 'Content-Type: application/json' -d '{ "rewardAddress": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c" }' 'http://localhost:3001/miner/mine'
+{
+    "index": 1,
+    "nonce": 1,
+    "previousHash": "c4e0b8df46ce5cb2bcb0379ab0840228536cf4cd489783532a7c9d199754d1ed",
+    "timestamp": 1493475731.692,
+    "transactions": [
+        {
+            "id": "ab872b412afe62a087f3a8c354a27377f5fda33d7c98a1db3b1b0985801a6784",
+            "hash": "423bae0bd2f4782f34c770df5be21f856b468a45bf88bb146da8ec2fe0fd3d21",
+            "type": "reward",
+            "data": {
+                "inputs": [],
+                "outputs": [
+                    {
+                        "amount": 5000000000,
+                        "address": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c"
+                    }
+                ]
+            }
+        }
+    ],
+    "hash": "0311a3a89198ccf888c76337cc190e2db238b67a7db0d5062aac97d14fb679b4"
+}
+
+# Create a transaction that transfer 1000000000 satoshis from address 1 to address 2
+$ curl -X POST --header 'Content-Type: application/json' --header 'password: t t t t t' -d '{ "fromAddress": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c", "toAddress": "c3c96504e432e35caa94c30034e70994663988ab80f94e4b526829c99958afa8", "amount": 1000000000, \ 
+   "changeAddress": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c" }' 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/transactions'
+ {
+  "id": "c3c1e6fbff949042b065dc9e22d065a54ab826595fd8877d2be8ddb8cbb0e27f",
+  "hash": "3b5bbf698031e437787fe7b31f098e214a1eeff01fee9b95c22bccf20146982c",
+  "type": "regular",
+  "data": {
+    "inputs": [
+      {
+        "transaction": "ab872b412afe62a087f3a8c354a27377f5fda33d7c98a1db3b1b0985801a6784",
+        "index": "0",
+        "amount": 5000000000,
+        "address": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c",
+        "signature": "4500f432d6b400811d83364224ce62bccd042ad92299118c0672bc5bc1390ffdfdbef135f36927d8bd77843f3a0b868d9ed3a5346dcbeda6c06f33876cfae00d"
+      }
+    ],
+    "outputs": [
+      {
+        "amount": 1000000000,
+        "address": "c3c96504e432e35caa94c30034e70994663988ab80f94e4b526829c99958afa8"
+      },
+      {
+        "amount": 3999999999,
+        "address": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c"
+      }
+    ]
+  }
+}
+
+# Mine a new block containing that transaction
+$ curl -X POST --header 'Content-Type: application/json' -d '{ "rewardAddress": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c" }' 'http://localhost:3001/miner/mine'
+{
+  "index": 2,
+  "nonce": 6,
+  "previousHash": "0311a3a89198ccf888c76337cc190e2db238b67a7db0d5062aac97d14fb679b4",
+  "timestamp": 1493475953.226,
+  "transactions": [
+    {
+      "id": "c3c1e6fbff949042b065dc9e22d065a54ab826595fd8877d2be8ddb8cbb0e27f",
+      "hash": "3b5bbf698031e437787fe7b31f098e214a1eeff01fee9b95c22bccf20146982c",
+      "type": "regular",
+      "data": {
+        "inputs": [
+          {
+            "transaction": "ab872b412afe62a087f3a8c354a27377f5fda33d7c98a1db3b1b0985801a6784",
+            "index": "0",
+            "amount": 5000000000,
+            "address": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c",
+            "signature": "4500f432d6b400811d83364224ce62bccd042ad92299118c0672bc5bc1390ffdfdbef135f36927d8bd77843f3a0b868d9ed3a5346dcbeda6c06f33876cfae00d"
+          }
+        ],
+        "outputs": [
+          {
+            "amount": 1000000000,
+            "address": "c3c96504e432e35caa94c30034e70994663988ab80f94e4b526829c99958afa8"
+          },
+          {
+            "amount": 3999999999,
+            "address": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c"
+          }
+        ]
+      }
+    },
+    {
+      "id": "6b55b1e85369743f360edd5bedc3467eba81b35c2b88490686eee90946231dd6",
+      "hash": "86f5b4a40c027e1ef7e060dd9b9ab7ae48258f3a43dfc19d9d8111c396463b8c",
+      "type": "fee",
+      "data": {
+        "inputs": [],
+        "outputs": [
+          {
+            "amount": 1,
+            "address": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c"
+          }
+        ]
+      }
+    },
+    {
+      "id": "0f6f6c04602ac1bea15157a1a86978d46488a7865fa3db3bfc581a1407950599",
+      "hash": "f9fa281fbf9ffd3d63dd0c3503588fe3010dd6740a4a960b98d1be4aa1fa7a05",
+      "type": "reward",
+      "data": {
+        "inputs": [],
+        "outputs": [
+          {
+            "amount": 5000000000,
+            "address": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c"
+          }
+        ]
+      }
+    }
+  ],
+  "hash": "08861fc4864ba0bf7a899db9ffaaa39376ad3857b1115951db074e3d06f93a5f"
+}
+
+# Check how many confirmations that transaction has.
+$ curl -X GET 'http://localhost:3001/node/transactions/c3c1e6fbff949042b065dc9e22d065a54ab826595fd8877d2be8ddb8cbb0e27f/confirmations'
+1
+
+# Get address 1 balance
+$ curl -X GET 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses/e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c/balance'
+9000000000
+
+# Get address 2 balance
+$ curl -X GET 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses/e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c/balance'
+1000000000
+
+# Get unspent transactions for address 1
+$ curl -X GET 'http://localhost:3001/blockchain/transactions/unspent?address=e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c'
+[
+  {
+    "transaction": "c3c1e6fbff949042b065dc9e22d065a54ab826595fd8877d2be8ddb8cbb0e27f",
+    "index": "1",
+    "amount": 3999999999,
+    "address": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c"
+  },
+  {
+    "transaction": "6b55b1e85369743f360edd5bedc3467eba81b35c2b88490686eee90946231dd6",
+    "index": "0",
+    "amount": 1,
+    "address": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c"
+  },
+  {
+    "transaction": "0f6f6c04602ac1bea15157a1a86978d46488a7865fa3db3bfc581a1407950599",
+    "index": "0",
+    "amount": 5000000000,
+    "address": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c"
+  }
+]
 ```
 
 #### Docker
