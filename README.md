@@ -210,6 +210,10 @@ A transaction contains a list of inputs and outputs representing a transfer of c
 
 The operator handles wallet and addresses as well the transaction creation. Most of its operation are CRUD related.
 
+###### Wallet structure
+
+A wallet contains a random id number, the password hash and the secret generated from that password. It contains a list of keyPairs each one representing an address.
+
 ```javascript
 [
     { // Wallet
@@ -232,12 +236,50 @@ The operator handles wallet and addresses as well the transaction creation. Most
 ]
 ```
 
+###### Address structure
+
+The address is created in a deterministic way, meaning that for a given password, the next address is created based on the previous address (or the password secret if it's the first address).
+
+It uses the EdDSA algorithm do generate a secret public key pair using a seed that can come from a random generated value from the password hash (also in a deterministic way) or from the last secret key.
+
+```javascript
+{ // Address
+    "index": 1,
+    "secretKey": "6acb83e364...ee6bcdbc73", // EdDSA secret key generated from the secret (1024 bytes)
+    "publicKey": "dda3ce5aa5...b409bf3fdc" // EdDSA public key generated from the secret (64 bytes) (also known as address)
+},
+```
+
+Only the public key is exposed as the user's address.
+
 ##### Miner
 
-Miner gets the list of unconfirmed transactions and creates a new block containing the transactions. By configuration, every blockchain has at most 2 transactions in it. 
+The Miner gets the list of pending transactions and creates a new block containing the transactions. By configuration, every blockchain has at most 2 transactions in it.
+
+Assembling a new block:
+1. Get the last two transactions from the list of pending transactions;
+2. Add a new transaction containing the fee value to the miner's address, 1 satoshi per transaction;
+3. Add a reward transaction containing 50 coins to the miner's address;
+4. Prove work for this block;
+
+###### Prove-of-work
+
 The prove-of-work is done by calculating the 14 first hex values for a given transaction hash and increases the nonce until it reaches the minimal difficulty level required. The difficulty increases by an exponential value (power of 5) every 5 blocks created. Around the 70th block created it starts to spend around 50 seconds to generate a new block with this configuration. All these values can be tweaked.
 
-The mining also generates 50 coins to the miner and includes a fee of 1 satoshi per transaction.
+```javascript
+const difficulty = this.blockchain.getDifficulty();
+do {
+    block.timestamp = new Date().getTime() / 1000;
+    block.nonce++;
+    block.hash = block.toHash();
+    blockDifficulty = block.getDifficulty();
+} while (blockDifficulty >= difficulty);
+```
+
+The `this.blockchain.getDifficulty()` returns the hex value of the current blockchain's index difficulty. This value is calculated by powering the initial difficulty by 5 every 5 blocks.
+The `block.getDifficulty()` returns the hex value of the first 14 bytes of block's hash and we compare it to the currently accepted difficulty. 
+
+When the hash generated reaches the desired difficulty level, it returns the block as it is.
 
 ##### Node
 
