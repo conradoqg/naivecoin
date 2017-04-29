@@ -86,7 +86,6 @@ It's the starting point to interact with the naivecoin, and every node provides 
 |Method|URL|Description|
 |------|---|-----------|
 |POST|/miner/mine|Mine a new block|
-|POST|/miner/mineInAnotherThread|Mine a new block (in another thread)|
 
 #### Characteristics and features
 Not all components in this implementation follow the complete requirement to a secure and scalable cryptocurrency. Inside the source-code, you can find comments with `INFO:` that describes what parts could be improved (and how) and what technics were used to solve that specific challenge.
