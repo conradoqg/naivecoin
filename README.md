@@ -314,10 +314,10 @@ $ curl -X POST --header 'Content-Type: application/json' -d '{ "password": "t t 
 
 # Create two addresses for the wallet created (replace walletId)
 $ curl -X POST --header 'Content-Type: application/json' --header 'password: t t t t t' 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses'
-e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c
+{"address":"e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c"}
 
 $ curl -X POST --header 'Content-Type: application/json' --header 'password: t t t t t' 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses'
-c3c96504e432e35caa94c30034e70994663988ab80f94e4b526829c99958afa8
+{"address":"c3c96504e432e35caa94c30034e70994663988ab80f94e4b526829c99958afa8"}
 
 # Mine a block to the address 1 so we can have some coins
 $ curl -X POST --header 'Content-Type: application/json' -d '{ "rewardAddress": "e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c" }' 'http://localhost:3001/miner/mine'
@@ -442,15 +442,15 @@ $ curl -X POST --header 'Content-Type: application/json' -d '{ "rewardAddress": 
 
 # Check how many confirmations that transaction has.
 $ curl -X GET 'http://localhost:3001/node/transactions/c3c1e6fbff949042b065dc9e22d065a54ab826595fd8877d2be8ddb8cbb0e27f/confirmations'
-1
+{"confirmations":1}
 
 # Get address 1 balance
 $ curl -X GET 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses/e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c/balance'
-9000000000
+{"balance":9000000000}
 
 # Get address 2 balance
 $ curl -X GET 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses/e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c/balance'
-1000000000
+{"balance":1000000000}
 
 # Get unspent transactions for address 1
 $ curl -X GET 'http://localhost:3001/blockchain/transactions/unspent?address=e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c'

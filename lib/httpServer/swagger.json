@@ -462,7 +462,12 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/Address"
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "$ref": "#/definitions/Address"
+                                }
+                            }
                         }
                     },
                     "400": {
@@ -504,7 +509,12 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "integer"
+                            "type": "object",
+                            "properties": {
+                                "balance": {
+                                    "type": "integer"
+                                }
+                            }
                         }
                     },
                     "400": {
@@ -576,7 +586,12 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "integer"
+                            "type": "object",
+                            "properties": {
+                                "confirmations": {
+                                    "type": "integer"
+                                }
+                            }
                         }
                     }
                 }

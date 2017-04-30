@@ -43,7 +43,7 @@ describe('Integration Test', () => {
                     .set({ password: walletPassword })
                     .expect(201);
             }).then((res) => {
-                context.address1 = res.text;
+                context.address1 = res.body.address;
             });
     });
 
@@ -55,7 +55,7 @@ describe('Integration Test', () => {
                     .set({ password: walletPassword })
                     .expect(201);
             }).then((res) => {
-                context.address2 = res.text;
+                context.address2 = res.body.address;
             });
     });
 
@@ -105,7 +105,7 @@ describe('Integration Test', () => {
                     .get(`/node/transactions/${context.transactionId}/confirmations`)
                     .expect(200)
                     .expect((res) => {
-                        assert(res.text == 1);
+                        assert(res.body.confirmations == 1);
                     });
             });
     });
@@ -117,7 +117,7 @@ describe('Integration Test', () => {
                     .get(`/operator/wallets/${context.walletId}/addresses/${context.address1}/balance`)
                     .expect(200)
                     .expect((res) => {
-                        assert(res.text == 9000000000);
+                        assert(res.body.balance == 9000000000);
                     });
             });
     });
@@ -129,7 +129,7 @@ describe('Integration Test', () => {
                     .get(`/operator/wallets/${context.walletId}/addresses/${context.address2}/balance`)
                     .expect(200)
                     .expect((res) => {
-                        assert(res.text == 1000000000);
+                        assert(res.body.balance == 1000000000);
                     });
             });
     });
