@@ -7,14 +7,13 @@ const Miner = require('../lib/miner');
 const Node = require('../lib/node');
 const fs = require('fs-extra');
 
+const name = 'integrationTest';
+require('../lib/util/consoleWrapper.js')(name, 0);
 
 describe('HTTP server', () => {
     it('should create wallet, address, mine, create transaction and mine again', () => {
-        const name = 'integrationTest';
-
-        fs.removeSync('data/' + name + '/');
-
-        require('../lib/util/consoleWrapper.js')(name, 0);
+        
+        fs.removeSync('data/' + name + '/');      
 
         let blockchain = new Blockchain(name);
         let operator = new Operator(name, blockchain);

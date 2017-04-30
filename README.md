@@ -207,7 +207,7 @@ A transaction contains a list of inputs and outputs representing a transfer of c
 
 ##### Operator
 
-The operator handles wallet and addresses as well the transaction creation. Most of its operation are CRUD related.
+The operator handles wallet and addresses as well the transaction creation. Most of its operation are CRUD related. Each node has its list of wallets and addresses, meaning that they aren't synchronized between nodes.
 
 ###### Wallet structure
 
