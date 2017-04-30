@@ -4,7 +4,7 @@
         "commonjs": true,
         "es6": true,
         "node": true,
-        "mocha": true
+        "mocha": true        
     },
     "parserOptions": {
         "ecmaFeatures": {
@@ -13,6 +13,7 @@
         "sourceType": "module"
     },
     "globals": {
+        "step": true
     },
     "rules": {
         "no-const-assign": "warn",

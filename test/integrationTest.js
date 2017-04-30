@@ -1,3 +1,4 @@
+require('mocha-steps');
 const supertest = require('supertest');
 const assert = require('assert');
 const HttpServer = require('../lib/httpServer');
@@ -10,54 +11,66 @@ const fs = require('fs-extra');
 const name = 'integrationTest';
 require('../lib/util/consoleWrapper.js')(name, 0);
 
-describe('HTTP server', () => {
-    it('should create wallet, address, mine, create transaction and mine again', () => {
-        
-        fs.removeSync('data/' + name + '/');      
+describe('Integration Test', () => {
+    fs.removeSync('data/' + name + '/');
 
-        let blockchain = new Blockchain(name);
-        let operator = new Operator(name, blockchain);
-        let miner = new Miner(blockchain, 0);
-        let node = new Node('localhost', 3001, [], blockchain);
-        let httpServer = new HttpServer(node, blockchain, operator, miner);
+    let blockchain = new Blockchain(name);
+    let operator = new Operator(name, blockchain);
+    let miner = new Miner(blockchain, 0);
+    let node = new Node('localhost', 3001, [], blockchain);
+    let httpServer = new HttpServer(node, blockchain, operator, miner);
 
-        let context = {};
-        const walletPassword = 't t t t t';
+    const walletPassword = 't t t t t';
+    let context = {};
 
+    step('create wallet', () => {
         return Promise.resolve()
             .then(() => {
                 return supertest(httpServer.app)
                     .post('/operator/wallets')
                     .send({ password: walletPassword })
                     .expect(201);
-            })
-            .then((res) => {
+            }).then((res) => {
                 context.walletId = res.body.id;
+            });
+    });
+
+    step('create address 1', () => {
+        return Promise.resolve()
+            .then(() => {
                 return supertest(httpServer.app)
                     .post(`/operator/wallets/${context.walletId}/addresses`)
                     .set({ password: walletPassword })
                     .expect(201);
-            })
-            .then((res) => {
+            }).then((res) => {
                 context.address1 = res.text;
+            });
+    });
+
+    step('create address 2', () => {
+        return Promise.resolve()
+            .then(() => {
                 return supertest(httpServer.app)
                     .post(`/operator/wallets/${context.walletId}/addresses`)
                     .set({ password: walletPassword })
                     .expect(201);
-            })
-            .then((res) => {
+            }).then((res) => {
                 context.address2 = res.text;
-                return supertest(httpServer.app)
-                    .post(`/operator/wallets/${context.walletId}/addresses`)
-                    .set({ password: walletPassword })
-                    .expect(201);
-            })
+            });
+    });
+
+    step('mine an empty block', () => {
+        return Promise.resolve()
             .then(() => {
                 return supertest(httpServer.app)
                     .post('/miner/mine')
                     .send({ rewardAddress: context.address1 })
                     .expect(201);
-            })
+            });
+    });
+
+    step('create a transaction', () => {
+        return Promise.resolve()
             .then(() => {
                 return supertest(httpServer.app)
                     .post(`/operator/wallets/${context.walletId}/transactions`)
@@ -72,11 +85,21 @@ describe('HTTP server', () => {
             })
             .then((res) => {
                 context.transactionId = res.body.id;
+            });
+    });
+
+    step('mine a block with transactions', () => {
+        return Promise.resolve()
+            .then(() => {                
                 return supertest(httpServer.app)
                     .post('/miner/mine')
                     .send({ rewardAddress: context.address1 })
                     .expect(201);
-            })
+            });
+    });
+
+    step('check confirmations for the created transaction', () => {
+        return Promise.resolve()
             .then(() => {
                 return supertest(httpServer.app)
                     .get(`/node/transactions/${context.transactionId}/confirmations`)
@@ -84,7 +107,11 @@ describe('HTTP server', () => {
                     .expect((res) => {
                         assert(res.text == 1);
                     });
-            })
+            });
+    });
+
+    step('check address 1 balance', () => {
+        return Promise.resolve()
             .then(() => {
                 return supertest(httpServer.app)
                     .get(`/operator/wallets/${context.walletId}/addresses/${context.address1}/balance`)
@@ -92,7 +119,11 @@ describe('HTTP server', () => {
                     .expect((res) => {
                         assert(res.text == 9000000000);
                     });
-            })
+            });
+    });
+
+    step('check address 2 balance', () => {
+        return Promise.resolve()
             .then(() => {
                 return supertest(httpServer.app)
                     .get(`/operator/wallets/${context.walletId}/addresses/${context.address2}/balance`)
