@@ -213,4 +213,49 @@ describe('Integration Test', () => {
                     });
             });
     });
+
+    step('create a new transaction', () => {
+        return Promise.resolve()
+            .then(() => {
+                return supertest(context.httpServer1.app)
+                    .post(`/operator/wallets/${context.walletId}/transactions`)
+                    .set({ password: walletPassword })
+                    .send({
+                        fromAddress: context.address1,
+                        toAddress: context.address2,
+                        amount: 1000000000,
+                        changeAddress: context.address1
+                    })
+                    .expect(201);
+            })
+            .then((res) => {
+                context.transactionId = res.body.id;
+            });
+    });
+
+    step('wait for nodes synchronization', () => {
+        return Promise.resolve()
+            .then(() => {
+                return new Promise(function (resolve) {
+                    setTimeout(function () {
+                        resolve();
+                    }, 1000); // Wait 1s then resolve.
+                });
+            });
+    });
+
+    step('check transactions', () => {
+        return Promise.resolve()
+            .then(() => {
+                return supertest(context.httpServer1.app)
+                    .get('/blockchain/transactions')                                        
+                    .expect(200)
+                    .expect((res) => {
+                        assert.equal(res.body.length, 1, `Expected transactions size of '${context.transactionId}' to be '1'`);
+                    });
+            })
+            .then((res) => {
+                context.transactionId = res.body.id;
+            });
+    });
 });
