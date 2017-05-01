@@ -1,7 +1,7 @@
 # Naivecoin - a cryptocurrency implementation in less than 1500 lines of code
 
 ### Motivation
-Cryptocurrencies and smart-contracts on top of a blockchain aren't the most trivial concepts to understand, things like wallets, addresses, block prove-of-work, transactions and its signatures, makes more sense when they are in a broad context. Inspired by [naivechain](https://github.com/lhartikk/naivechain), this project is an attempt to provide as concise and simple implementation of a cryptocurrency as possible.
+Cryptocurrencies and smart-contracts on top of a blockchain aren't the most trivial concepts to understand, things like wallets, addresses, block proof-of-work, transactions and their signatures, make more sense when they are in a broad context. Inspired by [naivechain](https://github.com/lhartikk/naivechain), this project is an attempt to provide as concise and simple an implementation of a cryptocurrency as possible.
 
 ### What is cryptocurrency
 [From Wikipedia](https://en.wikipedia.org/wiki/Cryptocurrency) : A cryptocurrency (or crypto currency) is a digital asset designed to work as a medium of exchange using cryptography to secure the transactions and to control the creation of additional units of the currency.
@@ -15,11 +15,11 @@ Cryptocurrencies and smart-contracts on top of a blockchain aren't the most triv
     * Miner
 * HTTP API interface to control everything
 * Synchronization of blockchain and transactions
-* Simple prove-of-work (The difficulty increases every 5 blocks)
+* Simple proof-of-work (The difficulty increases every 5 blocks)
 * Addresses creation using a deterministic approach [EdDSA](https://en.wikipedia.org/wiki/EdDSA)
 * Data is persisted to a folder
 
-> Naivechain uses websocket to p2p communication, but it was dropped to simplify the understanding of message exchange. It is relying only on REST communication.
+> Naivechain uses websocket for p2p communication, but it was dropped to simplify the understanding of message exchange. It is relying only on REST communication.
 
 #### Components communication
 ```
@@ -43,9 +43,9 @@ Cryptocurrencies and smart-contracts on top of a blockchain aren't the most triv
 ```
 
 #### HTTP Server
-Provides an API interface to manage the blockchain, wallets, addresses, transaction creation, mining request and peer connectivity.
+Provides an API to manage the blockchain, wallets, addresses, transaction creation, mining request and peer connectivity.
 
-It's the starting point to interact with the naivecoin, and every node provides a swagger API interface to make this interaction easier. Available endpoints:
+It's the starting point to interact with the naivecoin, and every node provides a swagger API to make this interaction easier. Available endpoints:
 
 ##### Blockchain
 
@@ -88,13 +88,13 @@ It's the starting point to interact with the naivecoin, and every node provides 
 |POST|/miner/mine|Mine a new block|
 
 #### Characteristics and features
-Not all components in this implementation follows the complete list of requirements for a secure and scalable cryptocurrency. Inside the source-code, you can find comments with `INFO:` that describes what parts could be improved (and how) and what technics were used to solve that specific challenge.
+Not all components in this implementation follow the complete list of requirements for a secure and scalable cryptocurrency. Inside the source-code, you can find comments with `INFO:` that describes what parts could be improved (and how) and what techniques were used to solve that specific challenge.
 
 ##### Blockchain
 
-The blockchain holds two pieces of information, the block list (linked list), and the transactions list (hash map). 
+The blockchain holds two pieces of information, the block list (a linked list), and the transaction list (a hash map). 
 
-It is responsible for:
+It's responsible for:
 * Verification of arriving blocks;
 * Verification of arriving transactions;
 * Synchronization of the transaction list;
@@ -113,17 +113,17 @@ A block is added to the block list:
 1. If the block is the last one (previous index + 1);
 2. If previous block is correct (previous hash == block.previousHash);
 3. The hash is correct (calculated block hash == block.hash);
-4. The difficulty level of the prove-of-work challenge is correct (difficulty at blockchain index _n_ < block difficulty);
+4. The difficulty level of the proof-of-work challenge is correct (difficulty at blockchain index _n_ < block difficulty);
 5. All transactions inside the block are valid;
-6. The sum of output transactions are equal the sum of input transactions + 50 bitcoin representing the reward for the block miner;
-7. If there is only 1 fee transaction and 1 reward transaction;
+6. The sum of output transactions are equal the sum of input transactions + 50 coins representing the reward for the block miner;
+7. If there is only 1 fee transaction and 1 reward transaction.
 
 A transaction inside a block is valid:
 1. If the transaction hash is correct (calculated transaction hash == transaction.hash);
 2. The signature of all input transactions are correct (transaction data is signed by the public key of the address);
 3. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
 4. If the transaction isn't already in the blockchain
-5. If all input transactions are unspent in the blockchain;
+5. If all input transactions are unspent in the blockchain.
 
 You can read this [post](https://medium.com/@lhartikk/a-blockchain-in-200-lines-of-code-963cc1cc0e54#.dttbm9afr5) from [naivechain](https://github.com/lhartikk/naivechain) for more details about how the blockchain works.
 
@@ -154,7 +154,7 @@ A block represents a group of transactions and contains information that links i
     "index": 0, // (first block: 0)
     "previousHash": "0", // (hash of previous block, first block is 0) (64 bytes)
     "timestamp": 1465154705, // number of seconds since January 1, 1970
-    "nonce": 0, // nonce used to identify the prove-of-work step.
+    "nonce": 0, // nonce used to identify the proof-of-work step.
     "transactions": [ // list of transactions inside the block
         { // transaction 0
             "id": "63ec3ac02f...8d5ebc6dba", // random id (64 bytes)
@@ -170,11 +170,11 @@ A block represents a group of transactions and contains information that links i
 }
 ```
 
-The details about the nonce and the prove-of-work algorithm used to generate the block will be described somewhere ahead.
+The details about the nonce and the proof-of-work algorithm used to generate the block will be described somewhere ahead.
 
 ###### Transaction structure:
 
-A transaction contains a list of inputs and outputs representing a transfer of coins between the coin owner and an address. The input array contains a list of existing unspent output transactions and it is signed by the address owner. The output array contains amounts to other addresses, including or not a change to the owner address.
+A transaction contains a list of inputs and outputs representing a transfer of coins between the coin owner and an address. The input list contains a list of existing unspent output transactions and it is signed by the address owner. The output list contains amounts to other addresses, including or not a change to the owner address.
 
 ```javascript
 { // Transaction
@@ -207,11 +207,11 @@ A transaction contains a list of inputs and outputs representing a transfer of c
 
 ##### Operator
 
-The operator handles wallet and addresses as well the transaction creation. Most of its operation are CRUD related. Each node has its list of wallets and addresses, meaning that they aren't synchronized between nodes.
+The operator handles wallets and addresses as well the transaction creation. Most of its operation are CRUD related. Each node has its list of wallets and addresses, meaning that they aren't synchronized between nodes.
 
 ###### Wallet structure
 
-A wallet contains a random id number, the password hash and the secret generated from that password. It contains a list of keyPairs each one representing an address.
+A wallet contains a random id number, the password hash and the secret generated from that password. It contains a list of key pairs each one representing an address.
 
 ```javascript
 [
@@ -239,7 +239,7 @@ A wallet contains a random id number, the password hash and the secret generated
 
 The address is created in a deterministic way, meaning that for a given password, the next address is created based on the previous address (or the password secret if it's the first address).
 
-It uses the EdDSA algorithm do generate a secret public key pair using a seed that can come from a random generated value from the password hash (also in a deterministic way) or from the last secret key.
+It uses the EdDSA algorithm to generate a secret public key pair using a seed that can come from a random generated value from the password hash (also in a deterministic way) or from the last secret key.
 
 ```javascript
 { // Address
@@ -253,7 +253,7 @@ Only the public key is exposed as the user's address.
 
 ##### Miner
 
-The Miner gets the list of pending transactions and creates a new block containing the transactions. By configuration, every blockchain has at most 2 transactions in it.
+The Miner gets the list of pending transactions and creates a new block containing the transactions. By configuration, every block has at most 2 transactions in it.
 
 Assembling a new block:
 1. Get the last two transactions from the list of pending transactions;
@@ -261,9 +261,9 @@ Assembling a new block:
 3. Add a reward transaction containing 50 coins to the miner's address;
 4. Prove work for this block;
 
-###### Prove-of-work
+###### Proof-of-work
 
-The prove-of-work is done by calculating the 14 first hex values for a given transaction hash and increases the nonce until it reaches the minimal difficulty level required. The difficulty increases by an exponential value (power of 5) every 5 blocks created. Around the 70th block created it starts to spend around 50 seconds to generate a new block with this configuration. All these values can be tweaked.
+The proof-of-work is done by calculating the 14 first hex values for a given transaction hash and increases the nonce until it reaches the minimal difficulty level required. The difficulty increases by an exponential value (power of 5) every 5 blocks created. Around the 70th block created it starts to spend around 50 seconds to generate a new block with this configuration. All these values can be tweaked.
 
 ```javascript
 const difficulty = this.blockchain.getDifficulty();
@@ -513,7 +513,21 @@ Options:
   -h, --help       Show help                                           [boolean]
 ```
 
+### Development
+
+```sh
+# Clonning repository
+$ git clone git@github.com:conradoqg/naivecoin.git
+$ cd naivecoin
+$ npm install
+
+# Testing
+$ npm test
+```
+
 ### Contribution and License Agreement
+
+If this implementation does something wrong, please feel free to contribute by opening an issue or sending a PR. The main goal of this project is not to create a full-featured cryptocurrency, but a good example of how it works.
 
 If you contribute code to this project, you are implicitly allowing your code
 to be distributed under the Apache 2.0 license. You are also implicitly verifying that
