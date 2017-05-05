@@ -42,6 +42,8 @@ Cryptocurrencies and smart-contracts on top of a blockchain aren't the most triv
                   +--------+
 ```
 
+Not all components in this implementation follow the complete list of requirements for a secure and scalable cryptocurrency. Inside the source-code, you can find comments with `INFO:` that describes what parts could be improved (and how) and what techniques were used to solve that specific challenge.
+
 #### HTTP Server
 Provides an API to manage the blockchain, wallets, addresses, transaction creation, mining request and peer connectivity.
 
@@ -87,10 +89,7 @@ It's the starting point to interact with the naivecoin, and every node provides 
 |------|---|-----------|
 |POST|/miner/mine|Mine a new block|
 
-#### Characteristics and features
-Not all components in this implementation follow the complete list of requirements for a secure and scalable cryptocurrency. Inside the source-code, you can find comments with `INFO:` that describes what parts could be improved (and how) and what techniques were used to solve that specific challenge.
-
-##### Blockchain
+#### Blockchain
 
 The blockchain holds two pieces of information, the block list (a linked list), and the transaction list (a hash map). 
 
@@ -145,7 +144,7 @@ A transaction is added to the transaction list:
 5. If the transaction isn't already in the blockchain
 6. If all input transactions are unspent in the blockchain;
 
-###### Block structure:
+##### Block structure
 
 A block represents a group of transactions and contains information that links it to the previous block.
 
@@ -172,7 +171,7 @@ A block represents a group of transactions and contains information that links i
 
 The details about the nonce and the proof-of-work algorithm used to generate the block will be described somewhere ahead.
 
-###### Transaction structure:
+##### Transaction structure
 
 A transaction contains a list of inputs and outputs representing a transfer of coins between the coin owner and an address. The input list contains a list of existing unspent output transactions and it is signed by the address owner. The output list contains amounts to other addresses, including or not a change to the owner address.
 
@@ -205,11 +204,11 @@ A transaction contains a list of inputs and outputs representing a transfer of c
 }
 ```
 
-##### Operator
+#### Operator
 
 The operator handles wallets and addresses as well the transaction creation. Most of its operation are CRUD related. Each operator has its list of wallets and addresses, meaning that they aren't synchronized between nodes.
 
-###### Wallet structure
+##### Wallet structure
 
 A wallet contains a random id number, the password hash and the secret generated from that password. It contains a list of key pairs each one representing an address.
 
@@ -235,7 +234,7 @@ A wallet contains a random id number, the password hash and the secret generated
 ]
 ```
 
-###### Address structure
+##### Address structure
 
 The address is created in a deterministic way, meaning that for a given password, the next address is created based on the previous address (or the password secret if it's the first address).
 
@@ -251,7 +250,7 @@ It uses the EdDSA algorithm to generate a secret public key pair using a seed th
 
 Only the public key is exposed as the user's address.
 
-##### Miner
+#### Miner
 
 The Miner gets the list of pending transactions and creates a new block containing the transactions. By configuration, every block has at most 2 transactions in it.
 
@@ -261,7 +260,7 @@ Assembling a new block:
 3. Add a reward transaction containing 50 coins to the miner's address;
 4. Prove work for this block;
 
-###### Proof-of-work
+##### Proof-of-work
 
 The proof-of-work is done by calculating the 14 first hex values for a given transaction hash and increases the nonce until it reaches the minimal difficulty level required. The difficulty increases by an exponential value (power of 5) every 5 blocks created. Around the 70th block created it starts to spend around 50 seconds to generate a new block with this configuration. All these values can be tweaked.
 
@@ -281,7 +280,7 @@ The `block.getDifficulty()` returns the hex value of the first 14 bytes of block
 
 When the hash generated reaches the desired difficulty level, it returns the block as it is.
 
-##### Node
+#### Node
 
 The node contains a list of connected peers and does all the data exchange between nodes, including:
 1. Receive new peers and check what to do with it
