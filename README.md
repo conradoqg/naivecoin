@@ -207,7 +207,7 @@ A transaction contains a list of inputs and outputs representing a transfer of c
 
 ##### Operator
 
-The operator handles wallets and addresses as well the transaction creation. Most of its operation are CRUD related. Each node has its list of wallets and addresses, meaning that they aren't synchronized between nodes.
+The operator handles wallets and addresses as well the transaction creation. Most of its operation are CRUD related. Each operator has its list of wallets and addresses, meaning that they aren't synchronized between nodes.
 
 ###### Wallet structure
 
@@ -533,8 +533,6 @@ If you contribute code to this project, you are implicitly allowing your code
 to be distributed under the Apache 2.0 license. You are also implicitly verifying that
 all code is your original work.
 
-## License
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/conradoqg/naivecoin.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20it%20out%3A%20Naivecoin%20-%20a%20cryptocurrency%20implementation%20in%20less%20than%201500%20lines%20of%20code&url=%5Bobject%20Object%5D)
 
-Copyright (c) 2015-2015, Conrado Quilles Gomes. (Apache 2.0 License)
-
-See LICENSE for more info.
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/conradoqg/naivecoin/master/LICENSE)
