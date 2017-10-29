@@ -523,6 +523,40 @@
                 }
             }
         },
+        "/operator/{addressId}/balance": {
+            "get": {
+                "tags": [
+                    "operator"
+                ],
+                "summary": "Get the balance of a given address",
+                "description": "",
+                "parameters": [                    
+                    {
+                        "in": "path",
+                        "name": "addressId",
+                        "description": "Address id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "balance": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
         "/node/peers": {
             "get": {
                 "tags": [
