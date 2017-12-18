@@ -3,7 +3,7 @@
     "info": {
         "description": "",
         "version": "0.0.1",
-        "title": "Not So Naive Chain API"
+        "title": "Naivecoin API"
     },
     "basePath": "/",
     "schemes": [
