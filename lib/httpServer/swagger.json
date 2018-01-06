@@ -452,7 +452,7 @@
                     }
                 }
             }
-        },        
+        },
         "/operator/wallets/{walletId}/transactions": {
             "post": {
                 "tags": [
@@ -483,6 +483,11 @@
                         "required": true,
                         "schema": {
                             "type": "object",
+                            "required": [
+                                "fromAddress",
+                                "toAddress",
+                                "amount"
+                            ],
                             "properties": {
                                 "fromAddress": {
                                     "type": "string",
@@ -522,7 +527,7 @@
                     }
                 }
             }
-        }, 
+        },
         "/operator/{addressId}/balance": {
             "get": {
                 "tags": [
@@ -530,7 +535,7 @@
                 ],
                 "summary": "Get the balance of a given address",
                 "description": "",
-                "parameters": [                    
+                "parameters": [
                     {
                         "in": "path",
                         "name": "addressId",
@@ -556,7 +561,7 @@
                     }
                 }
             }
-        },       
+        },
         "/node/peers": {
             "get": {
                 "tags": [
@@ -646,9 +651,16 @@
                         "required": true,
                         "schema": {
                             "type": "object",
+                            "required": [
+                                "rewardAddress"
+                            ],
                             "properties": {
                                 "rewardAddress": {
-                                    "description": "Address to reward",
+                                    "description": "Address to send the reward",
+                                    "type": "string"
+                                },
+                                "feeAddress": {
+                                    "description": "Address to send the fee",
                                     "type": "string"
                                 }
                             }
