@@ -448,7 +448,7 @@ $ curl -X GET 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f5
 {"balance":9000000000}
 
 # Get address 2 balance
-$ curl -X GET 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses/e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c/balance'
+$ curl -X GET 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses/c574de33acfd82f2146d2f45f37ce95b7bdca133b8ad310adbd46938c75992c8/balance'
 {"balance":1000000000}
 
 # Get unspent transactions for address 1
