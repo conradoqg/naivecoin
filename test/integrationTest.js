@@ -16,8 +16,8 @@ describe('Integration Test', () => {
     const name1 = 'integrationTest1';
     const name2 = 'integrationTest2';
 
-    let createNaivecoin = (name, host, port, peers) => {
-        fs.removeSync('data/' + name + '/');
+    let createNaivecoin = (name, host, port, peers, removeData = true) => {
+        if (removeData) fs.removeSync('data/' + name + '/');
         let blockchain = new Blockchain(name);
         let operator = new Operator(name, blockchain);
         let miner = new Miner(blockchain, logLevel);
@@ -29,7 +29,7 @@ describe('Integration Test', () => {
     const walletPassword = 't t t t t';
     let context = {};
 
-    step('start server', () => {
+    step('start server 1', () => {
         return createNaivecoin(name1, 'localhost', 3001, [])
             .then((httpServer) => {
                 context.httpServer1 = httpServer;
@@ -248,7 +248,7 @@ describe('Integration Test', () => {
         return Promise.resolve()
             .then(() => {
                 return supertest(context.httpServer1.app)
-                    .get('/blockchain/transactions')                                        
+                    .get('/blockchain/transactions')
                     .expect(200)
                     .expect((res) => {
                         assert.equal(res.body.length, 1, `Expected transactions size of '${context.transactionId}' to be '1'`);
@@ -257,5 +257,123 @@ describe('Integration Test', () => {
             .then((res) => {
                 context.transactionId = res.body.id;
             });
+    });
+
+    step('stop server 2', () => {
+        return Promise.resolve()
+            .then(() => {
+                return context.httpServer2.stop();
+            });
+    });
+
+    // Complementary tests to reach untested paths
+    describe('Complementary tests', () => {
+        step('get wallets', () => {
+            return Promise.resolve()
+                .then(() => {
+                    return supertest(context.httpServer1.app)
+                        .get('/operator/wallets')
+                        .expect(200)
+                        .expect((res) => {
+                            assert.equal(res.body.length, 1, 'Expected 1 wallet.');
+                            assert.equal(res.body[0].addresses.length, 2, 'Expected 2 addresses.');
+                        });
+                });
+        });
+
+        step('get wallet addresses', () => {
+            return Promise.resolve()
+                .then(() => {
+                    return supertest(context.httpServer1.app)
+                        .get(`/operator/wallets/${context.walletId}/addresses`)
+                        .expect(200)
+                        .expect((res) => {
+                            assert.equal(res.body.length, 2, 'Expected 2 addresses.');
+                        });
+                });
+        });
+
+        step('get wallet', () => {
+            return Promise.resolve()
+                .then(() => {
+                    return supertest(context.httpServer1.app)
+                        .get(`/operator/wallets/${context.walletId}`)
+                        .expect(200)
+                        .expect((res) => {
+                            assert.equal(res.body.addresses.length, 2, 'Expected 2 addresses.');
+                        });
+                });
+        });
+
+        step('restart server 1', () => {
+            return Promise.resolve()
+                .then(() => {
+                    return context.httpServer1.stop();
+                })
+                .then(() => {
+                    return createNaivecoin(name1, 'localhost', 3001, [], false)
+                        .then((httpServer) => {
+                            context.httpServer1 = httpServer;
+                        });
+                });
+        });
+
+        step('check address 1 balance', () => {
+            return Promise.resolve()
+                .then(() => {
+                    return supertest(context.httpServer1.app)
+                        .get(`/operator/${context.address1}/balance`)
+                        .expect(200)
+                        .expect((res) => {
+                            assert.equal(res.body.balance, 9000000000, `Expected balance of address '${context.address1}' to be '9000000000'`);
+                        });
+                });
+        });
+
+        step('get latest block', () => {
+            return Promise.resolve()
+                .then(() => {
+                    return supertest(context.httpServer1.app)
+                        .get('/blockchain/blocks/latest')
+                        .expect(200);
+                })
+                .then((res) => {
+                    context.latestBlock = {
+                        hash: res.body.hash,
+                        index: res.body.index
+                    };
+                });
+        });
+
+        step('get block by hash', () => {
+            return Promise.resolve()
+                .then(() => {
+                    return supertest(context.httpServer1.app)
+                        .get(`/blockchain/blocks/${context.latestBlock.hash}`)
+                        .expect(200)
+                        .expect((res) => {
+                            assert.equal(res.body.hash, context.latestBlock.hash , `Expected hash of block index '${context.latestBlock.index}' to be '${context.latestBlock.hash}'`);
+                        });
+                });
+        });
+
+        step('get block by index', () => {
+            return Promise.resolve()
+                .then(() => {
+                    return supertest(context.httpServer1.app)
+                        .get(`/blockchain/blocks/${context.latestBlock.index}`)
+                        .expect(200)
+                        .expect((res) => {
+                            assert.equal(res.body.index, context.latestBlock.index , `Expected index of block hash '${context.latestBlock.hash}' to be '${context.latestBlock.index}'`);
+                        });
+                });
+        });
+
+        step('stop server 1', () => {
+            return Promise.resolve()
+                .then(() => {
+                    return context.httpServer1.stop();
+                });
+        });
     });
 });
