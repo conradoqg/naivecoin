@@ -14,9 +14,9 @@ require('../lib/util/consoleWrapper.js')('integrationTest', logLevel);
 
 describe('Integration Test', () => {
     const name1 = 'integrationTest1';
-    const name2 = 'integrationTest2';
+    const name2 = 'integrationTest2';    
 
-    let createNaivecoin = (name, host, port, peers, removeData = true) => {
+    const createNaivecoin = (name, host, port, peers, removeData = true) => {
         if (removeData) fs.removeSync('data/' + name + '/');
         let blockchain = new Blockchain(name);
         let operator = new Operator(name, blockchain);
@@ -259,10 +259,25 @@ describe('Integration Test', () => {
             });
     });
 
+    step('check address 1 balance', () => {
+        return Promise.resolve()
+            .then(() => {
+                return supertest(context.httpServer1.app)
+                    .get(`/operator/${context.address1}/balance`)
+                    .expect(200)
+                    .expect((res) => {
+                        assert.equal(res.body.balance, 7999999999, `Expected balance of address '${context.address1}' to be '7999999999'`);
+                    });
+            });
+    });
+
     step('stop server 2', () => {
         return Promise.resolve()
             .then(() => {
                 return context.httpServer2.stop();
+            })
+            .then(() => {
+                fs.removeSync('data/' + name2 + '/');
             });
     });
 
@@ -318,18 +333,6 @@ describe('Integration Test', () => {
                 });
         });
 
-        step('check address 1 balance', () => {
-            return Promise.resolve()
-                .then(() => {
-                    return supertest(context.httpServer1.app)
-                        .get(`/operator/${context.address1}/balance`)
-                        .expect(200)
-                        .expect((res) => {
-                            assert.equal(res.body.balance, 9000000000, `Expected balance of address '${context.address1}' to be '9000000000'`);
-                        });
-                });
-        });
-
         step('get latest block', () => {
             return Promise.resolve()
                 .then(() => {
@@ -369,10 +372,29 @@ describe('Integration Test', () => {
                 });
         });
 
+        step('create a new transaction with more value than funds', () => {
+            return Promise.resolve()
+                .then(() => {
+                    return supertest(context.httpServer1.app)
+                        .post(`/operator/wallets/${context.walletId}/transactions`)
+                        .set({ password: walletPassword })
+                        .send({
+                            fromAddress: context.address1,
+                            toAddress: context.address2,
+                            amount: 8000000000,
+                            changeAddress: context.address1
+                        })
+                        .expect(400);
+                });                
+        });
+
         step('stop server 1', () => {
             return Promise.resolve()
                 .then(() => {
                     return context.httpServer1.stop();
+                })
+                .then(() => {
+                    fs.removeSync('data/' + name1 + '/');
                 });
         });
     });
