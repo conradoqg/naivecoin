@@ -1,0 +1,54 @@
+doctype html
+html(lang="en").has-navbar-fixed-top
+    head
+        title Naivecoin - #{pageTitle}
+        meta(name="viewport", content="width=device-width, initial-scale=1")
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css")        
+        script(src="https://use.fontawesome.com/releases/v5.0.0/js/all.js", defer)        
+        style(type='text/css').
+            /* Tooltip container */
+            .tooltip {
+                position: relative;                                
+            }
+
+            /* Tooltip text */
+            .tooltip .tooltiptext {
+                visibility: hidden;                
+                background-color: black;
+                color: #fff;
+                text-align: center;
+                padding: 5px;
+                border-radius: 6px;
+                top: -5px;
+                left: 105%;   
+                word-break: normal;
+            
+                /* Position the tooltip text - see examples below! */
+                position: absolute;
+                z-index: 1;
+            }
+
+            /* Show the tooltip text when you mouse over the tooltip container */
+            .tooltip:hover .tooltiptext {
+                visibility: visible;
+            }
+    body
+        nav.navbar.is-fixed-top.is-info
+            .container
+                .navbar-menu.is-active
+                    .navbar-brand
+                        span.navbar-item.title.is-2 Naivecoin
+                    .navbar-start                        
+                        a.navbar-item(href="/blockchain", class=`${pageTitle=='Blockchain' ? 'is-active' : ''}`) Blockchain
+                        a.navbar-item(href="/blockchain/transactions", class=`${pageTitle=='Transactions' ? 'is-active' : ''}`) Transactions
+                    .navbar-end
+                        a.navbar-item(href="/api-docs/", target="_blank") API
+        block content
+        script.
+            function toggle_visibility(id) {
+                var e = document.getElementById(id);
+                if ( e.style.display == 'none' )
+                    e.style.display = null;
+                else
+                    e.style.display = 'none';
+            }

@@ -1,0 +1,60 @@
+extends ../../layout.pug
+
+block content
+    section.section
+        .container
+            .level
+                .level-left
+                    h2.title.is-3 Transactions (Pending)                
+            hr
+            table.table.is-fullwidth.is-hoverable
+                thead
+                    tr
+                        th Id
+                        th Hash
+                        th Type
+                        th Inputs
+                        th Outputs
+                tbody
+                    each transaction in transactions                    
+                        tr(onClick=`toggle_visibility( '${transaction.id}' )`)
+                            td
+                                span.tooltip #{formatters.hash(transaction.id)}
+                                    span.tooltiptext #{transaction.id}
+                            td
+                                span.tooltip #{formatters.hash(transaction.hash)}
+                                    span.tooltiptext #{transaction.hash}
+                            td #{transaction.type}
+                            td #{transaction.data.inputs.length}
+                            td #{transaction.data.outputs.length}                            
+                        tr(id=`${transaction.id}`, style="display: none;")
+                            td(colspan=5)
+                                .content
+                                    .columns
+                                        .column.is-two-thirds
+                                            .title.is-4 Inputs                                            
+                                            each input in transaction.data.inputs
+                                                p
+                                                    span.icon
+                                                        i.fas.fa-arrow-right(data-fa-transform="rotate-45")
+                                                    | Address
+                                                    code.tooltip #{formatters.hash(input.address)}
+                                                        span.tooltiptext #{input.address}
+                                                    | From transaction
+                                                    code.tooltip #{formatters.hash(input.transaction)} : #{input.index}
+                                                        span.tooltiptext #{input.transaction}                                                    
+                                                    | Amount
+                                                    code #{formatters.amount(input.amount)}
+                                                    | Signature
+                                                    code #{formatters.hash(input.signature)}
+                                        .column
+                                            .title.is-4 Outputs                                            
+                                            each output in transaction.data.outputs
+                                                p
+                                                    span.icon
+                                                        i.fas.fa-arrow-right(data-fa-transform="rotate-320")
+                                                    | Address
+                                                    code.tooltip #{formatters.hash(output.address)}
+                                                        span.tooltiptext #{output.address}                                                    
+                                                    | Amount
+                                                    code #{formatters.amount(output.amount)}
