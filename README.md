@@ -1,5 +1,7 @@
 # Naivecoin - a cryptocurrency implementation in less than 1500 lines of code
 
+[![Coverage Status](https://coveralls.io/repos/github/google/yapf/badge.svg?branch=v0.0.2)](https://coveralls.io/github/google/yapf?branch=v0.0.2) [![Build Status](https://travis-ci.org/conradoqg/naivecoin.svg?branch=v0.0.2)](https://travis-ci.org/conradoqg/naivecoin)
+
 ### Motivation
 Cryptocurrencies and smart-contracts on top of a blockchain aren't the most trivial concepts to understand, things like wallets, addresses, block proof-of-work, transactions and their signatures, make more sense when they are in a broad context. Inspired by [naivechain](https://github.com/lhartikk/naivechain), this project is an attempt to provide as concise and simple an implementation of a cryptocurrency as possible.
 
@@ -58,9 +60,9 @@ It's the starting point to interact with the naivecoin, and every node provides 
 |GET|/blockchain/blocks/{hash}|Get block by hash|
 |GET|/blockchain/blocks/latest|Get the latest block|
 |PUT|/blockchain/blocks/latest|Update the latest block|
-|GET|/blockchain/transactions|Get all transactions|
-|POST|/blockchain/transactions|Create a transaction|
 |GET|/blockchain/blocks/transactions/{transactionId}|Get a transaction from some block|
+|GET|/blockchain/transactions|Get unconfirmed transactions|
+|POST|/blockchain/transactions|Create a transaction|
 |GET|/blockchain/transactions/unspent|Get unspent transactions|
 
 ##### Operator
@@ -70,10 +72,11 @@ It's the starting point to interact with the naivecoin, and every node provides 
 |GET|/operator/wallets|Get all wallets|
 |POST|/operator/wallets|Create a wallet from a password|
 |GET|/operator/wallets/{walletId}|Get wallet by id|
-|POST|/operator/wallets/{walletId}/transactions|Create a new transaction|
 |GET|/operator/wallets/{walletId}/addresses|Get all addresses of a wallet|
-|POST|/operator/wallets/{walletId}/addresses|Create a new address|
+|POST|/operator/wallets/{walletId}/transactions|Create a new transaction|
 |GET|/operator/wallets/{walletId}/addresses/{addressId}/balance|Get the balance of a given address and wallet|
+|POST|/operator/wallets/{walletId}/addresses|Create a new address|
+|GET|/operator/{addressId}/balance|Get the balance of a given address|
 
 ##### Node
 
@@ -115,7 +118,8 @@ A block is added to the block list:
 4. The difficulty level of the proof-of-work challenge is correct (difficulty at blockchain index _n_ < block difficulty);
 5. All transactions inside the block are valid;
 6. The sum of output transactions are equal the sum of input transactions + 50 coins representing the reward for the block miner;
-7. If there is only 1 fee transaction and 1 reward transaction.
+7. Check if there is a double spending in that block
+8. If there is only 1 fee transaction and 1 reward transaction.
 
 A transaction inside a block is valid:
 1. If the transaction hash is correct (calculated transaction hash == transaction.hash);
@@ -126,7 +130,7 @@ A transaction inside a block is valid:
 
 You can read this [post](https://medium.com/@lhartikk/a-blockchain-in-200-lines-of-code-963cc1cc0e54#.dttbm9afr5) from [naivechain](https://github.com/lhartikk/naivechain) for more details about how the blockchain works.
 
-Transactions is a list of pending transactions. Nothing special about it. In this implementation, the list of transactions contains only the pending transactions. As soon as a transaction is confirmed, the blockchain removes it from this list.
+Transactions is a list of unconfirmed transactions. Nothing special about it. In this implementation, the list of transactions contains only the unconfirmed transactions. As soon as a transaction is confirmed, the blockchain removes it from this list.
 
 ```
 [
@@ -255,7 +259,8 @@ Only the public key is exposed as the user's address.
 The Miner gets the list of pending transactions and creates a new block containing the transactions. By configuration, every block has at most 2 transactions in it.
 
 Assembling a new block:
-1. Get the last two transactions from the list of pending transactions;
+1. From the list of unconfirmed transaction selected candidate transactions that are not already in the blockchain or is not already selected;
+1. Get the first two transactions from the candidate list of transactions;
 2. Add a new transaction containing the fee value to the miner's address, 1 satoshi per transaction;
 3. Add a reward transaction containing 50 coins to the miner's address;
 4. Prove work for this block;
@@ -531,8 +536,6 @@ If this implementation does something wrong, please feel free to contribute by o
 If you contribute code to this project, you are implicitly allowing your code
 to be distributed under the Apache 2.0 license. You are also implicitly verifying that
 all code is your original work.
-
-[![Twitter](https://img.shields.io/badge/coverage-83%25-brightgreen.svg)](https://img.shields.io/badge/coverage-83%25-brightgreen.svg)
 
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/conradoqg/naivecoin.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20it%20out%3A%20Naivecoin%20-%20a%20cryptocurrency%20implementation%20in%20less%20than%201500%20lines%20of%20code&url=%5Bobject%20Object%5D)
 
