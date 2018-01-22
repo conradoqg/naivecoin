@@ -14,7 +14,8 @@
   "scripts": {
     "start": "node bin/naivecoin.js",
     "compose:up": "docker-compose up",
-    "test": "node_modules/.bin/nyc --reporter=lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --colors test/"
+    "coverage": "node_modules/.bin/nyc --reporter=lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --colors test/",
+    "test": "node_modules/.bin/_mocha -u bdd --colors test/"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
