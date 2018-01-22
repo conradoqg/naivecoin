@@ -5,20 +5,20 @@ block content
         .container
             .level
                 .level-left
-                    h2.title.is-3 Transactions (Pending)                
+                    h2.title.is-3 Unconfirmed Transactions
             hr
             table.table.is-fullwidth.is-hoverable
                 thead
                     tr
-                        th Id
+                        th ID
                         th Hash
                         th Type
                         th Inputs
                         th Outputs
                 tbody
                     each transaction in transactions                    
-                        tr(onClick=`toggle_visibility( '${transaction.id}' )`)
-                            td
+                        tr(onClick=`toggle_visibility( '${transaction.id}' )`, style="cursor: pointer")
+                            th
                                 span.tooltip #{formatters.hash(transaction.id)}
                                     span.tooltiptext #{transaction.id}
                             td

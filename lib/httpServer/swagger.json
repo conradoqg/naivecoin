@@ -174,7 +174,7 @@
                 "tags": [
                     "blockchain"
                 ],
-                "summary": "Get all transactions",
+                "summary": "Get all unconfirmed transactions",
                 "description": "",
                 "responses": {
                     "200": {
