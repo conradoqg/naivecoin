@@ -14,6 +14,7 @@
   "scripts": {
     "start": "node bin/naivecoin.js",
     "compose:up": "docker-compose up",
+    "coveralls": "node_modules/.bin/nyc --reporter=text-lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --colors test/ | coveralls",
     "coverage": "node_modules/.bin/nyc --reporter=lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --colors test/",
     "test": "node_modules/.bin/_mocha -u bdd --colors test/"
   },
@@ -37,6 +38,7 @@
     "node": ">=6"
   },
   "devDependencies": {
+    "coveralls": "^3.0.0",
     "mocha": "^3.3.0",
     "mocha-steps": "^1.0.2",
     "nyc": "^10.3.0",

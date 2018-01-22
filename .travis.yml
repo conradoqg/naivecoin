@@ -4,3 +4,4 @@ node_js:
   - "7"
   - "8"
   - "node"
+script: npm run coveralls
