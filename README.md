@@ -1,6 +1,6 @@
 # Naivecoin - a cryptocurrency implementation in less than 1500 lines of code
 
-[![Coverage Status](https://coveralls.io/repos/github/google/yapf/badge.svg?branch=v0.0.2)](https://coveralls.io/github/google/yapf?branch=v0.0.2) [![Build Status](https://travis-ci.org/conradoqg/naivecoin.svg?branch=v0.0.2)](https://travis-ci.org/conradoqg/naivecoin)
+[![Coverage Status](https://coveralls.io/repos/github/conradoqg/naivecoin/badge.svg?branch=master)](https://coveralls.io/github/conradoqg/naivecoin?branch=master) [![Build Status](https://travis-ci.org/conradoqg/naivecoin.svg?branch=master)](https://travis-ci.org/conradoqg/naivecoin)
 
 ### Motivation
 Cryptocurrencies and smart-contracts on top of a blockchain aren't the most trivial concepts to understand, things like wallets, addresses, block proof-of-work, transactions and their signatures, make more sense when they are in a broad context. Inspired by [naivechain](https://github.com/lhartikk/naivechain), this project is an attempt to provide as concise and simple an implementation of a cryptocurrency as possible.
