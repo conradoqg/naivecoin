@@ -1,14 +1,14 @@
 graph LR
-    previousBlockN-->hashBlockB
-    previousBlockB-->hashBlockA
+    previousHashN-->hashBlockB
+    previousHashB-->hashBlockA
     subgraph Block 0
     hashBlockA["hash"]
     end
     subgraph Block 1
     hashBlockB["hash"]
-    previousBlockB["previousBlock"]
+    previousHashB["previousHash"]
     end
     subgraph Block N
     hashBlockN["hash"]
-    previousBlockN["previousBlock"]
+    previousHashN["previousHash"]
     end
