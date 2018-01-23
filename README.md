@@ -24,25 +24,7 @@ Cryptocurrencies and smart-contracts on top of a blockchain aren't the most triv
 > Naivechain uses websocket for p2p communication, but it was dropped to simplify the understanding of message exchange. It is relying only on REST communication.
 
 #### Components communication
-```
-               +---------------+
-               |               |
-     +------+--+  HTTP Server  +---------+
-     |      |  |               |         |
-     |      |  +-------+-------+         |
-     |      |          |                 |
-+----v----+ |  +-------v------+    +-----v------+
-|         | |  |              |    |            |
-|  Miner  +---->  Blockchain  <----+  Operator  |
-|         | |  |              |    |            |
-+---------+ |  +-------^------+    +------------+
-            |          |
-            |     +----+---+
-            |     |        |
-            +----->  Node  |
-                  |        |
-                  +--------+
-```
+![Components communication](doc/components.png)]
 
 Not all components in this implementation follow the complete list of requirements for a secure and scalable cryptocurrency. Inside the source-code, you can find comments with `INFO:` that describes what parts could be improved (and how) and what techniques were used to solve that specific challenge.
 
@@ -92,6 +74,10 @@ It's the starting point to interact with the naivecoin, and every node provides 
 |------|---|-----------|
 |POST|/miner/mine|Mine a new block|
 
+From the Swagger UI is possible to access a simple UI to visualize the blockchain and the unconfirmed transactions.
+
+![UI](doc/ui.png)]
+
 #### Blockchain
 
 The blockchain holds two pieces of information, the block list (a linked list), and the transaction list (a hash map). 
@@ -103,13 +89,8 @@ It's responsible for:
 * Synchronization of the block list;
 
 The blockchain is a linked list where the hash of the next block is calculated based on the hash of the previous block plus the data inside the block itself:
-```
-+-----------+                +-----------+                +-----------+
-|           |  previousHash  |           |  previousHash  |           |
-|  Block 0  <----------------+  Block 1  <----------------+  Block N  |
-|           |                |           |                |           |
-+-----------+                +-----------+                +-----------+
-```
+
+![Blockchain](doc/blockchain.png)]
 
 A block is added to the block list:
 1. If the block is the last one (previous index + 1);

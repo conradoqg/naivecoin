@@ -1,0 +1,8 @@
+graph LR
+    M["Miner"]-->B["Blockchain"]
+    O["Operator"]-->B["Blockchain"]
+    N["Node"]-->B["Blockchain"]
+    H["HTTP Server"]-->M["Miner"]
+    H["HTTP Server"]-->B["Blockchain"]
+    H["HTTP Server"]-->O["Operator"]
+    H["HTTP Server"]-->N["Node"]
