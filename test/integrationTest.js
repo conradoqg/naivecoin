@@ -14,7 +14,7 @@ require('../lib/util/consoleWrapper.js')('integrationTest', logLevel);
 
 describe('Integration Test', () => {
     const name1 = 'integrationTest1';
-    const name2 = 'integrationTest2';    
+    const name2 = 'integrationTest2';
 
     const createNaivecoin = (name, host, port, peers, removeData = true) => {
         if (removeData) fs.removeSync('data/' + name + '/');
@@ -127,7 +127,7 @@ describe('Integration Test', () => {
         return Promise.resolve()
             .then(() => {
                 return supertest(context.httpServer1.app)
-                    .get(`/operator/wallets/${context.walletId}/addresses/${context.address1}/balance`)
+                    .get(`/operator/${context.address1}/balance`)
                     .expect(200)
                     .expect((res) => {
                         assert.equal(res.body.balance, 9000000000, `Expected balance of address '${context.address1}' to be '9000000000'`);
@@ -139,7 +139,7 @@ describe('Integration Test', () => {
         return Promise.resolve()
             .then(() => {
                 return supertest(context.httpServer1.app)
-                    .get(`/operator/wallets/${context.walletId}/addresses/${context.address2}/balance`)
+                    .get(`/operator/${context.address2}/balance`)
                     .expect(200)
                     .expect((res) => {
                         assert.equal(res.body.balance, 1000000000, `Expected balance of address '${context.address2}' to be '1000000000'`);
@@ -355,7 +355,7 @@ describe('Integration Test', () => {
                         .get(`/blockchain/blocks/${context.latestBlock.hash}`)
                         .expect(200)
                         .expect((res) => {
-                            assert.equal(res.body.hash, context.latestBlock.hash , `Expected hash of block index '${context.latestBlock.index}' to be '${context.latestBlock.hash}'`);
+                            assert.equal(res.body.hash, context.latestBlock.hash, `Expected hash of block index '${context.latestBlock.index}' to be '${context.latestBlock.hash}'`);
                         });
                 });
         });
@@ -367,7 +367,7 @@ describe('Integration Test', () => {
                         .get(`/blockchain/blocks/${context.latestBlock.index}`)
                         .expect(200)
                         .expect((res) => {
-                            assert.equal(res.body.index, context.latestBlock.index , `Expected index of block hash '${context.latestBlock.hash}' to be '${context.latestBlock.index}'`);
+                            assert.equal(res.body.index, context.latestBlock.index, `Expected index of block hash '${context.latestBlock.hash}' to be '${context.latestBlock.index}'`);
                         });
                 });
         });
@@ -385,7 +385,167 @@ describe('Integration Test', () => {
                             changeAddress: context.address1
                         })
                         .expect(400);
-                });                
+                });
+        });
+
+        describe('get the pages', () => {
+            it('should get the blockchain page', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .get('/blockchain')
+                            .set('Accept', 'text/html')
+                            .expect('Content-Type', /html/)
+                            .expect(200);
+                    });
+            });
+
+            it('should not get the blockchain json', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .get('/blockchain')
+                            .set('Accept', 'application/json')
+                            .expect(400);
+                    });
+            });
+
+            it('should get the unconfirmed transactions page', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .get('/blockchain/transactions')
+                            .set('Accept', 'text/html')
+                            .expect('Content-Type', /html/)
+                            .expect(200);
+                    });
+            });
+        });
+
+        describe('force errors', () => {
+            it('should not get the block by hash', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .get('/blockchain/blocks/1111111111111111111111111111111111111111111111111111111111111111')
+                            .expect(404);
+                    });
+            });
+
+            it('should not get the block by index', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .get('/blockchain/blocks/1000')
+                            .expect(404);
+                    });
+            });
+
+            it('should not get the transaction by ID from the blockchain', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .get('/blockchain/blocks/transactions/1111111111111111111111111111111111111111111111111111111111111111')
+                            .expect(404);
+                    });
+            });
+
+            it('should not create a wallet with no password', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .post('/operator/wallets')
+                            .send({ password: '' })
+                            .expect(400);
+                    });
+            });
+
+            it('should not get the wallet', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .get('/operator/wallets/a')
+                            .expect(404);
+                    });
+            });
+
+            it('should not get the addresses of a inexistent wallet', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .get('/operator/wallets/a/addresses')
+                            .expect(400);
+                    });
+            });
+
+            it('should not create a transaction with missing password', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .post(`/operator/wallets/${context.walletId}/transactions`)
+                            .send({
+                                fromAddress: context.address1,
+                                toAddress: context.address2,
+                                amount: 1000000000,
+                                changeAddress: context.address1
+                            })
+                            .expect(401);
+                    });
+            });
+
+            it('should not create a transaction with invalid password', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .post(`/operator/wallets/${context.walletId}/transactions`)
+                            .set({ password: 'wrong one' })
+                            .send({
+                                fromAddress: context.address1,
+                                toAddress: context.address2,
+                                amount: 1000000000,
+                                changeAddress: context.address1
+                            })
+                            .expect(403);
+                    });
+            });
+
+            it('should not create a wallet address without a password', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .post(`/operator/wallets/${context.walletId}/addresses`)
+                            .expect(401);
+                    });
+            });
+
+            it('should not create a wallet address with a wrong password', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .post(`/operator/wallets/${context.walletId}/addresses`)
+                            .set({ password: 'wrong one' })
+                            .expect(403);
+                    });
+            });
+
+            it('should not create a wallet address with a wrong wallet ID', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .post('/operator/wallets/A/addresses')
+                            .set({ password: walletPassword })
+                            .expect(400);
+                    });
+            });
+
+            it('should not get the address balance because no transactions were found', () => {
+                return Promise.resolve()
+                    .then(() => {
+                        return supertest(context.httpServer1.app)
+                            .get('/operator/A/balance')
+                            .expect(404);
+                    });
+            });
         });
 
         step('stop server 1', () => {

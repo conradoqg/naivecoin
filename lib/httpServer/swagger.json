@@ -412,47 +412,6 @@
                 }
             }
         },
-        "/operator/wallets/{walletId}/addresses/{addressId}/balance": {
-            "get": {
-                "tags": [
-                    "operator"
-                ],
-                "summary": "Get the balance of a given address and wallet",
-                "description": "",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "walletId",
-                        "description": "Wallet id",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "addressId",
-                        "description": "Address id",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "balance": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    }
-                }
-            }
-        },
         "/operator/wallets/{walletId}/transactions": {
             "post": {
                 "tags": [
@@ -556,8 +515,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request"
+                    "404": {
+                        "description": "Not Found"
                     }
                 }
             }

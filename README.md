@@ -24,7 +24,7 @@ Cryptocurrencies and smart-contracts on top of a blockchain aren't the most triv
 > Naivechain uses websocket for p2p communication, but it was dropped to simplify the understanding of message exchange. It is relying only on REST communication.
 
 #### Components communication
-![Components communication](doc/components.png)]
+![Components communication](doc/components.png)
 
 Not all components in this implementation follow the complete list of requirements for a secure and scalable cryptocurrency. Inside the source-code, you can find comments with `INFO:` that describes what parts could be improved (and how) and what techniques were used to solve that specific challenge.
 
@@ -56,7 +56,6 @@ It's the starting point to interact with the naivecoin, and every node provides 
 |GET|/operator/wallets/{walletId}|Get wallet by id|
 |GET|/operator/wallets/{walletId}/addresses|Get all addresses of a wallet|
 |POST|/operator/wallets/{walletId}/transactions|Create a new transaction|
-|GET|/operator/wallets/{walletId}/addresses/{addressId}/balance|Get the balance of a given address and wallet|
 |POST|/operator/wallets/{walletId}/addresses|Create a new address|
 |GET|/operator/{addressId}/balance|Get the balance of a given address|
 
@@ -76,7 +75,7 @@ It's the starting point to interact with the naivecoin, and every node provides 
 
 From the Swagger UI is possible to access a simple UI to visualize the blockchain and the unconfirmed transactions.
 
-![UI](doc/ui.png)]
+![UI](doc/ui.png)
 
 #### Blockchain
 
@@ -90,7 +89,7 @@ It's responsible for:
 
 The blockchain is a linked list where the hash of the next block is calculated based on the hash of the previous block plus the data inside the block itself:
 
-![Blockchain](doc/blockchain.png)]
+![Blockchain](doc/blockchain.png)
 
 A block is added to the block list if:
 1. The block is the last one (previous index + 1);
@@ -430,11 +429,11 @@ $ curl -X GET --header 'Content-Type: application/json' 'http://localhost:3001/n
 {"confirmations":1}
 
 # Get address 1 balance
-$ curl -X GET --header 'Content-Type: application/json' 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses/e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c/balance'
+$ curl -X GET --header 'Content-Type: application/json' 'http://localhost:3001/operator/e155df3a1bac05f88321b73931b48b54ea4300be9d1225e0b62638f537e5544c/balance'
 {"balance":9000000000}
 
 # Get address 2 balance
-$ curl -X GET --header 'Content-Type: application/json' 'http://localhost:3001/operator/wallets/a2fb4d3f93ea3d4624243c03f507295c0c7cb5b78291a651e5575dcd03dfeeeb/addresses/c574de33acfd82f2146d2f45f37ce95b7bdca133b8ad310adbd46938c75992c8/balance'
+$ curl -X GET --header 'Content-Type: application/json' 'http://localhost:3001/operator/c574de33acfd82f2146d2f45f37ce95b7bdca133b8ad310adbd46938c75992c8/balance'
 {"balance":1000000000}
 
 # Get unspent transactions for address 1
