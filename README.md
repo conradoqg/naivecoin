@@ -92,22 +92,22 @@ The blockchain is a linked list where the hash of the next block is calculated b
 
 ![Blockchain](doc/blockchain.png)]
 
-A block is added to the block list:
-1. If the block is the last one (previous index + 1);
-2. If previous block is correct (previous hash == block.previousHash);
+A block is added to the block list if:
+1. The block is the last one (previous index + 1);
+2. The previous block is correct (previous hash == block.previousHash);
 3. The hash is correct (calculated block hash == block.hash);
 4. The difficulty level of the proof-of-work challenge is correct (difficulty at blockchain index _n_ < block difficulty);
 5. All transactions inside the block are valid;
 6. The sum of output transactions are equal the sum of input transactions + 50 coins representing the reward for the block miner;
 7. Check if there is a double spending in that block
-8. If there is only 1 fee transaction and 1 reward transaction.
+8. There is only 1 fee transaction and 1 reward transaction.
 
-A transaction inside a block is valid:
-1. If the transaction hash is correct (calculated transaction hash == transaction.hash);
+A transaction inside a block is valid if:
+1. The transaction hash is correct (calculated transaction hash == transaction.hash);
 2. The signature of all input transactions are correct (transaction data is signed by the public key of the address);
 3. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
-4. If the transaction isn't already in the blockchain
-5. If all input transactions are unspent in the blockchain.
+4. The transaction isn't already in the blockchain
+5. All input transactions are unspent in the blockchain.
 
 You can read this [post](https://medium.com/@lhartikk/a-blockchain-in-200-lines-of-code-963cc1cc0e54#.dttbm9afr5) from [naivechain](https://github.com/lhartikk/naivechain) for more details about how the blockchain works.
 
@@ -121,13 +121,13 @@ Transactions is a list of unconfirmed transactions. Nothing special about it. In
 ]
 ```
 
-A transaction is added to the transaction list:
-1. If it's not already in the transaction list;
-2. If the transaction hash is correct (calculated transaction hash == transaction.hash);
+A transaction is added to the transaction list if:
+1. It's not already in the transaction list;
+2. The transaction hash is correct (calculated transaction hash == transaction.hash);
 3. The signature of all input transactions are correct (transaction data is signed by the public key of the address);
 4. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
-5. If the transaction isn't already in the blockchain
-6. If all input transactions are unspent in the blockchain;
+5. The transaction isn't already in the blockchain
+6. All input transactions are unspent in the blockchain;
 
 ##### Block structure
 
