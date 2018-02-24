@@ -65,4 +65,4 @@ if [ -z "$PEERS" ]; then PEERS_ARG=""; else PEERS_ARG="-e PEERS=$PEERS"; fi
 if [ -z "$NAME" ]; then NAME_ARG=""; else NAME_ARG="-e NAME=$NAME"; fi
 if [ -z "$LOG_LEVEL" ]; then LOG_LEVEL_ARG=""; else LOG_LEVEL_ARG="-e LOG_LEVEL=$LOG_LEVEL"; fi
 
-docker run -t --rm --name naivecoin $NAME $HOST_ARG $NAME_ARG $PORT_ARG $PEERS_ARG $LOG_LEVEL_ARG -v /$(pwd):/naivecoin -p $PORT:$PORT naivecoin
+docker run -t --rm --name naivecoin_$NAME $HOST_ARG $NAME_ARG $PORT_ARG $PEERS_ARG $LOG_LEVEL_ARG -v /$(pwd):/naivecoin -p $PORT:$PORT naivecoin
