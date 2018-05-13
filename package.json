@@ -36,7 +36,7 @@
     "yargs": "^10.1.1"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=8"
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
