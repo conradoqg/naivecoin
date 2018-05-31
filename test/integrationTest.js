@@ -6,6 +6,7 @@ const Blockchain = require('../lib/blockchain');
 const Operator = require('../lib/operator');
 const Miner = require('../lib/miner');
 const Node = require('../lib/node');
+const ProofSystem = require('../lib/blockchain/proofSystem');
 const fs = require('fs-extra');
 
 const logLevel = 0;
@@ -18,11 +19,12 @@ describe('Integration Test', () => {
 
     const createNaivecoin = (name, host, port, peers, removeData = true) => {
         if (removeData) fs.removeSync('data/' + name + '/');
-        let blockchain = new Blockchain(name);
-        let operator = new Operator(name, blockchain);
-        let miner = new Miner(blockchain, logLevel);
-        let node = new Node(host, port, peers, blockchain);
-        let httpServer = new HttpServer(node, blockchain, operator, miner);
+        const proofSystem = ProofSystem.create();
+        const blockchain = new Blockchain(name, proofSystem);
+        const operator = new Operator(name, blockchain);
+        const miner = new Miner(blockchain, logLevel, proofSystem);
+        const node = new Node(host, port, peers, blockchain);
+        const httpServer = new HttpServer(node, blockchain, operator, miner);
         return httpServer.listen(host, port);
     };
 
