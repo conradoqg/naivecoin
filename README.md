@@ -466,13 +466,13 @@ $ curl -X GET --header 'Content-Type: application/json' 'http://localhost:3001/b
 # Build the image
 $ docker build . -t naivecoin
 
-# Run naivecoin in a docker
+# Run naivecoin docker container
 $ ./dockerExec.sh
 
-# Run naivecoin in a docker using port 3002
+# Run naivecoin docker container using port 3002
 $ ./dockerExec.sh -p 3002
 
-# Run naivecoin in a docker options
+# Naivecoin docker container options
 $ ./dockerExec.sh -h
 Usage: ./dockerExec.sh -a HOST -p PORT -l LOG_LEVEL -e PEERS -n NAME
 
@@ -485,16 +485,19 @@ $ docker-compose up
 ```sh
 # Command-line options
 $ node bin/naivecoin.js -h
-Usage: bin\naivecoin.js [options]
+Usage: naivecoin.js [options]
 
 Options:
-  -a, --host       Host address. (localhost by default)
-  -p, --port       HTTP port. (3001 by default)
-  -l, --log-level  Log level (7=dir, debug, time and trace, 6=log and info,
-                   4=warn, 3=error, assert, 6 by default).
-  --peers          Peers list.                                           [array]
-  --name           Node name/identifier.
-  -h, --help       Show help                                           [boolean]
+  --version                Show version number                         [boolean]
+  -a, --host               Hostname. (localhost by default)
+  -p, --port               HTTP port. (3001 by default)
+  -l, --log-level          Log level (7=dir, debug, time and trace; 6=log and
+                           info; 4=warn; 3=error, assert; 6 by default).
+  -b, --broadcast-address  Broadcast address and port. (http://host:port by
+                           default)
+  --peers                  Peers list.                                   [array]
+  --name                   Node name/identifier.
+  -h, --help               Show help                                   [boolean]
 ```
 
 ### Development
