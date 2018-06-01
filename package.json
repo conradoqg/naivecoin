@@ -20,7 +20,7 @@
     "diagrams": "mmdc -i doc/blockchain.mmd -o doc/blockchain.png -b transparent && mmdc -i doc/components.mmd -o doc/components.png -b transparent"
   },
   "dependencies": {
-    "body-parser": "^1.17.1",
+    "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
     "elliptic": "^6.4.0",
     "es6-error": "^4.0.2",
