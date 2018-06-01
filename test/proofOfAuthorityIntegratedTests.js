@@ -1,11 +1,13 @@
 require('mocha-steps');
 const supertest = require('supertest');
+const Config = require('../lib/config');
 const HttpServer = require('../lib/httpServer');
 const Blockchain = require('../lib/blockchain');
 const Operator = require('../lib/operator');
 const Miner = require('../lib/miner');
 const Node = require('../lib/node');
 const ProofSystem = require('../lib/blockchain/proofSystem');
+const CryptoUtil = require('../lib/util/cryptoUtil');
 const fs = require('fs-extra');
 
 const logLevel = (process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 0);
@@ -19,7 +21,7 @@ describe('Integration Test (Proof-of-authority)', () => {
         const blockchain = new Blockchain(name, proofSystem);
         const operator = new Operator(name, blockchain);
         const miner = new Miner(blockchain, logLevel, proofSystem);
-        const node = new Node(host, port, peers, blockchain);
+        const node = new Node(name, host, port, peers, CryptoUtil.hash(Config), blockchain);
         const httpServer = new HttpServer(node, blockchain, operator, miner);
         return httpServer.listen(host, port);
     };
