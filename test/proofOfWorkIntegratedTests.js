@@ -9,6 +9,8 @@ const Node = require('../lib/node');
 const ProofSystem = require('../lib/blockchain/proofSystem');
 const fs = require('fs-extra');
 
+const logLevel = (process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 0);
+
 describe('Integration Test (Proof-of-work)', () => {
     const name1 = 'integrationTest3';
     const name2 = 'integrationTest4';
@@ -18,7 +20,7 @@ describe('Integration Test (Proof-of-work)', () => {
         const proofSystem = ProofSystem.create('proofOfWork');
         const blockchain = new Blockchain(name, proofSystem);
         const operator = new Operator(name, blockchain);
-        const miner = new Miner(blockchain, LOG_LEVEL, proofSystem);
+        const miner = new Miner(blockchain, logLevel, proofSystem);
         const node = new Node(host, port, peers, blockchain);
         const httpServer = new HttpServer(node, blockchain, operator, miner);
         return httpServer.listen(host, port);

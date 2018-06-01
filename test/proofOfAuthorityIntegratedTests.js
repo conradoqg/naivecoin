@@ -8,6 +8,8 @@ const Node = require('../lib/node');
 const ProofSystem = require('../lib/blockchain/proofSystem');
 const fs = require('fs-extra');
 
+const logLevel = (process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 0);
+
 describe('Integration Test (Proof-of-authority)', () => {
     const name1 = 'integrationTest1';
 
@@ -16,7 +18,7 @@ describe('Integration Test (Proof-of-authority)', () => {
         const proofSystem = ProofSystem.create('proofOfAuthority');
         const blockchain = new Blockchain(name, proofSystem);
         const operator = new Operator(name, blockchain);
-        const miner = new Miner(blockchain, LOG_LEVEL, proofSystem);
+        const miner = new Miner(blockchain, logLevel, proofSystem);
         const node = new Node(host, port, peers, blockchain);
         const httpServer = new HttpServer(node, blockchain, operator, miner);
         return httpServer.listen(host, port);
@@ -85,6 +87,16 @@ describe('Integration Test (Proof-of-authority)', () => {
                     .post('/miner/mine')
                     .send({ rewardAddress: context.address1.id, secretKey: context.address2.secretKey, publicKey: context.address2.publicKey })
                     .expect(400);
+            });
+    });
+    
+    step('stop server 1', () => {
+        return Promise.resolve()
+            .then(() => {
+                return context.httpServer1.stop();
+            })
+            .then(() => {
+                fs.removeSync('data/' + name1 + '/');
             });
     });
 });

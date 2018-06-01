@@ -12,12 +12,13 @@
     "naivecoin": "bin/naivecoin.js"
   },
   "scripts": {
-    "start": "node bin/naivecoin.js",
+    "start": "cross-env NODE_ENV=development node bin//naivecoin.js",
     "compose:up": "docker-compose up",
-    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
-    "coverage": "nyc --reporter=lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --colors test/",
-    "test": "_mocha -u bdd --colors test/",
-    "diagrams": "mmdc -i doc/blockchain.mmd -o doc/blockchain.png -b transparent && mmdc -i doc/components.mmd -o doc/components.png -b transparent"
+    "coveralls": "cross-env NODE_ENV=test nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "coverage": "cross-env NODE_ENV=test LOG_LEVEL=0 nyc --reporter=lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --recursive --colors test/",
+    "test": "eslint --fix bin lib test && cross-env NODE_ENV=test LOG_LEVEL=0 mocha -u bdd --recursive --colors test/",
+    "diagrams": "mmdc -i doc/blockchain.mmd -o doc/blockchain.png -b transparent && mmdc -i doc/components.mmd -o doc/components.png -b transparent",
+    "lint": "eslint --fix bin lib test"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -40,6 +41,8 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
+    "cross-env": "^5.1.6",
+    "eslint": "^4.19.1",
     "mermaid.cli": "^0.3.1",
     "mocha": "^3.3.0",
     "mocha-steps": "^1.0.2",

@@ -13,8 +13,7 @@
         "sourceType": "module"
     },
     "globals": {
-        "step": true,
-        "LOG_LEVEL": true
+        "step": true
     },
     "rules": {
         "no-const-assign": "warn",
