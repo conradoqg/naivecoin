@@ -13,13 +13,13 @@ const logLevel = 0;
 
 require('../lib/util/consoleWrapper.js')('integrationTest', logLevel);
 
-describe('Integration Test', () => {
+describe('Integration Test (Proof-of-authority)', () => {
     const name1 = 'integrationTest1';
     const name2 = 'integrationTest2';
 
     const createNaivecoin = (name, host, port, peers, removeData = true) => {
         if (removeData) fs.removeSync('data/' + name + '/');
-        const proofSystem = ProofSystem.create();
+        const proofSystem = ProofSystem.create('proofOfAuthority');
         const blockchain = new Blockchain(name, proofSystem);
         const operator = new Operator(name, blockchain);
         const miner = new Miner(blockchain, logLevel, proofSystem);
@@ -58,7 +58,7 @@ describe('Integration Test', () => {
                     .set({ password: walletPassword })
                     .expect(201);
             }).then((res) => {
-                context.address1 = res.body.address;
+                context.address1 = res.body;                
             });
     });
 
@@ -70,7 +70,7 @@ describe('Integration Test', () => {
                     .set({ password: walletPassword })
                     .expect(201);
             }).then((res) => {
-                context.address2 = res.body.address;
+                context.address2 = res.body;                
             });
     });
 
@@ -79,7 +79,7 @@ describe('Integration Test', () => {
             .then(() => {
                 return supertest(context.httpServer1.app)
                     .post('/miner/mine')
-                    .send({ rewardAddress: context.address1 })
+                    .send({ rewardAddress: context.address1.id, secretKey: context.address1.secretKey, publicKey: context.address1.publicKey })
                     .expect(201);
             });
     });
@@ -91,10 +91,10 @@ describe('Integration Test', () => {
                     .post(`/operator/wallets/${context.walletId}/transactions`)
                     .set({ password: walletPassword })
                     .send({
-                        fromAddress: context.address1,
-                        toAddress: context.address2,
+                        fromAddress: context.address1.id,
+                        toAddress: context.address2.id,
                         amount: 1000000000,
-                        changeAddress: context.address1
+                        changeAddress: context.address1.id
                     })
                     .expect(201);
             })
@@ -108,7 +108,7 @@ describe('Integration Test', () => {
             .then(() => {
                 return supertest(context.httpServer1.app)
                     .post('/miner/mine')
-                    .send({ rewardAddress: context.address1 })
+                    .send({ rewardAddress: context.address1.id, secretKey: context.address1.secretKey, publicKey: context.address1.publicKey })
                     .expect(201);
             });
     });
@@ -129,10 +129,10 @@ describe('Integration Test', () => {
         return Promise.resolve()
             .then(() => {
                 return supertest(context.httpServer1.app)
-                    .get(`/operator/${context.address1}/balance`)
+                    .get(`/operator/${context.address1.id}/balance`)
                     .expect(200)
                     .expect((res) => {
-                        assert.equal(res.body.balance, 9000000000, `Expected balance of address '${context.address1}' to be '9000000000'`);
+                        assert.equal(res.body.balance, 9000000000, `Expected balance of address '${context.address1.id}' to be '9000000000'`);
                     });
             });
     });
@@ -141,10 +141,10 @@ describe('Integration Test', () => {
         return Promise.resolve()
             .then(() => {
                 return supertest(context.httpServer1.app)
-                    .get(`/operator/${context.address2}/balance`)
+                    .get(`/operator/${context.address2.id}/balance`)
                     .expect(200)
                     .expect((res) => {
-                        assert.equal(res.body.balance, 1000000000, `Expected balance of address '${context.address2}' to be '1000000000'`);
+                        assert.equal(res.body.balance, 1000000000, `Expected balance of address '${context.address2.id}' to be '1000000000'`);
                     });
             });
     });
@@ -154,10 +154,10 @@ describe('Integration Test', () => {
             .then(() => {
                 return supertest(context.httpServer1.app)
                     .get('/blockchain/transactions/unspent')
-                    .query({ address: context.address1 })
+                    .query({ address: context.address1.id })
                     .expect(200)
                     .expect((res) => {
-                        assert.equal(res.body.length, 3, `Expected unspent transactions of address '${context.address1}' to be '3'`);
+                        assert.equal(res.body.length, 3, `Expected unspent transactions of address '${context.address1.id}' to be '3'`);
                     });
             });
     });
@@ -223,10 +223,10 @@ describe('Integration Test', () => {
                     .post(`/operator/wallets/${context.walletId}/transactions`)
                     .set({ password: walletPassword })
                     .send({
-                        fromAddress: context.address1,
-                        toAddress: context.address2,
+                        fromAddress: context.address1.id,
+                        toAddress: context.address2.id,
                         amount: 1000000000,
-                        changeAddress: context.address1
+                        changeAddress: context.address1.id
                     })
                     .expect(201);
             })
@@ -265,10 +265,10 @@ describe('Integration Test', () => {
         return Promise.resolve()
             .then(() => {
                 return supertest(context.httpServer1.app)
-                    .get(`/operator/${context.address1}/balance`)
+                    .get(`/operator/${context.address1.id}/balance`)
                     .expect(200)
                     .expect((res) => {
-                        assert.equal(res.body.balance, 7999999999, `Expected balance of address '${context.address1}' to be '7999999999'`);
+                        assert.equal(res.body.balance, 7999999999, `Expected balance of address '${context.address1.id}' to be '7999999999'`);
                     });
             });
     });
@@ -381,10 +381,10 @@ describe('Integration Test', () => {
                         .post(`/operator/wallets/${context.walletId}/transactions`)
                         .set({ password: walletPassword })
                         .send({
-                            fromAddress: context.address1,
-                            toAddress: context.address2,
+                            fromAddress: context.address1.id,
+                            toAddress: context.address2.id,
                             amount: 8000000000,
-                            changeAddress: context.address1
+                            changeAddress: context.address1.id
                         })
                         .expect(400);
                 });
@@ -486,10 +486,10 @@ describe('Integration Test', () => {
                         return supertest(context.httpServer1.app)
                             .post(`/operator/wallets/${context.walletId}/transactions`)
                             .send({
-                                fromAddress: context.address1,
-                                toAddress: context.address2,
+                                fromAddress: context.address1.id,
+                                toAddress: context.address2.id,
                                 amount: 1000000000,
-                                changeAddress: context.address1
+                                changeAddress: context.address1.id
                             })
                             .expect(401);
                     });
@@ -502,10 +502,10 @@ describe('Integration Test', () => {
                             .post(`/operator/wallets/${context.walletId}/transactions`)
                             .set({ password: 'wrong one' })
                             .send({
-                                fromAddress: context.address1,
-                                toAddress: context.address2,
+                                fromAddress: context.address1.id,
+                                toAddress: context.address2.id,
                                 amount: 1000000000,
-                                changeAddress: context.address1
+                                changeAddress: context.address1.id
                             })
                             .expect(403);
                     });
