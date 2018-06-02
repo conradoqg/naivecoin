@@ -408,7 +408,7 @@ describe('Integration Test (Proof-of-work)', () => {
                         return supertest(context.httpServer1.app)
                             .get('/blockchain')
                             .set('Accept', 'application/json')
-                            .expect(400);
+                            .expect(406);
                     });
             });
 

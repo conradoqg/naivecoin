@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "Visualize the blockchain by accessing <a href='/blockchain' target='_blank'>here</a>.",
-        "version": "0.0.1",
+        "version": "1.0.0",
         "title": "Naivecoin API"
     },
     "basePath": "/",
