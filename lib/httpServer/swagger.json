@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "Visualize the blockchain by accessing <a href='/blockchain' target='_blank'>here</a>.",
-        "version": "0.0.1",
+        "version": "1.0.0",
         "title": "Naivecoin API"
     },
     "basePath": "/",
@@ -296,7 +296,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/Wallet"
+                            "$ref": "#/definitions/WalletPostResponse"
                         }
                     },
                     "400": {
@@ -395,7 +395,7 @@
                             "type": "object",
                             "properties": {
                                 "address": {
-                                    "$ref": "#/definitions/Address"
+                                    "$ref": "#/definitions/AddressPostResponse"
                                 }
                             }
                         }
@@ -521,6 +521,23 @@
                 }
             }
         },
+        "/node/peer": {
+            "get": {
+                "tags": [
+                    "node"
+                ],
+                "summary": "Get the node (peer) information",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Peer"
+                        }
+                    }
+                }
+            }
+        },
         "/node/peers": {
             "get": {
                 "tags": [
@@ -601,7 +618,7 @@
                     "miner"
                 ],
                 "summary": "Mine a new block",
-                "description": "Mine a new block and add it to the end of blockchain.",
+                "description": "Mine a new block and add it to the end of blockchain",
                 "parameters": [
                     {
                         "in": "body",
@@ -615,12 +632,20 @@
                             ],
                             "properties": {
                                 "rewardAddress": {
-                                    "description": "Address to send the reward",
-                                    "type": "string"
+                                    "type": "string",
+                                    "description": "Address to send the reward"
                                 },
                                 "feeAddress": {
-                                    "description": "Address to send the fee",
-                                    "type": "string"
+                                    "type": "string",
+                                    "description": "Address to send the fee"
+                                },
+                                "secretKey": {
+                                    "type": "string",
+                                    "description": "If the blokchain uses proof-of-authority, the Secret Key of the sealer"
+                                },
+                                "publicKey": {
+                                    "type": "string",
+                                    "description": "If the blokchain uses proof-of-authority, the Public Key of the sealer"
                                 }
                             }
                         }
@@ -640,42 +665,117 @@
     "definitions": {
         "Block": {
             "type": "object",
+            "required": [
+                "index",
+                "previousHash",
+                "timestamp",
+                "nonce",
+                "data",
+                "hash"
+            ],
             "properties": {
                 "index": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Block index"
                 },
                 "previousHash": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The hash of the previous block"
                 },
                 "timestamp": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Timestamp in milliseconds of the block creation"
                 },
-                "data": {
-                    "type": "object"
+                "nonce": {
+                    "type": "string",
+                    "description": "Counter of tries to find the correct block (proof-of-work only)"
+                },
+                "transactions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Transaction"
+                    }
                 },
                 "hash": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Block hash"
+                },
+                "sealer": {
+                    "type": "string",
+                    "description": "Address of the block sealer (proof-of-authority)"
+                },
+                "signature": {
+                    "type": "string",
+                    "description": "Signature of the block sealer (proof-of-authority)"
                 }
             }
         },
         "Peer": {
             "type": "object",
+            "required": [
+                "name",
+                "network",
+                "url"
+            ],
             "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Node name"
+                },
+                "network": {
+                    "type": "string",
+                    "description": "Hash of the node configuration"
+                },
                 "url": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Broadcast address that can be accessed by other nodes"
                 }
             }
         },
         "Wallet": {
             "type": "object",
+            "required": [
+                "id",
+                "addresses"
+            ],
             "properties": {
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Wallet id"
                 },
                 "addresses": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/Address"
+                    }
+                }
+            }
+        },
+        "WalletPostResponse": {
+            "type": "object",
+            "required": [
+                "id",
+                "passwordHash",
+                "secret",
+                "addresses"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Wallet id"
+                },
+                "passwordHash": {
+                    "type": "string",
+                    "description": "Password hash"
+                },
+                "secret": {
+                    "type": "string",
+                    "description": "Secret generated from the password"
+                },
+                "addresses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AddressPostResponse"
                     }
                 }
             }
@@ -683,11 +783,53 @@
         "Address": {
             "type": "string"
         },
-        "Transaction": {
+        "AddressPostResponse": {
             "type": "object",
+            "required": [
+                "id",
+                "index",
+                "secretKey",
+                "publicKey"
+            ],
             "properties": {
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Address id"
+                },
+                "index": {
+                    "type": "integer",
+                    "description": "Address index"
+                },
+                "secretKey": {
+                    "type": "string",
+                    "description": "Secret key of the address"
+                },
+                "publicKey": {
+                    "type": "string",
+                    "description": "Public key of the address"
+                }
+            }
+        },
+        "Transaction": {
+            "type": "object",
+            "required": [
+                "id",
+                "hash",
+                "type",
+                "data"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Transaction id"
+                },
+                "hash": {
+                    "type": "string",
+                    "description": "Transaction hash"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Transaction type (reward, fee or regular)"
                 },
                 "data": {
                     "type": "object",

@@ -1,28 +1,30 @@
 require('mocha-steps');
 const supertest = require('supertest');
 const assert = require('assert');
-const HttpServer = require('../lib/httpServer');
-const Blockchain = require('../lib/blockchain');
-const Operator = require('../lib/operator');
-const Miner = require('../lib/miner');
-const Node = require('../lib/node');
+const Config = require('../../lib/config');
+const HttpServer = require('../../lib/httpServer');
+const Blockchain = require('../../lib/blockchain');
+const Operator = require('../../lib/operator');
+const Miner = require('../../lib/miner');
+const Node = require('../../lib/node');
+const ProofSystem = require('../../lib/blockchain/proofSystem');
 const fs = require('fs-extra');
 
-const logLevel = 0;
+const logLevel = (process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 0);
 
-require('../lib/util/consoleWrapper.js')('integrationTest', logLevel);
-
-describe('Integration Test', () => {
-    const name1 = 'integrationTest1';
-    const name2 = 'integrationTest2';
+describe('Integration Test (Proof-of-work)', () => {
+    const name1 = 'integrationTest3';
+    const name2 = 'integrationTest4';
 
     const createNaivecoin = (name, host, port, peers, removeData = true) => {
         if (removeData) fs.removeSync('data/' + name + '/');
-        let blockchain = new Blockchain(name);
-        let operator = new Operator(name, blockchain);
-        let miner = new Miner(blockchain, logLevel);
-        let node = new Node(host, port, peers, blockchain);
-        let httpServer = new HttpServer(node, blockchain, operator, miner);
+        Config.PROOF_SYSTEM = 'proofOfWork';
+        const proofSystem = ProofSystem.create();
+        const blockchain = new Blockchain(name, proofSystem);
+        const operator = new Operator(name, blockchain);
+        const miner = new Miner(blockchain, logLevel, proofSystem, false);
+        const node = new Node(name, host, port, peers, Config.hash, blockchain);
+        const httpServer = new HttpServer(node, blockchain, operator, miner);
         return httpServer.listen(host, port);
     };
 
@@ -30,7 +32,7 @@ describe('Integration Test', () => {
     let context = {};
 
     step('start server 1', () => {
-        return createNaivecoin(name1, 'localhost', 3001, [])
+        return createNaivecoin(name1, 'localhost', 3003, [])
             .then((httpServer) => {
                 context.httpServer1 = httpServer;
             });
@@ -56,7 +58,7 @@ describe('Integration Test', () => {
                     .set({ password: walletPassword })
                     .expect(201);
             }).then((res) => {
-                context.address1 = res.body.address;
+                context.address1 = res.body;
             });
     });
 
@@ -68,7 +70,7 @@ describe('Integration Test', () => {
                     .set({ password: walletPassword })
                     .expect(201);
             }).then((res) => {
-                context.address2 = res.body.address;
+                context.address2 = res.body;
             });
     });
 
@@ -77,7 +79,7 @@ describe('Integration Test', () => {
             .then(() => {
                 return supertest(context.httpServer1.app)
                     .post('/miner/mine')
-                    .send({ rewardAddress: context.address1 })
+                    .send({ rewardAddress: context.address1.id })
                     .expect(201);
             });
     });
@@ -89,10 +91,10 @@ describe('Integration Test', () => {
                     .post(`/operator/wallets/${context.walletId}/transactions`)
                     .set({ password: walletPassword })
                     .send({
-                        fromAddress: context.address1,
-                        toAddress: context.address2,
+                        fromAddress: context.address1.id,
+                        toAddress: context.address2.id,
                         amount: 1000000000,
-                        changeAddress: context.address1
+                        changeAddress: context.address1.id
                     })
                     .expect(201);
             })
@@ -106,7 +108,7 @@ describe('Integration Test', () => {
             .then(() => {
                 return supertest(context.httpServer1.app)
                     .post('/miner/mine')
-                    .send({ rewardAddress: context.address1 })
+                    .send({ rewardAddress: context.address1.id })
                     .expect(201);
             });
     });
@@ -127,10 +129,10 @@ describe('Integration Test', () => {
         return Promise.resolve()
             .then(() => {
                 return supertest(context.httpServer1.app)
-                    .get(`/operator/${context.address1}/balance`)
+                    .get(`/operator/${context.address1.id}/balance`)
                     .expect(200)
                     .expect((res) => {
-                        assert.equal(res.body.balance, 9000000000, `Expected balance of address '${context.address1}' to be '9000000000'`);
+                        assert.equal(res.body.balance, 9000000000, `Expected balance of address '${context.address1.id}' to be '9000000000'`);
                     });
             });
     });
@@ -139,10 +141,10 @@ describe('Integration Test', () => {
         return Promise.resolve()
             .then(() => {
                 return supertest(context.httpServer1.app)
-                    .get(`/operator/${context.address2}/balance`)
+                    .get(`/operator/${context.address2.id}/balance`)
                     .expect(200)
                     .expect((res) => {
-                        assert.equal(res.body.balance, 1000000000, `Expected balance of address '${context.address2}' to be '1000000000'`);
+                        assert.equal(res.body.balance, 1000000000, `Expected balance of address '${context.address2.id}' to be '1000000000'`);
                     });
             });
     });
@@ -152,16 +154,16 @@ describe('Integration Test', () => {
             .then(() => {
                 return supertest(context.httpServer1.app)
                     .get('/blockchain/transactions/unspent')
-                    .query({ address: context.address1 })
+                    .query({ address: context.address1.id })
                     .expect(200)
                     .expect((res) => {
-                        assert.equal(res.body.length, 3, `Expected unspent transactions of address '${context.address1}' to be '3'`);
+                        assert.equal(res.body.length, 3, `Expected unspent transactions of address '${context.address1.id}' to be '3'`);
                     });
             });
     });
 
     step('start server 2', () => {
-        return createNaivecoin(name2, 'localhost', 3002, [{ url: 'http://localhost:3001' }])
+        return createNaivecoin(name2, 'localhost', 3004, [{ url: 'http://localhost:3003' }])
             .then((httpServer) => {
                 context.httpServer2 = httpServer;
             });
@@ -221,10 +223,10 @@ describe('Integration Test', () => {
                     .post(`/operator/wallets/${context.walletId}/transactions`)
                     .set({ password: walletPassword })
                     .send({
-                        fromAddress: context.address1,
-                        toAddress: context.address2,
+                        fromAddress: context.address1.id,
+                        toAddress: context.address2.id,
                         amount: 1000000000,
-                        changeAddress: context.address1
+                        changeAddress: context.address1.id
                     })
                     .expect(201);
             })
@@ -263,10 +265,10 @@ describe('Integration Test', () => {
         return Promise.resolve()
             .then(() => {
                 return supertest(context.httpServer1.app)
-                    .get(`/operator/${context.address1}/balance`)
+                    .get(`/operator/${context.address1.id}/balance`)
                     .expect(200)
                     .expect((res) => {
-                        assert.equal(res.body.balance, 7999999999, `Expected balance of address '${context.address1}' to be '7999999999'`);
+                        assert.equal(res.body.balance, 7999999999, `Expected balance of address '${context.address1.id}' to be '7999999999'`);
                     });
             });
     });
@@ -326,7 +328,7 @@ describe('Integration Test', () => {
                     return context.httpServer1.stop();
                 })
                 .then(() => {
-                    return createNaivecoin(name1, 'localhost', 3001, [], false)
+                    return createNaivecoin(name1, 'localhost', 3003, [], false)
                         .then((httpServer) => {
                             context.httpServer1 = httpServer;
                         });
@@ -379,10 +381,10 @@ describe('Integration Test', () => {
                         .post(`/operator/wallets/${context.walletId}/transactions`)
                         .set({ password: walletPassword })
                         .send({
-                            fromAddress: context.address1,
-                            toAddress: context.address2,
+                            fromAddress: context.address1.id,
+                            toAddress: context.address2.id,
                             amount: 8000000000,
-                            changeAddress: context.address1
+                            changeAddress: context.address1.id
                         })
                         .expect(400);
                 });
@@ -406,7 +408,7 @@ describe('Integration Test', () => {
                         return supertest(context.httpServer1.app)
                             .get('/blockchain')
                             .set('Accept', 'application/json')
-                            .expect(400);
+                            .expect(406);
                     });
             });
 
@@ -484,10 +486,10 @@ describe('Integration Test', () => {
                         return supertest(context.httpServer1.app)
                             .post(`/operator/wallets/${context.walletId}/transactions`)
                             .send({
-                                fromAddress: context.address1,
-                                toAddress: context.address2,
+                                fromAddress: context.address1.id,
+                                toAddress: context.address2.id,
                                 amount: 1000000000,
-                                changeAddress: context.address1
+                                changeAddress: context.address1.id
                             })
                             .expect(401);
                     });
@@ -500,10 +502,10 @@ describe('Integration Test', () => {
                             .post(`/operator/wallets/${context.walletId}/transactions`)
                             .set({ password: 'wrong one' })
                             .send({
-                                fromAddress: context.address1,
-                                toAddress: context.address2,
+                                fromAddress: context.address1.id,
+                                toAddress: context.address2.id,
                                 amount: 1000000000,
-                                changeAddress: context.address1
+                                changeAddress: context.address1.id
                             })
                             .expect(403);
                     });

@@ -5,4 +5,5 @@ coverage
 *.log
 yarn.lock
 .vscode
-data
+data/**/
+!data/config.js
