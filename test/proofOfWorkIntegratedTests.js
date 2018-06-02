@@ -22,7 +22,7 @@ describe('Integration Test (Proof-of-work)', () => {
         const proofSystem = ProofSystem.create('proofOfWork');
         const blockchain = new Blockchain(name, proofSystem);
         const operator = new Operator(name, blockchain);
-        const miner = new Miner(blockchain, logLevel, proofSystem);
+        const miner = new Miner(blockchain, logLevel, proofSystem, false);
         const node = new Node(name, host, port, peers, CryptoUtil.hash(Config), blockchain);
         const httpServer = new HttpServer(node, blockchain, operator, miner);
         return httpServer.listen(host, port);
