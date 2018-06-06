@@ -4,38 +4,36 @@ services:
     environment:
       - NAME=1
       - HOST=0.0.0.0
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: rlkamradt/naivecoin
     ports:
     - "3001:3001"
     volumes:
     - ./:/naivecoin
+    networks:
+     - network
   node2:
-    environment:      
+    environment:
       - HOST=0.0.0.0
       - NAME=2
-      - PEERS=http://node1:3001      
-    build:
-      context: ./
-      dockerfile: Dockerfile
+      - PEERS=http://node1:3001
+    image: rlkamradt/naivecoin
     ports:
     - "3002:3001"
     volumes:
     - ./:/naivecoin
-    links:
-      - node1:node1
+    networks:
+     - network
   node3:
     environment:
       - HOST=0.0.0.0
       - NAME=3
-      - PEERS=http://node2:3001      
-    build:
-      context: ./
-      dockerfile: Dockerfile
+      - PEERS=http://node2:3001
+    image: rlkamradt/naivecoin
     ports:
     - "3003:3001"
     volumes:
     - ./:/naivecoin
-    links:
-      - node2:node2
+    networks:
+     - network
+networks:
+  network:
