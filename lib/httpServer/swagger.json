@@ -198,7 +198,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "Transacqion",
+                        "description": "Transaction",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/Transaction"
@@ -526,7 +526,7 @@
                 "tags": [
                     "node"
                 ],
-                "summary": "Get all peers connected to node",
+                "summary": "Get all peers connected to this node",
                 "description": "",
                 "responses": {
                     "200": {
@@ -544,7 +544,7 @@
                 "tags": [
                     "node"
                 ],
-                "summary": "Connects a new peer to node",
+                "summary": "Connects a new peer to this node",
                 "description": "",
                 "parameters": [
                     {
@@ -601,7 +601,7 @@
                     "miner"
                 ],
                 "summary": "Mine a new block",
-                "description": "Mine a new block and add it to the end of blockchain.",
+                "description": "Mine a new block and add it to the end of the blockchain.",
                 "parameters": [
                     {
                         "in": "body",
