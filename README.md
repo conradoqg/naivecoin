@@ -272,7 +272,7 @@ The node contains a list of connected peers and does all the data exchange betwe
 1. Receive new blocks and check what to do with it
 2. Receive new transactions and check what to do with it
 
-The node rebroadcasts every information it receives unless it doesn't do anything with it, for example, if it already has the peer/transaction/blockchain.
+The node rebroadcasts all information it receives unless it doesn't do anything with it, for example, if it already has the peer/transaction/blockchain.
 
 An extra responsibility is to get a number of confirmations for a given transaction. It does that by asking every node if it has that transaction in its blockchain.
 
@@ -500,7 +500,7 @@ Options:
 ### Development
 
 ```sh
-# Clonning repository
+# Cloning repository
 $ git clone git@github.com:conradoqg/naivecoin.git
 $ cd naivecoin
 $ npm install
