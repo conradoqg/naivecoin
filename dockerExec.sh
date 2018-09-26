@@ -18,10 +18,10 @@ while getopts $options OPTION; do
         a)
             HOST=$OPTARG
             ;;
-        p) 
+        p)
             PORT=$OPTARG
             ;;
-        l) 
+        l)
             LOG_LEVEL=$OPTARG
             ;;
         e)
@@ -30,17 +30,17 @@ while getopts $options OPTION; do
         n)
             NAME=$OPTARG
             ;;
-        h) 
-            usage 
+        h)
+            usage
             ;;
-        \?) 
+        \?)
             echo_err_help "Unknown option: -$OPTARG"
             ;;
-        :) 
-            echo_err_help "Missing option argument for -$OPTARG" 
+        :)
+            echo_err_help "Missing option argument for -$OPTARG"
             ;;
-        *) 
-            echo_err_help "Unimplemented option: -$OPTARG" 
+        *)
+            echo_err_help "Unimplemented option: -$OPTARG"
             ;;
     esac
 done
@@ -51,7 +51,7 @@ HOST="${HOST:-0.0.0.0}"
 PORT="${PORT:-3001}"
 NAME="${NAME:-1}"
 
-echo "Running naivecoin inside docker with the following arguments:
+echo "Running concord inside docker with the following arguments:
   HOST:  $HOST
   PORT:  $PORT
   LOG_LEVEL:  $LOG_LEVEL
@@ -65,4 +65,4 @@ if [ -z "$PEERS" ]; then PEERS_ARG=""; else PEERS_ARG="-e PEERS=$PEERS"; fi
 if [ -z "$NAME" ]; then NAME_ARG=""; else NAME_ARG="-e NAME=$NAME"; fi
 if [ -z "$LOG_LEVEL" ]; then LOG_LEVEL_ARG=""; else LOG_LEVEL_ARG="-e LOG_LEVEL=$LOG_LEVEL"; fi
 
-docker run -t --rm --name naivecoin_$NAME $HOST_ARG $NAME_ARG $PORT_ARG $PEERS_ARG $LOG_LEVEL_ARG -v /$(pwd):/naivecoin -p $PORT:$PORT naivecoin
+docker run -t --rm --name concord_$NAME $HOST_ARG $NAME_ARG $PORT_ARG $PEERS_ARG $LOG_LEVEL_ARG -v /$(pwd):/concord -p $PORT:$PORT concord

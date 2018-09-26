@@ -1,28 +1,28 @@
 doctype html
 html(lang="en").has-navbar-fixed-top
     head
-        title Naivecoin - #{pageTitle}
+        title Concord - #{pageTitle}
         meta(name="viewport", content="width=device-width, initial-scale=1")
-        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css")        
-        script(src="https://use.fontawesome.com/releases/v5.0.0/js/all.js", defer)        
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css")
+        script(src="https://use.fontawesome.com/releases/v5.0.0/js/all.js", defer)
         style(type='text/css').
             /* Tooltip container */
             .tooltip {
-                position: relative;                                
+                position: relative;
             }
 
             /* Tooltip text */
             .tooltip .tooltiptext {
-                visibility: hidden;                
+                visibility: hidden;
                 background-color: black;
                 color: #fff;
                 text-align: center;
                 padding: 5px;
                 border-radius: 6px;
                 top: -5px;
-                left: 105%;   
+                left: 105%;
                 word-break: normal;
-            
+
                 /* Position the tooltip text - see examples below! */
                 position: absolute;
                 z-index: 1;
@@ -37,8 +37,8 @@ html(lang="en").has-navbar-fixed-top
             .container
                 .navbar-menu.is-active
                     .navbar-brand
-                        span.navbar-item.title.is-2 Naivecoin
-                    .navbar-start                        
+                        span.navbar-item.title.is-2 Concord
+                    .navbar-start
                         a.navbar-item(href="/blockchain", class=`${pageTitle=='Blockchain' ? 'is-active' : ''}`) Blockchain
                         a.navbar-item(href="/blockchain/transactions", class=`${pageTitle=='Unconfirmed Transactions' ? 'is-active' : ''}`) Unconfirmed Transactions
                     .navbar-end

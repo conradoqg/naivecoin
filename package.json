@@ -1,18 +1,18 @@
 {
-  "name": "naivecoin",
+  "name": "Concord-Core",
   "version": "0.0.2",
-  "description": "Naivecoin, a cryptocurrency demonstration",
-  "homepage": "https://github.com/conradoqg/naivecoin",
+  "description": "Concord's Multi-Purpose Desktop Application",
+  "homepage": "https://github.com/Concord-Ecosystem/Concord-Core",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/conradoqg/naivecoin.git"
+    "url": "https://github.com/Concord-Ecosystem/Concord-Core.git"
   },
   "bin": {
-    "naivecoin": "bin/naivecoin.js"
+    "concord": "bin/concord.js"
   },
   "scripts": {
-    "start": "node bin/naivecoin.js",
+    "start": "node bin/concord.js",
     "compose:up": "docker-compose up",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc --reporter=lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --colors test/",
