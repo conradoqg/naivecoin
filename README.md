@@ -2,13 +2,13 @@
 
 ## Introduction
 
-Concord Core is the main Desktop Application of the Concord Ecosystem, with a built-in Blockchain Wallet for the Concord Coin (CXD).
+Concord Core is the main desktop application of the Concord Ecosystem, with a built-in blockchain wallet for the Concord Coin (CXD).
 
-Concord Core aims to create a new Blockchain structure, based on a new Validation and Storage-Based consensus protocol, without removing the security and decentralized nature of the average Cryptocurrency Blockchain, consensus will be kept via optionally-participating Validator Nodes, which in the future will be referred to and abbreviated to "VN(s)".
+Concord Core aims to create a new blockchain structure, based on a new aalidation and storage-based consensus protocol, without removing the security and decentralized nature of the average cryptocurrency blockchain. The consensus will be kept via optionally-participating Validator Nodes, which in the future will be referred to and abbreviated as "VN(s)".
 
-VNs scan, emulate and validate the blockchain and it's network at all times. In order for a Block to be broadcasted into the network it must first be submitted to all VNs, once all available VNs have received the block they will perform their validation checks against their own copy of the blockchain, there must be a collective consensus percentage of atleast 50% for a block to pass validation and be broadcasted to all Nodes throughout the Core Chain via Masternodes, whom will be referred to as "MN(s)" in the future.
+VNs scan, emulate, and validate the blockchain and the network at all times. In order for a block to be broadcasted into the network, it must first be submitted to all VNs. Once all available VNs have received the block, they will perform their validation checks against their own copy of the blockchain. There must be a collective consensus percentage of at least 50% for a block to pass validation and be broadcasted to all nodes throughout the Core Chain via Masternodes(which will be referred to as "MN(s)" in the future.).
 
-MNs store, distribute and serve the blockchain to all Lightnodes and Light-Validators. Each Masternode must have it's own copy of the full blockchain to distribute to any nodes connected to it, meaning having many of these across the globe is essentially a large validator-secured distributed database. MNs allow Lightnodes "LN(s)" and Light-Validators to function properly, without forcing them to store a full copy of the blockchain by themselves.
+MNs store, distribute, and serve the blockchain to all Lightnodes and Light-Validators. Each Masternode must have its own copy of the full blockchain to distribute to any nodes connected to it. This means having many of these across the globe is essentially a large validator-secured distributed database. MNs allow Lightnodes "LN(s)" and Light-Validators to function properly, without forcing them to store a full copy of the blockchain by themselves.
 
 
 ### Client
@@ -42,7 +42,7 @@ $ npm test
 
 ### Contribution and License Agreement
 
-If any issues are discovered within the project, you are free to correct and Fork/PR, or send an issue within our Repo.
+If any issues are discovered within the project, you are free to correct and Fork/PR, or send an issue within the Concord Repo.
 
 If you contribute code to this project, you are implicitly allowing your code
 to be distributed under the Apache 2.0 license. You are also implicitly verifying that
