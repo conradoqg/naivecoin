@@ -33,7 +33,6 @@
     "es6-error": "^4.0.2",
     "express": "^4.16.2",
     "fs-extra": "^5.0.0",
-    "nat-pmp": "^1.0.0",
     "node-downloader-helper": "^1.0.8",
     "pug": "^2.0.0-rc.4",
     "ramda": "^0.25.0",
