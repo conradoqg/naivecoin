@@ -1,0 +1,890 @@
+@keyframes introAnim {
+    0% {
+        opacity: 0;
+        top: 120px;
+    }
+
+    5% {
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 0.75;
+        top:40%;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+        top:40%;
+    }
+
+	99% {
+        opacity: 0;
+		top: 120px;
+    }
+    100% {
+        opacity: 0;
+        top: 120px;
+    }
+}
+
+@keyframes introSlide {
+	0% {
+		left: -500px;
+    }
+	80% {
+		left: -2200px;
+    }
+    100% {
+        left: -2500px;
+    }
+}
+
+.introText {
+	user-select: none;
+	z-index:12;
+	position: fixed;
+	top: 27.5%;
+	left: 40%;
+	animation: introAnim 10s 1;
+	animation-delay: 2s;
+	font-size: 27.5px;
+}
+.bgImg {
+	user-select: none;
+	z-index: 11;
+	opacity: 1;
+	position: absolute;
+	top: -900px;
+	left: -1150px;
+	height: 2090px;
+	width: 2000px;
+	transform: rotate(-25deg);
+	color: #2e3033;
+	animation-name: introSlide;
+	animation-delay: 13s;
+	background-color: #2e3033;
+	animation-duration: 2.5s;
+	animation-iteration-count: 1;
+}
+
+.topnav {
+	user-select: none;
+    overflow: overlay;
+    background: linear-gradient(limegreen, green);
+    width: 86.5%;
+    -webkit-app-region: no-drag;
+    margin: 0px auto;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.ch-grid {
+	user-select: none;
+	margin: 20px 0 0 0;
+	padding: 0px;
+	top: 126px;
+	left: 11px;
+	position: absolute;
+	list-style: none;
+	display: block;
+	text-align: center;
+	width: 100%;
+}
+
+.ch-grid:after,
+.ch-item:before {
+	content: '';
+    display: table;
+}
+
+.ch-grid:after {
+	clear: both;
+}
+
+.ch-grid li {
+	width: 220px;
+	height: 220px;
+	display: inline-block;
+	margin: 20px;
+}
+
+.ch-item {
+	user-select: none;
+	width: 90%;
+	height: 90%;
+	border-radius: 50%;
+	position: relative;
+	cursor: default;
+	box-shadow:
+		inset 0 0 0 0 rgb(134, 220, 139),
+		inset 0 0 0 16px rgba(255, 0, 0, 0),
+		0 1px 2px rgba(255, 0, 0, 0);
+	transition: all 1.2s cubic-bezier(0.42, 0, 0.2, 1);
+}
+
+.ch-img-1 {
+	user-select: none;
+	background-image: url(concordLogo.png);
+	-webkit-app-region: no-drag;
+}
+
+.ch-info {
+	user-select: none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	opacity: 0;
+	transition: all 1.4s cubic-bezier(0.65, 0.06, 0, 1.33);
+	transform: scale(0);
+	backface-visibility: hidden;
+}
+
+.ch-info h3 {
+	user-select: none;
+	color: rgba(255, 255, 255, 0);
+	text-transform: uppercase;
+	position: relative;
+	letter-spacing: 2px;
+	font-size: 22px;
+	margin: 0 30px;
+	padding: 65px 0 0 0;
+	height: 110px;
+	font-family: corbel;
+	text-shadow:
+		0 0 1px rgba(255, 255, 255, 0),
+		0 1px 2px rgba(0,0,0,0.3);
+}
+
+.ch-info p {
+	user-select: none;
+	color: rgb(255, 255, 255);
+	padding: 10px 5px;
+	font-style: italic;
+	margin: 0 30px;
+	font-size: 12px;
+	position:relative;
+	top: 0px;
+	overflow: visible;
+	border-top: 1px solid rgba(255, 255, 255, 0);
+}
+
+.ch-info p a {
+	user-select: none;
+	transition: all 0.4s cubic-bezier(0.42, 0, 0.2, 1.16);
+	display: block;
+	color: rgba(255,255,255,0.7);
+	font-style: normal;
+	position: relative;
+	font-weight: 700;
+	overflow: visible;
+	cursor: pointer;
+	text-transform: uppercase;
+	font-size: 15px;
+	border-radius: 10px 10px 10px 10px;
+	letter-spacing: 1px;
+	margin-top: 10px;
+	padding-top: 0px;
+	height: 129px;
+	padding-top:15px;
+	top: -95px;
+	font-family: corbel;
+	z-index:5;
+	-webkit-app-region: no-drag;
+}
+
+.ch-info p a:hover {
+	color: #93e267;
+}
+
+.ch-item:hover {
+	box-shadow:
+		inset 0 0 0 110px rgba(134, 220, 139, 0.65),
+		inset 0 0 0 16px rgba(255, 255, 255, 0),
+		0 1px 2px rgba(0, 0, 0, 0);
+}
+
+.ch-item:hover .ch-info {
+	opacity: 1;
+	transform: scale(1);
+}
+
+.topnav a {
+	user-select: none;
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 5px 9px;
+    text-decoration: none;
+    font-size: 19px;
+    width: 22.2997%;
+    white-space: nowrap;
+    font-family: corbel;
+}
+
+.topnav a:hover {
+	user-select: none;
+    background-color: #ddd;
+    color: black;
+    cursor: pointer;
+}
+
+@keyframes glowing {
+    0% {
+        filter: drop-shadow(0px 0px 0px lime);
+    }
+
+    50% {
+        filter: drop-shadow(0px 0px 6px lime);
+    }
+
+    100% {
+        filter: drop-shadow(0px 0px 0px lime);
+    }
+}
+
+@keyframes start {
+    0% {
+        width: 0%;
+        opacity: 0%;
+    }
+
+    100% {
+        width: 20%;
+        opacity: 100%;
+    }
+}
+
+.coreImg {
+    display: block;
+    padding-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+	user-select: none;
+    animation-name: glowing;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+}
+
+.update {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 3px 17px;
+    text-align: center;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    animation-name: glowing;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    -webkit-app-region: no-drag;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+	user-select: none;
+}
+
+.sendMsg {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    animation-name: glowing;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    -webkit-app-region: no-drag;
+	user-select: none;
+}
+
+h1 {
+    color: #33cc33;
+    font-family: corbel;
+    font-size: 300%;
+	user-select: none;
+}
+
+h2 {
+    font-family: corbel;
+	user-select: none;
+}
+
+h3 {
+    color: white;
+    font-family: corbel;
+	user-select: none;
+}
+
+h4 {
+    font-family: corbel;
+	user-select: none;
+}
+
+h5 {
+    color: white;
+    font-family: corbel;
+	user-select: none;
+}
+
+p {
+    color: white;
+    font-family: corbel;
+    font-size: 160%;
+	user-select: none;
+}
+
+span {
+    color: white;
+    font-family: corbel;
+	user-select: none;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    border-radius: 4px;
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0,0,0);
+    /* Fallback color */
+    background-color: rgba(0,0,0,0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    border-radius:15px;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+/* The Close Button */
+.close {
+	user-select: none;
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    -webkit-app-region: no-drag;
+}
+
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    text-align:center;
+    padding: 2px 16px;
+    top:-2px;
+    position:relative;
+    border-radius:15px 15px 2px 2px;
+    background-color: #39bf39;
+    color: white;
+}
+
+.modal-body {
+    padding: 2px 16px;
+}
+
+.mainBody {
+    overflow-x: hidden;
+}
+
+.exit {
+	user-select: none;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    width: 35px;
+    height: 35px;
+    top: 2px;
+    right: 2px;
+    cursor: pointer;
+    transition: 0.6s;
+    -webkit-app-region: no-drag;
+}
+
+.exit:hover {
+    transform: rotate(90deg);
+    -webkit-app-region: no-drag;
+}
+
+.changelogButton {
+	user-select: none;
+    z-index:2;
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    width: 75px;
+    height: 18px;
+    bottom: -25px;
+    left: 3px;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    color: white;
+    font-family: Corbel;
+    font-size: 13px;
+}
+
+.exit:hover {
+    transform: rotate(90deg);
+    -webkit-app-region: no-drag;
+}
+
+.settings {
+	user-select: none;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30px;
+    height: 30px;
+    top: 8px;
+    left: 8px;
+    cursor: pointer;
+    transition: 0.6s;
+    -webkit-app-region: no-drag;
+}
+
+.settings:hover {
+    transform: rotate(90deg);
+    -webkit-app-region: no-drag;
+}
+
+.button {
+  -webkit-app-region: no-drag;
+}
+
+.switch {
+	user-select: none;
+    z-index:1;
+    position: relative;
+    display: inline-block;
+    width: 54px;
+    height: 28px;
+    -webkit-app-region: no-drag;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    -webkit-app-region: no-drag;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    -webkit-app-region: no-drag;
+}
+
+input:checked + .slider {
+    background-color: limegreen;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 19px;
+    -webkit-app-region: no-drag;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.peersBox {
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    position: fixed;
+    bottom: 23px;
+    right: 0px;
+    width: 35px;
+    height: 35px;
+    top: 536px;
+    right: 0px;
+}
+
+.footer {
+   position:fixed;
+   left: 0px;
+   bottom: 0px;
+   width: 100%;
+   height: 75px;
+   background: linear-gradient(to bottom, rgba(54, 57, 62, 0), rgba(54, 57, 62, 0.92),  rgb(54, 57, 62),  rgb(54, 57, 62));
+   color: white;
+   text-align: center;
+   user-select: none;
+}
+
+.peersImage {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 8px;
+    left: -22px;
+	user-select: none;
+}
+
+.peersAmount {
+    position: relative;
+    height: 20px;
+    width: 15px;
+    top: -4px;
+    left: 0px;
+	user-select: none;
+}
+
+.centerText {
+    text-align: center;
+}
+
+.chatBoxInput {
+    z-index:1;
+    text-align: center;
+    bottom: 2%;
+    position: fixed;
+    width: 140%;
+    left: -20%;
+}
+
+.privKey {
+	z-index:1;
+    padding-top: 5px;
+    background-color: #36393e;
+    border: none;
+    border-color: #36393e;
+    border-bottom: 2px solid lime;
+    outline-color: transparent;
+    width: 20%;
+    bottom: 10%;
+    transition: 0.2s;
+    animation-iteration-count: 1;
+    animation: start 0.4s 1;
+    animation-delay: 2.5s;
+    -webkit-app-region: no-drag;
+}
+
+.privKey:focus {
+    width: 30%;
+    outline: none;
+    -webkit-app-region: no-drag;
+}
+
+.msgBox {
+    padding-top: 25px;
+    background-color: rgba(54, 57, 62, 0);
+    border: none;
+    color: limegreen;
+    border-color: rgba(54, 57, 62, 0);
+    border-bottom: 2px solid lime;
+    outline-color: transparent;
+    width: 20%;
+    transition: 0.2s;
+    -webkit-app-region: no-drag;
+}
+
+.msgBox:focus {
+    padding-top: 25px;
+    border-color: rgba(54, 57, 62, 0);
+    border-bottom: 2px solid lime;
+    outline-color: transparent;
+    width: 30%;
+    outline: none;
+    background-color: rgba(54, 57, 62, 0);
+    -webkit-app-region: no-drag;
+}
+
+.amountBox {
+    padding-top: 25px;
+    background-color: rgba(54, 57, 62, 0);
+    border: none;
+    color: limegreen;
+    border-color: rgba(54, 57, 62, 0);
+    border-bottom: 2px solid lime;
+    outline-color: transparent;
+    width: 20%;
+    transition: 0.2s;
+    -webkit-app-region: no-drag;
+}
+
+.amountBox:focus {
+    padding-top: 25px;
+    border-color: rgba(54, 57, 62, 0);
+    border-bottom: 2px solid lime;
+    outline-color: transparent;
+    width: 30%;
+    outline: none;
+    background-color: rgba(54, 57, 62, 0);
+    -webkit-app-region: no-drag;
+}
+
+.ipBox {
+    padding-top: 25px;
+    background-color: rgba(54, 57, 62, 0);
+    border: none;
+    color: limegreen;
+    border-color: rgba(54, 57, 62, 0);
+    border-bottom: 2px solid lime;
+    outline-color: transparent;
+    width: 20%;
+    transition: 0.2s;
+    -webkit-app-region: no-drag;
+}
+
+.ipBox:focus {
+    padding-top: 25px;
+    border-color: rgba(54, 57, 62, 0);
+    border-bottom: 2px solid lime;
+    outline-color: transparent;
+    width: 30%;
+    outline: none;
+    background-color: rgba(54, 57, 62, 0);
+    -webkit-app-region: no-drag;
+}
+
+.sendBox {
+    padding-top: 25px;
+    background-color: #36393e;
+    border: none;
+    color: limegreen;
+    border-color: #36393e;
+    border-bottom: 2px solid lime;
+    outline-color: transparent;
+    width: 20%;
+    transition: 0.2s;
+    -webkit-app-region: no-drag;
+}
+
+.sendBox:focus {
+    padding-top: 25px;
+    border-color: #36393e;
+    border-bottom: 2px solid lime;
+    outline-color: transparent;
+    width: 30%;
+    outline: none;
+    background-color: #36393e;
+    -webkit-app-region: no-drag;
+}
+
+@font-face {
+    font-family: 'concordText';
+    src: url('droid-sans/DroidSans.ttf');
+}
+
+.aMessage {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    max-width: 60%;
+    text-align: left;
+    left: 60px;
+    margin: -1px 10px;
+    color: white;
+    background-color: green;
+    border-radius: 40px;
+}
+
+.aMessage h4 {
+    position: relative;
+    font-family: concordText;
+    word-wrap: break-word;
+    padding:5px 5px 5px 10px;
+    width: -webkit-fill-available;
+    text-align: left;
+    top:1px;
+    margin: 2px;
+    color: white;
+}
+
+.messageAvatar{
+    position: relative;
+    top: 22px;
+    float: left;
+    left: 36px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: left;
+}
+
+
+.messageAvatarMine{
+    position: relative;
+    top: 22px;
+    float: right;
+    right: 37px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: right;
+}
+
+.aMessageMine {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    max-width: 60%;
+    text-align: right;
+    right: 50px;
+    margin: -1px 10px;
+    color: white;
+    background-color: darkgreen;
+    border-radius: 40px;
+}
+
+.aMessageMine h4 {
+    position: relative;
+    font-family: concordText;
+    word-wrap: break-word;
+    padding:5px 5px 5px 10px;
+    width: -webkit-fill-available;
+    text-align: left;
+    margin: 2px;
+    color: white;
+}
+
+.messageNickname {
+    position: relative;
+    text-align: left;
+    top: 12px;
+    left: -35px;
+}
+
+.messageNicknameMine {
+    position: relative;
+    text-align: right;
+    top: 18px;
+    right: -35px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 25px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: darkgreen;
+    border-radius: 25px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: green;
+}
+
+.copyID {
+    outline-color: transparent;
+    outline: none;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    animation-name: glowing;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    -webkit-app-region: no-drag;
+}
+
+.ID {
+    resize: none;
+    outline-color: transparent;
+    background-color: transparent;
+    -moz-box-shadow: none;
+    height: 0px;
+    margin-bottom: 50px;
+}

@@ -1,0 +1,721 @@
+<!--
+
+WARNING - WARNING - WARNING
+
+This file is very disorganized and has mixed-styling
+as this project was started prior to me learning
+styleguides, eventually this will be entire styled
+under the Standard JS Styleguide and is automatically
+linted per-commit or push.
+
+This project was entirely programmed by Eupharia, Owner
+and Lead Developer of Concord (Doesn't mean this is perfect
+by any means!) and is based on Naivecoin/Naivechain, by two
+amazing open-source GitHub developers
+
+THANK YOU!~ <3
+
+-->
+
+
+
+<html>
+  <head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concord Core</title>
+  <link rel="stylesheet" href="styles.css">
+  </head>
+<div class="topnav" id="menu" style="display:none">
+  <a draggable="false" type="button" onclick="loadCore();">Core</a>
+  <a draggable="false" type="button" onclick="loadSend();">Send</a>
+  <a draggable="false" type="button" onclick="loadRecieve();">Receive</a>
+  <a draggable="false" type="button" onclick="loadMessage();">Message</a>
+</div>
+<img class="coreImg" id="titleImg" src="concordCore.gif" alt="Concord" draggable="false" style="display:none">
+<ul id="upgradeGrid" class="ch-grid" style="display:none">
+<li>
+  <div class="ch-item ch-img-1">
+    <div class="ch-info">
+      <p><a id="upgradeButton" onclick="upgradeToMasternode();">Upgrade to Masternode</a></p>
+    </div>
+  </div>
+</li>
+</ul>
+<body class="mainBody" oncontextmenu="return false">
+  <img class="exit" oncontextmenu="return false" id="exit" onclick="exitCore();" class="exit" src="x.png" alt="x" draggable="false">
+  <img class="settings" oncontextmenu="return false" id="settings" style="display:none" onclick="loadSettings();" class="settings" src="settingsCog.png" alt="Settings" draggable="false">
+<div id="recieveMenu" style="display:none" class="centerText">
+  <h3 readonly="" id="ID" class="ID">Unknown</h3><button class="copyID" style="vertical-align:top;">Copy Identity</button>
+  <script>
+  document.getElementById("upgradeGrid").style.display = "none";
+  var address;
+  var walletID;
+  var balanceDecimals = 6;
+  const clipboardy = require('clipboardy');
+  const req = require('requestify')
+  const fs = require('fs');
+  var x11 = require('x11-hash-js');
+
+  var coreImgOffline = "concordLogoOffline.png";
+  var coreImgOnline = "concordLogo.png";
+  var coreImgConnecting = "concordLogoConnecting.png";
+  var coreImgSpin = "concordCore.gif";
+
+  var copyTextareaBtn = document.querySelector('.copyID');
+
+  var stopStatus = 0
+
+
+  copyTextareaBtn.addEventListener('click', function(event) {
+    if(document.getElementById("ID").innerHTML != 'Identity Copied!'){
+       try {
+          clipboardy.writeSync(address);
+          document.getElementById("ID").innerHTML = 'Identity Copied!';
+          setTimeout(function(){document.getElementById("ID").innerHTML = address},2500);
+       } catch (err) {
+          console.log('Error, Couldn\'t copy Identity');
+          document.getElementById("ID").innerHTML = 'Identity couldn\'t copy';
+          setTimeout(function(){document.getElementById("ID").innerHTML = address},2500);
+       }
+    }
+  });
+  document.getElementById("recieveMenu").style.visibility = 'hidden';
+  document.getElementById("recieveMenu").style.display = "none";
+  </script>
+  </div>
+<div id="messageMenu" style="display:none">
+  <h3 id="msgInfo" class="centerText">Broadcast an ID-Message</h3>
+  <h3 class="centerText">Chat History:</h3>
+  <div id="lastMessages"></div>
+  <div class="chatBoxInput">
+    <input oncontextmenu="return false" id="ipBox" name="msgBox" type="msgBox" class="ipBox" value="ID" color="#4CAF50" autofocus="autofocus"><input oncontextmenu="return false" id="msgBox" name="msgBox" type="msgBox" class="msgBox" value="Message" color="#4CAF50" autofocus="autofocus"><button class="sendMsg" style="vertical-align:bottom;" onclick="broadcastMsg();">Broadcast</button>
+  </div>
+  <script>
+  const Discord = require('discord.js');
+  var bot = new Discord.Client();
+  </script>
+
+  </div>
+<div id="optionsMenu" style="display:none" class="centerText">
+  <h3 id="optionInfo">Options and Preferences</h3>
+  <h5>CSP Network<br> </br>
+  <label class="switch">
+  <input id="networkChecker" onclick="changeNetwork();" type="checkbox">
+  <span class="slider round"></span>
+  </label>
+  <br>
+  <br>
+  <br>
+  </h5>
+  <h6 id="changelogButton" class="changelogButton" onclick="openChangelog();">Changelog</h6>
+  <script>
+  var isNetworkChecked;
+    fs.readFile("pref2.pref", 'utf8', function(err, contents) {
+          if(!err){
+            console.log('CSP Hard-link is enabled');
+            isNetworkChecked = 1;
+            document.getElementById("networkChecker").checked = true;
+          }else{
+            console.log('CSP Hard-link is disabled');
+            isNetworkChecked = 0;
+            document.getElementById("networkChecker").checked = false;
+          }
+        });
+        fs.readFile("pref3.pref", 'utf8', function(err, contents) {
+          if(!err){
+            console.log('Masternode Enabled');
+            document.getElementById("upgradeButton").innerHTML = 'Downgrade to Lightnode';
+            nodeType = 1;
+            setTimeout(function(){stopStatus = 0;},2500);
+          }else{
+            console.log('Lightnode Enabled');
+            nodeType = 0;
+          }
+        });
+    document.getElementById("optionsMenu").style.display = "none";
+    function changeNetwork(){
+      isNetworkChecked = document.getElementById("networkChecker").checked;
+      if(isNetworkChecked == 1){
+        fs.writeFile('pref2.pref', 'true', function(err) {
+          if(err){
+            console.log('Error writing pref2-file');
+            document.getElementById("optionInfo").innerHTML = 'Error Saving - Please open Core as Administrator';
+          }else{
+            document.getElementById("optionInfo").innerHTML = 'Switched Networking to CSP';
+          }
+        });
+      }else{
+        fs.unlinkSync('pref2.pref');
+        document.getElementById("optionInfo").innerHTML = 'Switched Networking to Core Chain';
+        isNetworkChecked = 0;
+      }
+    }
+  </script>
+</div>
+<div id="sendMenu" style="display:none" class="centerText">
+  <h3 id="sendInfo">Send Concord to an Identity (ID)</h3>
+  <input oncontextmenu="return false" id="sendBox" name="amountBox" type="amountBox" class="sendBox" placeholder="ID" color="#4CAF50" autofocus="autofocus"><input oncontextmenu="return false" id="amountBox" name="amountBox" type="amountBox" class="amountBox" placeholder="0" color="#4CAF50" autofocus="autofocus"><button class="sendMsg" style="vertical-align:bottom;" onclick="sendTransaction();" href="#">Send</button>
+  <br>
+  <input oncontextmenu="return false" id="sendPassword" name="sendPassword" type="sendPassword" class="sendBox" placeholder="Wallet Password" color="#4CAF50" autofocus="autofocus">
+  <script>
+  document.getElementById("sendMenu").style.display = "none";
+  const amtEnter = document.getElementsByClassName("amountBox")[0];
+  amtEnter.addEventListener("keydown", function(event) {
+    if (event.key === "Enter"){
+      sendTransaction();
+    }
+  });
+
+  function sendTransaction () {
+    var amount = Number(Number(document.getElementById('amountBox').value).toFixed(8))
+    var to = document.getElementById('sendBox').value
+    var password = document.getElementById('sendPassword').value
+    console.log("stuffs:\nHeader: '"+password)
+    req.request(hostUrl+'operator/wallets/'+walletID+'/transactions', {
+    method: 'POST',
+    headers: {
+      "password": password
+    },
+    body: {
+      "fromAddress": address,
+      "toAddress": to,
+      "amount": amount,
+      "changeAddress": address
+    },
+      dataType: 'json'
+    }).then(function(response) {
+      console.log("Blockchain: "+response.body)
+      getBalance()
+    }).fail(function(response) {
+      console.log("Error "+response.getCode()+" on POST "+hostUrl+'operator/wallets/'+to+'/transactions\n'+response.body)
+    })
+  }
+
+  function getBal(){
+    if(bot && isNetworkChecked == 0 && lastMsg && nodeList.length >= 1){
+      var chnnl = lastMsg.member.guild.channels.find('name','cx-admin-debug');
+      chnnl.send('!apibal '+identity);
+    }else if(bot && isNetworkChecked == 1 && lastMsg){
+      var chnnl = lastMsg.member.guild.channels.find('name','cx-admin-debug');
+      chnnl.send('!apibal '+identity);
+    }
+  }
+  </script>
+  </div>
+</body>
+  <body oncontextmenu="return false" style="-webkit-app-region: drag">
+<div id="myModal" class="modal">
+<div class="modal-content">
+  <div class="modal-header">
+    <span class="close">&times;</span>
+    <h2 id="changelogVer">Changelog for Version </h2>
+  </div>
+  <div class="modal-body">
+    <h4 id="changelogContent">Update stuff</p>
+  </div>
+</div>
+
+</div>
+    <div oncontextmenu="return false" id="coreMenu" class="centerText">
+  <script>
+var modal = document.getElementById('myModal');
+
+var btn = document.getElementById("myBtn");
+
+var span = document.getElementsByClassName("close")[0];
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+function openChangelog(){
+modal.style.display = "block";
+document.getElementById("changelogContent").innerHTML = currentChangelog;
+document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer;
+}
+
+  document.getElementById("settings").style.display = "none";
+  document.getElementById("messageMenu").style.display = "none";
+  var xShutdown = 0;
+  window.onbeforeunload = (e) => {
+    if(xShutdown == 0){
+      e.returnValue = false;
+    }
+  }
+  var msgList = [];
+  setInterval(function(){xShutdown = 0; document.getElementById("lastMessages").innerHTML = msgList.join("<br>") + '<br><br><br><br><br>';},750);
+  // CONCORD NODE STARTUP DATA
+  const ipc = require('electron').ipcRenderer;
+  const notifier = require('electron-notifications')
+  var exitButton = document.getElementById('exit');
+  exitButton.addEventListener('click', function(){
+    ipc.once('actionReply', function(event, response){
+      exitCore();
+    })
+    ipc.send('invokeAction', 'exit');
+  });
+
+  /* fs.readFile("lockfile.lock", 'utf8', function(err, contents) {                        // *DEPRECATED
+    if(!err){
+      if(contents == 'on'){
+        //fs.readFile("safelock.lock", 'utf8', function(errr, contentss) {
+          //if(errr){
+            //console.log('Terminating');
+            //terminate();
+          //}else if(!errr){
+            //console.log('Safelock shows a crash, aborting termination');
+          //}
+        //});
+      }else{
+        fs.writeFile('lockfile.lock', 'on', function(err) {
+          if(err){
+            console.log('Error writing lock-file');
+          }
+        });
+      }
+    }else{
+      fs.writeFile('lockfile.lock', 'on', function(err) {
+        if(err){
+          console.log('Error writing lock-file');
+        }
+      });
+    }
+  }); */
+
+
+  var notification;
+  var path = require('path');
+  var desktopPath = require('path').join(require('os').homedir(), 'Desktop');
+  desktopPath = desktopPath.replace('\\','/');
+  desktopPath = desktopPath.replace('\\','/');
+  desktopPath = desktopPath.replace('\\','/');
+  desktopPath = desktopPath.replace('\\','/');
+  desktopPath = desktopPath.replace('\\','/');
+  console.log(desktopPath);
+  const { DownloaderHelper } = require('node-downloader-helper');
+  var userName = process.env['USERPROFILE'].split(path.sep)[2];
+  var loginId = path.join("domainName",userName);
+  var appdata = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : '/var/local');
+  appdata = appdata.replace('\\','/');
+  appdata = appdata.replace('\\','/');
+  appdata = appdata.replace('\\','/');
+  appdata = appdata.replace('\\','/');
+  appdata = appdata.replace('\\','/');
+  appdata = appdata.replace('\\','/');
+  appdata = appdata.replace('\\','/');
+  var appdataPath = appdata+'/Concord Core/';
+  var host
+  var port = '3001'
+  var hostUrl
+
+  fs.readFile("bin/ip.pref", 'utf8', function(err, contents) {
+    if (!err) {
+      host = contents.replace(/(\r\n|\n|\r)/gm,"")
+      hostUrl = 'http://'+host+':'+port+"/"
+      console.log("Connecting to "+hostUrl+" for REST Wallet GUI Control")
+      setTimeout(checkWallet, 5500)
+    } else {
+      console.log("Error loading IP Preference - "+err)
+    }
+  })
+
+  console.log(appdataPath);
+  if (fs.existsSync(appdataPath)) {
+    console.log(appdataPath+' has already been created');
+  } else {
+    try{
+      fs.mkdirSync(appdataPath);
+      console.log('Created AppData directory');
+    } catch(err) {
+      console.log('Couldn\'t create AppData directory');
+    }
+  }
+
+  document.getElementById("menu").style.visibility = 'hidden';
+  var lastMsg;
+  const swal = require('sweetalert');
+  const DiscordRPC = require('discord-rpc');
+  const rpc = new DiscordRPC.Client({ transport: 'ipc' });
+  const startTimestamp = new Date();
+  var nodeList = [];
+  var nodeVer = 'Concord Core 0.2';
+  var nodeVerNum = '20';
+  var currentChangelog = '<b>Additions:</b><br>Added Identity System with x11 hashing<br>Added FraudGuard.io client-side protection<br>Added instant Network-Switcher for the ability to choose the transaction network<br>Added basic Raining abilities to the Send tab<br>Added new chat-system, aliases, bubbles, SMS format<br><br><b>Fixes:</b><br>Fixed balances from displaying incorrectly temporarily after transactions<br>Fixed animations for all text-input borders<br><br><b>Changes:</b><br>Changed text-inputs to reset after confirming the text<br>Changed the navmenu\'s fixed scaling to auto-scale with Core<br>Slightly decreased transparency on the application';
+  var myLastMsg;
+  var d;
+  var term = 0;
+  var updateNeeded = 0;
+  var titleImgSrc = document.getElementById('titleImg');
+  if(titleImgSrc && titleImgSrc.style) {
+    titleImgSrc.style.height = '250px';
+    titleImgSrc.style.width = '250px';
+  }
+async function setActivity() {
+var versionz = nodeVer.replace('Concord','');
+versionz = versionz.replace('Core','');
+versionz = versionz.replace(' ','');
+versionz = versionz.replace(' ','');
+var networkType = '';
+var nodeName = '';
+if(isNetworkChecked == 1){
+networkType = 'Lightnet';
+}else{
+networkType = 'Core Chain'
+}
+
+if(nodeType == 0){
+   nodeName = 'Lightnode';
+}else if(nodeType == 1){
+   nodeName = 'Masternode';
+}else if(nodeType == 2){
+   nodeName = 'Validator';
+}
+rpc.setActivity({
+  details: nodeName,
+  state: 'Network: '+networkType,
+  startTimestamp,
+  largeImageKey: 'concordcore',
+  largeImageText: 'Concord Core',
+  smallImageKey: 'concordcore',
+  smallImageText: nodeName,
+  instance: false,
+});
+}
+
+
+
+rpc.login({clientId:'423599777436008458'}).catch(console.error);
+rpc.on('ready', () => {
+setActivity();
+rpcLogged = 1;
+
+// activity can only be set every 15 seconds
+setInterval(() => {
+  setActivity();
+}, 15e3);
+});
+
+  //CORE TERMINATION
+
+  function terminate(){
+    setTimeout(function(){
+      document.getElementById("titleImg").src=coreImgOffline;
+      document.getElementById("nodeStatus").innerHTML = 'Node Terminated';
+      document.getElementById("menu").style.visibility = 'hidden';
+      document.getElementById("peersBox").style.visibility = 'hidden';
+      setInterval(function(){
+        terminate();
+      },500);
+      term = 1;
+    },500);
+  }
+
+  function exitCore(){
+  if(term == 0){
+    var write = 'off';
+  }else{
+    var write = 'on';
+  }
+    fs.writeFile('lockfile.lock', write, function(err) {
+      if(err){
+        console.log('Error writing lock-file');
+      } else {
+        if(write == 1){
+          fs.exists('safelock.lock', (exists) => {
+            if(exists){
+              fs.unlinkSync('safelock.lock');
+            } else {
+              console.log('No safelock found');
+            }
+          });
+        }
+        console.log('Shutting down Core Safely');
+        setTimeout(function(){
+          xShutdown = 1;
+          app.quit();
+          process.exit();
+        },30);
+      }
+    });
+  }
+
+
+  //CONCORD NODE API --> GUI FUNCTIONS
+
+  function checkWallet () {
+    fs.exists('bin/data/1/wallet.json', (exists) => {
+      if (exists) {
+        console.log("Wallet.json found, reading and importing")
+        fs.readFile("bin/data/1/wallet.json", 'utf8', function(err, contents) {
+          if (err) {
+            console.log("ERROR reading wallet.json")
+            return
+          } else {
+            contents = JSON.parse(contents)
+            walletID = contents.id
+            console.log("Wallet ''"+walletID+"'' loaded, searching for addresses")
+            fs.readFile("bin/data/1/addresses.json", 'utf8', function(err, contents) {
+              if (err) {
+                console.log("ERROR reading addresses.json")
+                return
+              } else {
+                contents = JSON.parse(contents)
+                address = contents.address
+                console.log("Address '"+address+"' loaded as default address")
+                getBalance()
+              }
+            })
+          }
+        })
+      } else {
+        console.log('No wallet found, generating new one')
+        req.post(hostUrl+'operator/wallets', {password: 'test test test test test'}).then(function(response) {
+          console.log("Blockchain: "+response.body)
+          fs.writeFile('bin/data/1/wallet.json', response.body, function(err) {
+            if (err) {
+              console.log("ERROR saving WalletID: "+err)
+              return
+            } else {
+              response.body = JSON.parse(response.body)
+              if (response.body.id && response.body.id.length === 64) {
+                if (response.body.addresses && response.body.addresses.length === 0) {
+                  var newWalletID = response.body.id
+                  console.log("Generating new wallet address")
+                  req.request(hostUrl+'operator/wallets/'+newWalletID+'/addresses', {
+    	            method: 'POST',
+    	            headers: {
+    		           'password': 'test test test test test'
+    	            },
+    	              dataType: 'json'
+                  }).then(function(response) {
+                    console.log("Blockchain: "+response.body)
+                    fs.writeFile('bin/data/1/addresses.json', response.body, function(err) {
+                      if (err) {
+                        console.log("ERROR saving Address: "+err)
+                        return
+                      } else {
+                        response.body = JSON.parse(response.body)
+                        address = response.body.address
+                      }
+                    })
+                  }).fail(function(response) {
+          		      console.log("Error "+response.getCode()+" on POST "+hostUrl+'operator/wallets/'+newWalletID+'/addresses')
+          	      })
+                } else {
+                  console.log("Wallet address already exists")
+                }
+              } else {
+                console.log("WalletID not 64 characters long, invalid.")
+              }
+            }
+          })
+        }).fail(function(response) {
+		      console.log("Error "+response.getCode()+" on POST "+hostUrl+'operator/wallets')
+	      })
+      }
+    })
+  }
+
+  function getBalance () {
+    req.get(hostUrl+'operator/'+address+'/balance').then(function(response) {
+      console.log("Blockchain Balance: "+response.body)
+	     response = JSON.parse(response.body)
+       if(response.balance){
+         document.getElementById("nodeStatus").innerHTML = Number(parseFloat(response.balance).toFixed(balanceDecimals)).toPrecision()+' CXD';
+       }
+     }).fail(function(response) {
+       console.log("Error "+response.getCode()+" on GET "+hostUrl+'operator/'+address+'/balance')
+     })
+  }
+
+  var isMining = 0
+
+  function toggleMining () { //Will eventually be changed to a TOGGLE not a per-click manual
+    document.getElementById("miningSwitch").value = "Mining..."
+    req.post(hostUrl+'miner/mine', {rewardAddress: address, feeAddress: address}).then(function(response) {
+      console.log(response)
+      response = JSON.parse(response.body)
+      document.getElementById("miningSwitch").value = "Mined Block "+response.index
+      getBalance()
+    }).fail(function(response) {
+      console.log("Error "+response.getCode()+" on POST "+hostUrl+'miner/mine')
+    })
+  }
+
+
+
+
+
+
+  //CONCORD NODE GUI UPDATING
+
+
+  function checkNodeStatus(){
+  if(updateNeeded == 0){
+    if(stopStatus == 0){
+      if(term == 0){
+        document.getElementById("titleImg").src=coreImgOnline;
+        document.getElementById("settings").style.display = "block";
+        if(updateNeeded == 0){
+          document.getElementById("peersBox").style.visibility = 'visible';
+            document.getElementById("nodeStatus").innerHTML = Number(parseFloat(balance).toFixed(balanceDecimals)).toPrecision()+' CXD';
+        } else {
+          document.getElementById("peersBox").style.visibility = 'hidden';
+        }
+        }else if(term == 1){
+          terminate();
+        }
+      }
+    }
+  }
+
+  function loadCore(){
+    document.getElementById("coreMenu").style.display = "block";
+    document.getElementById("recieveMenu").style.display = "none";
+    document.getElementById("messageMenu").style.display = "none";
+    document.getElementById("sendMenu").style.display = "none";
+    document.getElementById("optionsMenu").style.display = "none";
+    document.getElementById("menu").style.display = "block";
+    document.getElementById("menu").style.visibility = "visible";
+    document.getElementById("peersBox").style.display = "block";
+    stopStatus = 0;
+  }
+
+  function loadSend(){
+    if(updateNeeded == 0){
+      document.getElementById("coreMenu").style.display = "none";
+      document.getElementById("recieveMenu").style.display = "none";
+      document.getElementById("messageMenu").style.display = "none";
+      document.getElementById("optionsMenu").style.display = "none";
+      document.getElementById("sendMenu").style.display = "block";
+      document.getElementById("sendInfo").innerHTML = 'Send Concord to an Identity (ID)';
+    }
+  }
+
+  function loadRecieve(){
+  if(updateNeeded == 0){
+    document.getElementById("coreMenu").style.display = "none";
+    document.getElementById("messageMenu").style.display = "none";
+    document.getElementById("sendMenu").style.display = "none";
+    document.getElementById("optionsMenu").style.display = "none";
+    document.getElementById("recieveMenu").style.display = "block";
+    document.getElementById("recieveMenu").style.visibility = "visible";
+    document.getElementById("ID").innerHTML = address;
+  }
+  }
+
+  function loadMessage(){
+  if(updateNeeded == 0){
+    document.getElementById("coreMenu").style.display = "none";
+    document.getElementById("recieveMenu").style.display = "none";
+    document.getElementById("sendMenu").style.display = "none";
+    document.getElementById("optionsMenu").style.display = "none";
+    document.getElementById("messageMenu").style.display = "block";
+    document.getElementById("messageMenu").style.visibility = "visible";
+    document.getElementById("msgInfo").innerHTML = 'Broadcast an ID-Message';
+  }
+  }
+
+  function loadSettings(){
+  if(updateNeeded == 0){
+    document.getElementById("coreMenu").style.display = "none";
+    document.getElementById("recieveMenu").style.display = "none";
+    document.getElementById("sendMenu").style.display = "none";
+    document.getElementById("messageMenu").style.display = "none";
+    document.getElementById("optionsMenu").style.display = "block";
+    document.getElementById("optionsMenu").style.visibility = "visible";
+    document.getElementById("optionInfo").innerHTML = 'Options and Preferences';
+    //swal("Big Meow!", "Little Meow!", "success");
+  }
+  }
+
+
+  function updateCore(){
+    document.getElementById("coreMenu").style.display = "block";
+    document.getElementById("recieveMenu").style.display = "none";
+    document.getElementById("peersBox").style.display = "none";
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("messageMenu").style.display = "none";
+    document.getElementById("messageMenu").style.visibility = "hidden";
+    document.getElementById("coreMenu").style.visibility = "visible";
+    document.getElementById("titleImg").src=coreImgSpin;
+    console.log('Updating Concord Core');
+    const dl = new DownloaderHelper('https://www.euphmail.com/downloads/Concord%20Core%20Installer.exe', require('path').join(require('os').homedir(), 'Desktop'));
+
+    dl.on('end', () => completedUpdate())
+    dl.on('progress', (stats) => document.getElementById("nodeStatus").innerHTML = 'Update Progress: '+(Number(stats.progress)).toFixed(0)+'%')
+    dl.on('start', () => document.getElementById("nodeStatus").innerHTML = 'Download Started')
+    dl.on('error', () => retryUpdate())
+    dl.start();
+    document.getElementById("update").style.display = "none";
+    document.getElementById("nodeStatus").innerHTML = 'Starting Download';
+  }
+
+  function retryUpdate(){
+    document.getElementById("nodeStatus").innerHTML = 'Download Failed, retrying';
+    document.getElementById("titleImg").src=coreImgOffline;
+    setTimeout(function(){
+      updateCore();
+    },2500);
+  }
+
+  function completedUpdate(){
+    document.getElementById("nodeStatus").innerHTML = 'Download Completed<br>Core will shutdown in 10 seconds<br><small>The updated installer was downloaded to your Desktop*</small>';
+    document.getElementById("titleImg").src=coreImgOnline;
+    fs.renameSync(desktopPath+'/Concord%20Core%20Installer.exe',desktopPath+'/Concord Core Installer.exe');
+    setTimeout(function(){
+      //var exec = require('child_process').execFile;
+
+      //var fun = function(){
+      //	console.log("Unloading "+nodeVer);
+      //	exec(desktopPath+'/Concord Core Installer.exe', function(err, data) {
+      //		console.log(err)
+      //		console.log(data.toString());
+      //		setTimeout(function(){exitCore();},1000);
+      //	});
+      //}
+      //fun();
+      exitCore();
+    },10000);
+  }
+
+
+  function systemMessage(sysMsg){
+    var sysMsgProcessed = 'System: '+sysMsg;
+    msgList.push(sysMsgProcessed);
+  }
+
+  </script>
+  <div class="updateCenter">
+  <button id="update" class="update" onclick="updateCore();">Update</button>
+  </div>
+  <div class="introMaster" id="introMaster">
+  <div id="introText" class="introText"><p oncontextmenu="return false" id="introTextText"></p></div>
+  <div oncontextmenu="return false" id="introBg" class="bgImg"></div>
+  </div>
+  <p oncontextmenu="return false" id="nodeStatus"></p>
+  <br>
+  <input id="miningSwitch" onclick="toggleMining()" type="button" title="Mine a Block" value="Mine a Block" class="button">
+   <script>
+   var introText = document.getElementById("introTextText");
+   setTimeout(function(){introText.innerHTML += 'W';},2700);
+   setTimeout(function(){introText.innerHTML += 'e';},2750);
+   setTimeout(function(){introText.innerHTML += 'l';},2800);
+   setTimeout(function(){introText.innerHTML += 'c';},2850);
+   setTimeout(function(){introText.innerHTML += 'o';},2900);
+   setTimeout(function(){introText.innerHTML += 'm';},2950);
+   setTimeout(function(){introText.innerHTML += 'e';},3000);
+   setTimeout(function(){document.getElementById("introText").style.display = "none";document.getElementById("titleImg").style.display = "block";},11950);
+   setTimeout(function(){document.getElementById("introMaster").style.display = "none";document.getElementById("nodeStatus").style.display = "block";document.getElementById("menu").style.display = "block";loadCore();setTimeout(checkNodeStatus, 1000)},15250);
+   document.getElementById("update").style.display = "none";
+  </script>
+
+  </div>
+  <div class="footer">
+  <div id="peersBox" class="peersBox">
+    <p id="peersAmount" class="peersAmount"> <small><img class="peersImage" src="concordNodes.png"></img>0</small></p>
+  </div>
+  <script>document.getElementById("peersBox").style.visibility = 'hidden';</script>
+</div>
+  </body>
+</html>

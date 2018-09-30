@@ -11,8 +11,9 @@
   "bin": {
     "concord": "bin/concord.js"
   },
+  "main": "main.js",
   "scripts": {
-    "start": "node bin/concord.js",
+    "start": "start launch.bat",
     "compose:up": "docker-compose up",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc --reporter=lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --colors test/",
@@ -22,17 +23,26 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "cli-color": "^1.2.0",
+    "clipboardy": "^1.2.3",
+    "discord-rpc": "^3.0.0",
+    "discord.js": "^11.4.2",
+    "electron": "^3.0.1",
+    "electron-notifications": "^1.0.0",
     "elliptic": "^6.4.0",
     "es6-error": "^4.0.2",
     "express": "^4.16.2",
     "fs-extra": "^5.0.0",
+    "node-downloader-helper": "^1.0.8",
     "pug": "^2.0.0-rc.4",
     "ramda": "^0.25.0",
+    "requestify": "^0.2.5",
     "statuses": "^1.3.1",
     "superagent": "^3.5.2",
     "swagger-ui-express": "^1.0.8",
+    "sweetalert": "^2.1.0",
     "threads": "^0.10.0",
     "timeago.js": "^3.0.2",
+    "x11-hash-js": "^1.0.1",
     "yargs": "^10.1.1"
   },
   "engines": {
