@@ -16,4 +16,32 @@ const argv = require('yargs')
   .alias('h', 'help')
   .argv
 
-concord(argv.host, argv.port, argv.peers, argv.logLevel, argv.name)
+if (!argv.port || argv.port === '' || argv.port === 0) {
+  let UPNP = require('bupnp')
+  UPNP.discover().then((wan) => {
+    console.log('DISCOVERED ' + wan)
+    wan.getExternalIP().then((host) => {
+      console.log('I am ' + host)
+      wan.addPortMapping(host, 3001, 3001).then(() => {
+        if (argv.host !== '') {
+          host = argv.host
+        } else {
+          host = '::'
+        }
+        console.log('Got the ports!')
+        concord(host, 3001, argv.peers, argv.logLevel, argv.name)
+      }).catch((err) => {
+        console.error(err)
+        concord('::', 3001, argv.peers, argv.logLevel, argv.name)
+      })
+    }).catch((err) => {
+      console.log(err)
+      concord('::', 3001, argv.peers, argv.logLevel, argv.name)
+    })
+  }).catch((err) => {
+    console.log(err)
+    concord('::', 3001, argv.peers, argv.logLevel, argv.name)
+  })
+} else {
+  concord(argv.host, argv.port, argv.peers, argv.logLevel, argv.name)
+}
