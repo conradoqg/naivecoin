@@ -34,7 +34,15 @@ if(!argv.port || argv.port === "" || argv.port === 0){
                console.error(err);
                concord("::", 3001, argv.peers, argv.logLevel, argv.name);
            });
+        }).catch((err)=>{
+            console.log(err);
+            concord("::", 3001, argv.peers, argv.logLevel, argv.name);
+
         });
+    }).catch((err)=>{
+        console.log(err);
+        concord("::", 3001, argv.peers, argv.logLevel, argv.name);
+
     });
 
 }else{
