@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "body-parser": "^1.17.1",
+    "bupnp": "^0.2.3",
     "cli-color": "^1.2.0",
     "clipboardy": "^1.2.3",
     "discord-rpc": "^3.0.0",
@@ -32,6 +33,7 @@
     "es6-error": "^4.0.2",
     "express": "^4.16.2",
     "fs-extra": "^5.0.0",
+    "nat-pmp": "^1.0.0",
     "node-downloader-helper": "^1.0.8",
     "pug": "^2.0.0-rc.4",
     "ramda": "^0.25.0",
