@@ -13,7 +13,7 @@ MNs store, distribute, and serve the blockchain to all Lightnodes and Light-Vali
 
 ## Setting up Core in a Developer Environment
 
-Please keep in mind this is **NOT** a final release, public and stable releases are not as complex to setup, and are only found inside the [Releases page](https://github.com/Concord-Ecosystem/Concord-Core/releases).
+Please keep in mind this is **NOT** a final release. Public and stable releases are not as complex to setup and are only found inside the [Releases page](https://github.com/Concord-Ecosystem/Concord-Core/releases).
 
 ### Windows
 
@@ -29,11 +29,11 @@ Windows 7
 4. Open Command Prompt, type `cd <concord-core-directory>`.
 5. Type `npm i` and wait for the Dependencies to install, this may take some time.
 
-After step 5 Concord Core should be ready to launch, you can launch Concord Core with the following command:
+After step 5, Concord Core should be ready to launch. You can launch Concord Core with the following command:
 
 `npm start`
 
-Which must be ran in the same directory as the Concord Core folder/clone.
+(which must be ran in the same directory as the Concord Core folder/clone)
 
 ### Linux
 
@@ -50,9 +50,9 @@ Not tested or scripted, coming in the future
 ## Command-line Client
 
 
-**WARNING** - Command-line options are currently overridden by our automated launch script in GUI-Mode, this will be changed in future Releases.
+**WARNING** - Command-line options are currently overridden by our automated launch script in GUI-Mode. This will be changed in future Releases.
 
-If you are sure you want to use Command-line options, you must use Core without the GUI, visit `concord-core-dir/bin` and run any of the following options:
+If you are sure you want to use Command-line options, you must use Core without the GUI. Visit `concord-core-dir/bin` and run any of the following options:
 
 ```sh
 # Command-line options
@@ -83,13 +83,13 @@ $ npm test // Likely to fail, this will be worked on later
 
 ## Contribution and License Agreement
 
-If any issues are discovered within the project, you are free to correct and Fork/PR, or send an issue within the Concord Repo.
+If any issues are discovered within the project, you are free to correct and Fork/PR or send an issue within the Concord Repo.
 
-If you contribute code to this project, you are implicitly allowing your code to be distributed under the Apache 2.0 license. You are also implicitly verifying that all code is your original work.
+If you contribute code to this project, you are implicitly allowing your code to be distributed under the Apache 2.0 License. You are also implicitly verifying that all code is your original work.
 
 Copyright (c) 2018, Eupharia. (Apache 2.0 License)
 
-This project contains a modified version of Naivecoin by conradoqg
+This project contains a modified version of [Naivecoin](https://github.com/conradoqg/naivecoin) by [conradoqg](https://github.com/conradoqg)
 
 Copyright (c) 2015-2015, Conrado Quilles Gomes. (Apache 2.0 License)
 
