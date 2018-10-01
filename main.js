@@ -14,7 +14,7 @@ function createWindow () {
   Menu.setApplicationMenu(null)
   const ipc = require('electron').ipcMain
 
-  win = new BrowserWindow({show: true, width: 810, height: 600, opacity: 0.97, minWidth: 810, minHeight: 600, backgroundColor: '#36393e', icon: 'concordLogoSmall.ico', frame: false})
+  win = new BrowserWindow({show: true, width: 810, height: 600, opacity: 0.97, minWidth: 810, minHeight: 600, backgroundColor: '#36393e', icon: 'img/concordLogoSmall.ico', frame: false})
 
   ipc.on('invokeAction', function (event, data) {
     event.sender.send('actionReply')

@@ -6,3 +6,5 @@ coverage
 yarn.lock
 .vscode
 data
+bin/ip.pref
+lockfile.lock

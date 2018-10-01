@@ -31,7 +31,7 @@ THANK YOU!~ <3
   <a draggable="false" type="button" onclick="loadRecieve();">Receive</a>
   <a draggable="false" type="button" onclick="loadMessage();">Message</a>
 </div>
-<img class="coreImg" id="titleImg" src="concordCore.gif" alt="Concord" draggable="false" style="display:none">
+<img class="coreImg" id="titleImg" src="img/concordCore.gif" alt="Concord" draggable="false" style="display:none">
 <ul id="upgradeGrid" class="ch-grid" style="display:none">
 <li>
   <div class="ch-item ch-img-1">
@@ -42,24 +42,25 @@ THANK YOU!~ <3
 </li>
 </ul>
 <body class="mainBody" oncontextmenu="return false">
-  <img class="exit" oncontextmenu="return false" id="exit" onclick="exitCore();" class="exit" src="x.png" alt="x" draggable="false">
-  <img class="settings" oncontextmenu="return false" id="settings" style="display:none" onclick="loadSettings();" class="settings" src="settingsCog.png" alt="Settings" draggable="false">
+  <img class="exit" oncontextmenu="return false" id="exit" onclick="exitCore();" class="exit" src="img/x.png" alt="x" draggable="false">
+  <img class="settings" oncontextmenu="return false" id="settings" style="display:none" onclick="loadSettings();" class="settings" src="img/settingsCog.png" alt="Settings" draggable="false">
 <div id="recieveMenu" style="display:none" class="centerText">
   <h3 readonly="" id="ID" class="ID">Unknown</h3><button class="copyID" style="vertical-align:top;">Copy Identity</button>
   <script>
   document.getElementById("upgradeGrid").style.display = "none";
   var address;
   var walletID;
+  var imageLocation = 'img/'
   var balanceDecimals = 6;
   const clipboardy = require('clipboardy');
   const req = require('requestify')
   const fs = require('fs');
   var x11 = require('x11-hash-js');
 
-  var coreImgOffline = "concordLogoOffline.png";
-  var coreImgOnline = "concordLogo.png";
-  var coreImgConnecting = "concordLogoConnecting.png";
-  var coreImgSpin = "concordCore.gif";
+  var coreImgOffline = imageLocation+"concordLogoOffline.png";
+  var coreImgOnline = imageLocation+"concordLogo.png";
+  var coreImgConnecting = imageLocation+"concordLogoConnecting.png";
+  var coreImgSpin = imageLocation+"concordCore.gif";
 
   var copyTextareaBtn = document.querySelector('.copyID');
 
@@ -713,7 +714,7 @@ setInterval(() => {
   </div>
   <div class="footer">
   <div id="peersBox" class="peersBox">
-    <p id="peersAmount" class="peersAmount"> <small><img class="peersImage" src="concordNodes.png"></img>0</small></p>
+    <p id="peersAmount" class="peersAmount"> <small><img class="peersImage" src="img/concordNodes.png"></img>0</small></p>
   </div>
   <script>document.getElementById("peersBox").style.visibility = 'hidden';</script>
 </div>
