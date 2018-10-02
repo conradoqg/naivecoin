@@ -247,7 +247,11 @@ document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer;
   setInterval(function(){xShutdown = 0; document.getElementById("lastMessages").innerHTML = msgList.join("<br>") + '<br><br><br><br><br>';},750);
   // CONCORD NODE STARTUP DATA
   const ipc = require('electron').ipcRenderer;
-  const notifier = require('electron-notifications')
+  const WindowsBalloon = require('node-notifier').WindowsBalloon
+  var notifier = new WindowsBalloon({
+    withFallback: false,
+    customPath: void 0
+  })
   var exitButton = document.getElementById('exit');
   exitButton.addEventListener('click', function(){
     ipc.once('actionReply', function(event, response){
@@ -530,6 +534,7 @@ setInterval(() => {
   }
 
   var isMining = 0
+  var hasLeakWarned = 0
 
   function toggleMining () {
     if (isMining === 0) {
@@ -538,7 +543,23 @@ setInterval(() => {
       isMining = 0
     }
     mineBlock()
-  }
+	if (hasLeakWarned === 0) {
+		notifier.notify(
+		{
+			title: 'Mining Warning',
+			message: 'Mining is known to have a memory leak, please do not mine for extensive amounts of time',
+			sound: true,
+			time: 10000,
+			wait: false,
+			type: 'warn'
+		},
+			function(error, response) {
+			console.log(response)
+			hasLeakWarned = 1
+			}
+		)
+	 }
+ }
 
   function mineBlock () {
     if (isMining === 1) {
