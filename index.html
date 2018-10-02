@@ -531,16 +531,29 @@ setInterval(() => {
 
   var isMining = 0
 
-  function toggleMining () { //Will eventually be changed to a TOGGLE not a per-click manual
-    document.getElementById("miningSwitch").value = "Mining..."
-    req.post(hostUrl+'miner/mine', {rewardAddress: address, feeAddress: address}).then(function(response) {
-      console.log(response)
-      response = JSON.parse(response.body)
-      document.getElementById("miningSwitch").value = "Mined Block "+response.index
+  function toggleMining () {
+    if (isMining === 0) {
+      isMining = 1
+    } else {
+      isMining = 0
+    }
+    mineBlock()
+  }
+
+  function mineBlock () {
+    if (isMining === 1) {
+      document.getElementById("nodeStatus").innerHTML = "Mining..."
+      req.post(hostUrl+'miner/mine', {rewardAddress: address, feeAddress: address}).then(function(response) {
+        console.log(response)
+        response = JSON.parse(response.body)
+        document.getElementById("nodeStatus").innerHTML = "Mined Block "+response.index+"!"
+        setTimeout(mineBlock, 4000)
+      }).fail(function(response) {
+        console.log("Error "+response.getCode()+" on POST "+hostUrl+'miner/mine')
+      })
+    } else {
       getBalance()
-    }).fail(function(response) {
-      console.log("Error "+response.getCode()+" on POST "+hostUrl+'miner/mine')
-    })
+    }
   }
 
 
@@ -696,7 +709,11 @@ setInterval(() => {
   </div>
   <p oncontextmenu="return false" id="nodeStatus"></p>
   <br>
-  <input id="miningSwitch" onclick="toggleMining()" type="button" title="Mine a Block" value="Mine a Block" class="button">
+  <h5>Mining<br>
+  <label class="switch">
+  <input id="miningSwitch" onclick="toggleMining()" type="checkbox" title="Toggle Automining">
+  <span class="slider round"></span>
+  </label>
    <script>
    var introText = document.getElementById("introTextText");
    setTimeout(function(){introText.innerHTML += 'W';},2700);
