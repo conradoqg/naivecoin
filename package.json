@@ -35,6 +35,7 @@
     "fs-extra": "^5.0.0",
     "node-downloader-helper": "^1.0.8",
     "node-notifier": "^5.2.1",
+    "npm": "^6.4.1",
     "pug": "^2.0.0-rc.4",
     "ramda": "^0.25.0",
     "requestify": "^0.2.5",

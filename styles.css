@@ -416,7 +416,7 @@ span {
 }
 
 /* The Close Button */
-.close {
+.closeChangelog {
 	user-select: none;
     color: white;
     float: right;
@@ -425,7 +425,7 @@ span {
     -webkit-app-region: no-drag;
 }
 
-.close:hover, .close:focus {
+.closeChangelog:hover, .closeChangelog:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
@@ -575,6 +575,18 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+.miningBreakInput {
+  -webkit-app-region: no-drag;
+  background-color: #36393e;
+  border: none;
+  color: limegreen;
+  border-color: #36393e;
+  border-bottom: 2px solid lime;
+  outline-color: transparent;
+  width: 20%;
+  transition: 0.2s;
 }
 
 .peersBox {

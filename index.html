@@ -48,21 +48,21 @@ THANK YOU!~ <3
   <h3 readonly="" id="ID" class="ID">Unknown</h3><button class="copyID" style="vertical-align:top;">Copy Identity</button>
   <script>
   document.getElementById("upgradeGrid").style.display = "none";
-  var address;
-  var walletID;
+  var address
+  var walletID
   var imageLocation = 'img/'
-  var balanceDecimals = 6;
-  const clipboardy = require('clipboardy');
+  var balanceDecimals = 6
+  const clipboardy = require('clipboardy')
   const req = require('requestify')
-  const fs = require('fs');
-  var x11 = require('x11-hash-js');
+  const fs = require('fs')
+  var x11 = require('x11-hash-js')
 
-  var coreImgOffline = imageLocation+"concordLogoOffline.png";
-  var coreImgOnline = imageLocation+"concordLogo.png";
-  var coreImgConnecting = imageLocation+"concordLogoConnecting.png";
-  var coreImgSpin = imageLocation+"concordCore.gif";
+  var coreImgOffline = imageLocation+"concordLogoOffline.png"
+  var coreImgOnline = imageLocation+"concordLogo.png"
+  var coreImgConnecting = imageLocation+"concordLogoConnecting.png"
+  var coreImgSpin = imageLocation+"concordCore.gif"
 
-  var copyTextareaBtn = document.querySelector('.copyID');
+  var copyTextareaBtn = document.querySelector('.copyID')
 
   var stopStatus = 0
 
@@ -72,16 +72,16 @@ THANK YOU!~ <3
        try {
           clipboardy.writeSync(address);
           document.getElementById("ID").innerHTML = 'Identity Copied!';
-          setTimeout(function(){document.getElementById("ID").innerHTML = address},2500);
+          setTimeout(function(){document.getElementById("ID").innerHTML = address},2500)
        } catch (err) {
           console.log('Error, Couldn\'t copy Identity');
           document.getElementById("ID").innerHTML = 'Identity couldn\'t copy';
-          setTimeout(function(){document.getElementById("ID").innerHTML = address},2500);
+          setTimeout(function(){document.getElementById("ID").innerHTML = address},2500)
        }
     }
   });
-  document.getElementById("recieveMenu").style.visibility = 'hidden';
-  document.getElementById("recieveMenu").style.display = "none";
+  document.getElementById("recieveMenu").style.visibility = 'hidden'
+  document.getElementById("recieveMenu").style.display = "none"
   </script>
   </div>
 <div id="messageMenu" style="display:none">
@@ -89,11 +89,11 @@ THANK YOU!~ <3
   <h3 class="centerText">Chat History:</h3>
   <div id="lastMessages"></div>
   <div class="chatBoxInput">
-    <input oncontextmenu="return false" id="ipBox" name="msgBox" type="msgBox" class="ipBox" value="ID" color="#4CAF50" autofocus="autofocus"><input oncontextmenu="return false" id="msgBox" name="msgBox" type="msgBox" class="msgBox" value="Message" color="#4CAF50" autofocus="autofocus"><button class="sendMsg" style="vertical-align:bottom;" onclick="broadcastMsg();">Broadcast</button>
+    <input oncontextmenu="return false" id="ipBox" name="msgBox" type="msgBox" class="ipBox" placeholder="ID" color="#4CAF50" autofocus="autofocus"><input oncontextmenu="return false" id="msgBox" name="msgBox" type="msgBox" class="msgBox" placeholder="Message" color="#4CAF50" autofocus="autofocus"><button class="sendMsg" style="vertical-align:bottom;" onclick="broadcastMsg();">Broadcast</button>
   </div>
   <script>
-  const Discord = require('discord.js');
-  var bot = new Discord.Client();
+  const Discord = require('discord.js')
+  var bot = new Discord.Client()
   </script>
 
   </div>
@@ -101,54 +101,56 @@ THANK YOU!~ <3
   <h3 id="optionInfo">Options and Preferences</h3>
   <h5>CSP Network<br> </br>
   <label class="switch">
-  <input id="networkChecker" onclick="changeNetwork();" type="checkbox">
+  <input id="networkChecker" onclick="changeNetwork()" type="checkbox">
   <span class="slider round"></span>
   </label>
-  <br>
-  <br>
-  <br>
   </h5>
-  <h6 id="changelogButton" class="changelogButton" onclick="openChangelog();">Changelog</h6>
+  <h5>Seconds between mining sessions</h5>
+  <input id="miningBreakInput" type="text" value="5" placeholder="Time in Seconds" class="miningBreakInput">
+  <br>
+  <br>
+  <br>
+  <h6 id="changelogButton" class="changelogButton" onclick="openChangelog()">Changelog</h6>
   <script>
   var isNetworkChecked;
     fs.readFile("pref2.pref", 'utf8', function(err, contents) {
           if(!err){
-            console.log('CSP Hard-link is enabled');
+            console.log('CSP Hard-link is enabled')
             isNetworkChecked = 1;
-            document.getElementById("networkChecker").checked = true;
+            document.getElementById("networkChecker").checked = true
           }else{
-            console.log('CSP Hard-link is disabled');
+            console.log('CSP Hard-link is disabled')
             isNetworkChecked = 0;
-            document.getElementById("networkChecker").checked = false;
+            document.getElementById("networkChecker").checked = false
           }
-        });
+        })
         fs.readFile("pref3.pref", 'utf8', function(err, contents) {
           if(!err){
             console.log('Masternode Enabled');
-            document.getElementById("upgradeButton").innerHTML = 'Downgrade to Lightnode';
+            document.getElementById("upgradeButton").innerHTML = 'Downgrade to Lightnode'
             nodeType = 1;
-            setTimeout(function(){stopStatus = 0;},2500);
+            setTimeout(function(){stopStatus = 0;},2500)
           }else{
-            console.log('Lightnode Enabled');
-            nodeType = 0;
+            console.log('Lightnode Enabled')
+            nodeType = 0
           }
-        });
-    document.getElementById("optionsMenu").style.display = "none";
+        })
+    document.getElementById("optionsMenu").style.display = "none"
     function changeNetwork(){
-      isNetworkChecked = document.getElementById("networkChecker").checked;
+      isNetworkChecked = document.getElementById("networkChecker").checked
       if(isNetworkChecked == 1){
         fs.writeFile('pref2.pref', 'true', function(err) {
           if(err){
-            console.log('Error writing pref2-file');
-            document.getElementById("optionInfo").innerHTML = 'Error Saving - Please open Core as Administrator';
+            console.log('Error writing pref2-file')
+            document.getElementById("optionInfo").innerHTML = 'Error Saving - Please open Core as Administrator'
           }else{
-            document.getElementById("optionInfo").innerHTML = 'Switched Networking to CSP';
+            document.getElementById("optionInfo").innerHTML = 'Switched Networking to CSP'
           }
-        });
+        })
       }else{
-        fs.unlinkSync('pref2.pref');
-        document.getElementById("optionInfo").innerHTML = 'Switched Networking to Core Chain';
-        isNetworkChecked = 0;
+        fs.unlinkSync('pref2.pref')
+        document.getElementById("optionInfo").innerHTML = 'Switched Networking to Core Chain'
+        isNetworkChecked = 0
       }
     }
   </script>
@@ -163,7 +165,7 @@ THANK YOU!~ <3
   const amtEnter = document.getElementsByClassName("amountBox")[0];
   amtEnter.addEventListener("keydown", function(event) {
     if (event.key === "Enter"){
-      sendTransaction();
+      sendTransaction()
     }
   });
 
@@ -186,29 +188,28 @@ THANK YOU!~ <3
       dataType: 'json'
     }).then(function(response) {
       console.log("Blockchain: "+response.body)
+	  if (JSON.stringify(response.body).includes("transaction")) {
+		let receiver = to
+		if (receiver === address) {
+		  receiver = "yourself"
+		} else {
+		  receiver = 'an outside Identity'
+		}
+		walletNotify('Transaction Sent', amount+' CXD was sent to '+receiver, coreImgOnline)
+	  }
       getBalance()
     }).fail(function(response) {
       console.log("Error "+response.getCode()+" on POST "+hostUrl+'operator/wallets/'+to+'/transactions\n'+response.body)
     })
   }
-
-  function getBal(){
-    if(bot && isNetworkChecked == 0 && lastMsg && nodeList.length >= 1){
-      var chnnl = lastMsg.member.guild.channels.find('name','cx-admin-debug');
-      chnnl.send('!apibal '+identity);
-    }else if(bot && isNetworkChecked == 1 && lastMsg){
-      var chnnl = lastMsg.member.guild.channels.find('name','cx-admin-debug');
-      chnnl.send('!apibal '+identity);
-    }
-  }
   </script>
   </div>
 </body>
   <body oncontextmenu="return false" style="-webkit-app-region: drag">
-<div id="myModal" class="modal">
+<div id="changelogModal" class="modal">
 <div class="modal-content">
   <div class="modal-header">
-    <span class="close">&times;</span>
+    <span class="closeChangelog">&times;</span>
     <h2 id="changelogVer">Changelog for Version </h2>
   </div>
   <div class="modal-body">
@@ -219,20 +220,18 @@ THANK YOU!~ <3
 </div>
     <div oncontextmenu="return false" id="coreMenu" class="centerText">
   <script>
-var modal = document.getElementById('myModal');
+var modal = document.getElementById('changelogModal')
 
-var btn = document.getElementById("myBtn");
-
-var span = document.getElementsByClassName("close")[0];
+var span = document.getElementsByClassName("closeChangelog")[0]
 
 span.onclick = function() {
-  modal.style.display = "none";
+  modal.style.display = "none"
 }
 
 function openChangelog(){
-modal.style.display = "block";
-document.getElementById("changelogContent").innerHTML = currentChangelog;
-document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer;
+modal.style.display = "block"
+document.getElementById("changelogContent").innerHTML = currentChangelog
+document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer
 }
 
   document.getElementById("settings").style.display = "none";
@@ -247,8 +246,8 @@ document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer;
   setInterval(function(){xShutdown = 0; document.getElementById("lastMessages").innerHTML = msgList.join("<br>") + '<br><br><br><br><br>';},750);
   // CONCORD NODE STARTUP DATA
   const ipc = require('electron').ipcRenderer;
-  const WindowsBalloon = require('node-notifier').WindowsBalloon
-  var notifier = new WindowsBalloon({
+  const windowsToaster = require('node-notifier').WindowsToaster
+  var notifier = new windowsToaster({
     withFallback: false,
     customPath: void 0
   })
@@ -345,7 +344,7 @@ document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer;
   var nodeList = [];
   var nodeVer = 'Concord Core 0.2';
   var nodeVerNum = '20';
-  var currentChangelog = '<b>Additions:</b><br>Added Identity System with x11 hashing<br>Added FraudGuard.io client-side protection<br>Added instant Network-Switcher for the ability to choose the transaction network<br>Added basic Raining abilities to the Send tab<br>Added new chat-system, aliases, bubbles, SMS format<br><br><b>Fixes:</b><br>Fixed balances from displaying incorrectly temporarily after transactions<br>Fixed animations for all text-input borders<br><br><b>Changes:</b><br>Changed text-inputs to reset after confirming the text<br>Changed the navmenu\'s fixed scaling to auto-scale with Core<br>Slightly decreased transparency on the application';
+  var currentChangelog = 'WILL BE UPDATED SOON!'
   var myLastMsg;
   var d;
   var term = 0;
@@ -485,6 +484,7 @@ setInterval(() => {
               if (response.body.id && response.body.id.length === 64) {
                 if (response.body.addresses && response.body.addresses.length === 0) {
                   var newWalletID = response.body.id
+				  walletID = newWalletID
                   console.log("Generating new wallet address")
                   req.request(hostUrl+'operator/wallets/'+newWalletID+'/addresses', {
     	            method: 'POST',
@@ -535,6 +535,7 @@ setInterval(() => {
 
   var isMining = 0
   var hasLeakWarned = 0
+  var miningBreakTime = Number(document.getElementById("miningBreakInput").value) * 1000
 
   function toggleMining () {
     if (isMining === 0) {
@@ -549,9 +550,8 @@ setInterval(() => {
 			title: 'Mining Warning',
 			message: 'Mining is known to have a memory leak, please do not mine for extensive amounts of time',
 			sound: true,
-			time: 10000,
 			wait: false,
-			type: 'warn'
+			icon: coreImgOffline
 		},
 			function(error, response) {
 			console.log(response)
@@ -563,12 +563,20 @@ setInterval(() => {
 
   function mineBlock () {
     if (isMining === 1) {
-      document.getElementById("nodeStatus").innerHTML = "Mining..."
       req.post(hostUrl+'miner/mine', {rewardAddress: address, feeAddress: address}).then(function(response) {
         console.log(response)
         response = JSON.parse(response.body)
-        document.getElementById("nodeStatus").innerHTML = "Mined Block "+response.index+"!"
-        setTimeout(mineBlock, 4000)
+		var i = 0,
+		transactionLength = response.transactions.length,
+		reward = 0
+		for (i = 0; i<transactionLength; i++) {
+		  if (response.transactions[i].type === 'reward') {
+			reward = Number(response.transactions[i].data.outputs[0].amount)
+		  }
+		}
+		walletNotify('Wallet Income Earned', 'You mined Block '+response.index+', earning you '+reward.toPrecision()+' CXD', coreImgSpin)
+		getBalance()
+        setTimeout(mineBlock, miningBreakTime)
       }).fail(function(response) {
         console.log("Error "+response.getCode()+" on POST "+hostUrl+'miner/mine')
       })
@@ -604,6 +612,21 @@ setInterval(() => {
     }
   }
 
+  function walletNotify (title, message, icon) {
+    notifier.notify(
+		{
+			title: title,
+			message: message,
+			sound: true,
+			icon: icon,
+			wait: false
+		},
+			function(error, response) {
+			console.log(response)
+			}
+		)
+  }
+
   function loadCore(){
     document.getElementById("coreMenu").style.display = "block";
     document.getElementById("recieveMenu").style.display = "none";
@@ -613,6 +636,7 @@ setInterval(() => {
     document.getElementById("menu").style.display = "block";
     document.getElementById("menu").style.visibility = "visible";
     document.getElementById("peersBox").style.display = "block";
+	miningBreakTime = Number(document.getElementById("miningBreakInput").value) * 1000
     stopStatus = 0;
   }
 
@@ -660,7 +684,6 @@ setInterval(() => {
     document.getElementById("optionsMenu").style.display = "block";
     document.getElementById("optionsMenu").style.visibility = "visible";
     document.getElementById("optionInfo").innerHTML = 'Options and Preferences';
-    //swal("Big Meow!", "Little Meow!", "success");
   }
   }
 
