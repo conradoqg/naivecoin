@@ -534,7 +534,6 @@ setInterval(() => {
   }
 
   var isMining = 0
-  var hasLeakWarned = 0
   var miningBreakTime = Number(document.getElementById("miningBreakInput").value) * 1000
 
   function toggleMining () {
@@ -544,21 +543,6 @@ setInterval(() => {
       isMining = 0
     }
     mineBlock()
-	if (hasLeakWarned === 0) {
-		notifier.notify(
-		{
-			title: 'Mining Warning',
-			message: 'Mining is known to have a memory leak, please do not mine for extensive amounts of time',
-			sound: true,
-			wait: false,
-			icon: coreImgOffline
-		},
-			function(error, response) {
-			console.log(response)
-			hasLeakWarned = 1
-			}
-		)
-	 }
  }
 
   function mineBlock () {
