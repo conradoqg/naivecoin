@@ -1,5 +1,6 @@
 # Concord Core - Concord's Multi-Purpose Desktop Application
 
+[![Build Status](https://travis-ci.com/Concord-Ecosystem/Concord-Core.svg?branch=master)](https://travis-ci.com/Concord-Ecosystem/Concord-Core)
 [![Coverage Status](https://coveralls.io/repos/github/Concord-Ecosystem/Concord-Core/badge.svg?branch=master)](https://coveralls.io/github/Concord-Ecosystem/Concord-Core?branch=master)
 
 ## Introduction
