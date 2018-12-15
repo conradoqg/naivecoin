@@ -8,6 +8,7 @@ const Miner = require('../lib/miner')
 const Node = require('../lib/node')
 const Config = require('../lib/config.js')
 const fs = require('fs-extra')
+const genRString = require('crypto-random-string')
 
 const logLevel = 0
 
@@ -27,7 +28,7 @@ describe('Integration Test', () => {
     return httpServer.listen(host, port)
   }
 
-  const walletPassword = 't t t t t'
+  const walletPassword = genRString(64)
   let context = {}
 
   step('start server 1', () => {
