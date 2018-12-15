@@ -1,5 +1,7 @@
 # Concord Core - Concord's Multi-Purpose Desktop Application
 
+[![Coverage Status](https://coveralls.io/repos/github/Concord-Ecosystem/Concord-Core/badge.svg?branch=master)](https://coveralls.io/github/Concord-Ecosystem/Concord-Core?branch=master)
+
 ## Introduction
 
 Concord Core is the main desktop application of the Concord Ecosystem, with a built-in blockchain wallet for the Concord Coin (CXD).
