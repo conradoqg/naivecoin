@@ -526,7 +526,7 @@ describe('Integration Test', () => {
             return supertest(context.httpServer1.app)
               .post(`/operator/wallets/${context.walletId}/addresses`)
               .set({ password: 'wrong one' })
-              .expect(403)
+              .expect(401)
           })
       })
 
@@ -536,7 +536,7 @@ describe('Integration Test', () => {
             return supertest(context.httpServer1.app)
               .post('/operator/wallets/A/addresses')
               .set({ password: walletPassword })
-              .expect(400)
+              .expect(401)
           })
       })
 
