@@ -131,7 +131,7 @@ describe('Integration Test', () => {
           .get(`/operator/${context.address1}/balance`)
           .expect(200)
           .expect((res) => {
-            assert.equal(res.body.balance, (Config.PREMINE_REWARD - (Config.PREMINE_REWARD / 10)), `Expected balance of address '${context.address1}' to be '${(Config.PREMINE_REWARD - (Config.PREMINE_REWARD / 10))}'`)
+            assert.equal(res.body.balance, (Config.PREMINE_REWARD - (Config.PREMINE_REWARD / 10)) + Config.FEE_PER_TRANSACTION, `Expected balance of address '${context.address1}' to be '${(Config.PREMINE_REWARD - (Config.PREMINE_REWARD / 10)) + Config.FEE_PER_TRANSACTION}'`)
           })
       })
   })
