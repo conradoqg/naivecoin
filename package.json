@@ -1,6 +1,6 @@
 {
   "name": "Concord-Core",
-  "version": "0.2.0",
+  "version": "0.0.2",
   "description": "Concord's Multi-Purpose Desktop Application",
   "homepage": "https://github.com/Concord-Ecosystem/Concord-Core",
   "license": "Apache-2.0",
@@ -13,7 +13,7 @@
   },
   "main": "main.js",
   "scripts": {
-    "start": "cd lib && start launch.bat",
+    "start": "start launch.bat",
     "compose:up": "docker-compose up",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc --reporter=lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --colors test/",
@@ -25,7 +25,6 @@
     "bupnp": "^0.2.3",
     "cli-color": "^1.2.0",
     "clipboardy": "^1.2.3",
-    "crypto-random-string": "^1.0.0",
     "discord-rpc": "^3.0.0",
     "discord.js": "^11.4.2",
     "electron": "^3.0.1",
