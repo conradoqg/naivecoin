@@ -6,6 +6,7 @@ const Blockchain = require('../lib/blockchain')
 const Operator = require('../lib/operator')
 const Miner = require('../lib/miner')
 const Node = require('../lib/node')
+const Config = require('../lib/config.js')
 const fs = require('fs-extra')
 
 const logLevel = 0
@@ -91,7 +92,7 @@ describe('Integration Test', () => {
           .send({
             fromAddress: context.address1,
             toAddress: context.address2,
-            amount: 1000000000,
+            amount: Config.PREMINE_REWARD / 10,
             changeAddress: context.address1
           })
           .expect(201)
@@ -130,7 +131,7 @@ describe('Integration Test', () => {
           .get(`/operator/${context.address1}/balance`)
           .expect(200)
           .expect((res) => {
-            assert.equal(res.body.balance, 9000000000, `Expected balance of address '${context.address1}' to be '9000000000'`)
+            assert.equal(res.body.balance, (Config.PREMINE_REWARD - (Config.PREMINE_REWARD / 10)), `Expected balance of address '${context.address1}' to be '${(Config.PREMINE_REWARD - (Config.PREMINE_REWARD / 10))}'`)
           })
       })
   })
@@ -142,7 +143,7 @@ describe('Integration Test', () => {
           .get(`/operator/${context.address2}/balance`)
           .expect(200)
           .expect((res) => {
-            assert.equal(res.body.balance, 1000000000, `Expected balance of address '${context.address2}' to be '1000000000'`)
+            assert.equal(res.body.balance, Config.PREMINE_REWARD / 10, `Expected balance of address '${context.address2}' to be '${Config.PREMINE_REWARD / 10}'`)
           })
       })
   })
@@ -223,7 +224,7 @@ describe('Integration Test', () => {
           .send({
             fromAddress: context.address1,
             toAddress: context.address2,
-            amount: 1000000000,
+            amount: Config.PREMINE_REWARD / 10,
             changeAddress: context.address1
           })
           .expect(201)
@@ -266,7 +267,7 @@ describe('Integration Test', () => {
           .get(`/operator/${context.address1}/balance`)
           .expect(200)
           .expect((res) => {
-            assert.equal(res.body.balance, 7999999999, `Expected balance of address '${context.address1}' to be '7999999999'`)
+            assert.equal(res.body.balance, (Config.PREMINE_REWARD - ((Config.PREMINE_REWARD / 10) * 2)) , `Expected balance of address '${context.address1}' to be '${(Config.PREMINE_REWARD - ((Config.PREMINE_REWARD / 10) * 2))}'`)
           })
       })
   })
