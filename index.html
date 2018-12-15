@@ -52,10 +52,13 @@ THANK YOU!~ <3
   var walletID
   var imageLocation = 'img/'
   var balanceDecimals = 6
+  var lastBlockHashes = 0
+  var hashrate = 0
   const clipboardy = require('clipboardy')
   const req = require('requestify')
   const fs = require('fs')
   var x11 = require('x11-hash-js')
+  const genRString = require('crypto-random-string');
 
   var coreImgOffline = imageLocation+"concordLogoOffline.png"
   var coreImgOnline = imageLocation+"concordLogo.png"
@@ -159,7 +162,7 @@ THANK YOU!~ <3
   <h3 id="sendInfo">Send Concord to an Identity (ID)</h3>
   <input oncontextmenu="return false" id="sendBox" name="amountBox" type="amountBox" class="sendBox" placeholder="ID" color="#4CAF50" autofocus="autofocus"><input oncontextmenu="return false" id="amountBox" name="amountBox" type="amountBox" class="amountBox" placeholder="0" color="#4CAF50" autofocus="autofocus"><button class="sendMsg" style="vertical-align:bottom;" onclick="sendTransaction();" href="#">Send</button>
   <br>
-  <input oncontextmenu="return false" id="sendPassword" name="sendPassword" type="sendPassword" class="sendBox" placeholder="Wallet Password" color="#4CAF50" autofocus="autofocus">
+  <!--<input oncontextmenu="return false" id="sendPassword" name="sendPassword" type="sendPassword" class="sendBox" placeholder="Wallet Password" color="#4CAF50" autofocus="autofocus"> -->
   <script>
   document.getElementById("sendMenu").style.display = "none";
   const amtEnter = document.getElementsByClassName("amountBox")[0];
@@ -172,8 +175,25 @@ THANK YOU!~ <3
   function sendTransaction () {
     var amount = Number(Number(document.getElementById('amountBox').value).toFixed(8))
     var to = document.getElementById('sendBox').value
-    var password = document.getElementById('sendPassword').value
-    console.log("stuffs:\nHeader: '"+password)
+    var password = '' //document.getElementById('sendPassword').value     // NOTE: Will be enabled once password-based transactions are finished, for now, local and automatic authentication
+
+    if (password === '') {
+      fs.readFile("bin/data/1/key.priv", 'utf8', function(err, contents) {
+        if (err) {
+          walletNotify('Private Key Error', 'Your private key couldn\'t be found locally. Please double-check your files!', coreImgOffline)
+          return
+        } else {
+          password = contents
+          if (password === '') {
+            walletNotify('Private Key Error', 'Your private key couldn\'t be found locally. Please double-check your files!', coreImgOffline)
+            return
+          }
+        }
+      })
+    }
+    setTimeout(function(){
+    if (password.length > 0) {
+    console.log("Transaction authentication\nHeader: '"+password)
     req.request(hostUrl+'operator/wallets/'+walletID+'/transactions', {
     method: 'POST',
     headers: {
@@ -200,7 +220,17 @@ THANK YOU!~ <3
       getBalance()
     }).fail(function(response) {
       console.log("Error "+response.getCode()+" on POST "+hostUrl+'operator/wallets/'+to+'/transactions\n'+response.body)
+      if (response.body.includes("Invalid password")) {
+        walletNotify('Authentication Error', 'Your transaction failed due to an incorrect private key', coreImgOffline)
+        return
+      }
+      if (response.body.includes("The sender does not have enough to pay")) {
+        walletNotify('Not Enough Funds', 'You don\'t have enough funds to fulfill your transaction', coreImgOffline)
+        return
+      }
     })
+  }
+  },250)
   }
   </script>
   </div>
@@ -213,7 +243,7 @@ THANK YOU!~ <3
     <h2 id="changelogVer">Changelog for Version </h2>
   </div>
   <div class="modal-body">
-    <h4 id="changelogContent">Update stuff</p>
+    <h4 id="changelogContent">Update stuff</h4>
   </div>
 </div>
 
@@ -258,34 +288,6 @@ document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer
     })
     ipc.send('invokeAction', 'exit');
   });
-
-  /* fs.readFile("lockfile.lock", 'utf8', function(err, contents) {                        // *DEPRECATED
-    if(!err){
-      if(contents == 'on'){
-        //fs.readFile("safelock.lock", 'utf8', function(errr, contentss) {
-          //if(errr){
-            //console.log('Terminating');
-            //terminate();
-          //}else if(!errr){
-            //console.log('Safelock shows a crash, aborting termination');
-          //}
-        //});
-      }else{
-        fs.writeFile('lockfile.lock', 'on', function(err) {
-          if(err){
-            console.log('Error writing lock-file');
-          }
-        });
-      }
-    }else{
-      fs.writeFile('lockfile.lock', 'on', function(err) {
-        if(err){
-          console.log('Error writing lock-file');
-        }
-      });
-    }
-  }); */
-
 
   var notification;
   var path = require('path');
@@ -457,7 +459,7 @@ setInterval(() => {
           } else {
             contents = JSON.parse(contents)
             walletID = contents.id
-            console.log("Wallet ''"+walletID+"'' loaded, searching for addresses")
+            console.log("Wallet '"+walletID+"' loaded, searching for addresses")
             fs.readFile("bin/data/1/addresses.json", 'utf8', function(err, contents) {
               if (err) {
                 console.log("ERROR reading addresses.json")
@@ -473,7 +475,9 @@ setInterval(() => {
         })
       } else {
         console.log('No wallet found, generating new one')
-        req.post(hostUrl+'operator/wallets', {password: 'test test test test test'}).then(function(response) {
+        var key = genRString(64)
+        console.log('Key: ' + key)
+        req.post(hostUrl+'operator/wallets', {password: key}).then(function(response) {
           console.log("Blockchain: "+response.body)
           fs.writeFile('bin/data/1/wallet.json', response.body, function(err) {
             if (err) {
@@ -484,12 +488,12 @@ setInterval(() => {
               if (response.body.id && response.body.id.length === 64) {
                 if (response.body.addresses && response.body.addresses.length === 0) {
                   var newWalletID = response.body.id
-				  walletID = newWalletID
+				          walletID = newWalletID
                   console.log("Generating new wallet address")
                   req.request(hostUrl+'operator/wallets/'+newWalletID+'/addresses', {
     	            method: 'POST',
     	            headers: {
-    		           'password': 'test test test test test'
+    		           'password': key
     	            },
     	              dataType: 'json'
                   }).then(function(response) {
@@ -501,6 +505,13 @@ setInterval(() => {
                       } else {
                         response.body = JSON.parse(response.body)
                         address = response.body.address
+                        fs.writeFile('bin/data/1/key.priv', key, function(err) {
+                            if (err) {
+                              walletNotify('Private Key Error', 'Your newly generated Private Key had a saving issue. This means authenticating transactions will fail, please delete your local wallet files and restart', coreImgOffline, 'wait')
+                            } else {
+                              walletNotify('First Address Generated', 'Congrats, Welcome to Concord Core!', coreImgSpin)
+                            }
+                        })
                       }
                     })
                   }).fail(function(response) {
@@ -539,30 +550,59 @@ setInterval(() => {
   function toggleMining () {
     if (isMining === 0) {
       isMining = 1
+      nodeType = 2
     } else {
       isMining = 0
+      nodeType = 0
+      document.getElementById("miningStatus").innerHTML = "Mining"
     }
     mineBlock()
  }
 
   function mineBlock () {
     if (isMining === 1) {
-      req.post(hostUrl+'miner/mine', {rewardAddress: address, feeAddress: address}).then(function(response) {
+      req.request(hostUrl+'miner/mine', {method: 'POST', body: {rewardAddress: address, feeAddress: address}, dataType: 'json', timeout: (160000)}).then(function(response) {
         console.log(response)
         response = JSON.parse(response.body)
-		var i = 0,
-		transactionLength = response.transactions.length,
-		reward = 0
-		for (i = 0; i<transactionLength; i++) {
-		  if (response.transactions[i].type === 'reward') {
-			reward = Number(response.transactions[i].data.outputs[0].amount)
-		  }
-		}
-		walletNotify('Wallet Income Earned', 'You mined Block '+response.index+', earning you '+reward.toPrecision()+' CXD', coreImgSpin)
-		getBalance()
+		    var i = 0,
+		    transactionLength = response.transactions.length,
+		    reward = 0
+		    for (i = 0; i<transactionLength; i++) {
+		      if (response.transactions[i].type === 'reward') {
+			         reward = Number(response.transactions[i].data.outputs[0].amount)
+		      }
+		    }
+        response.nonce++
+        var convertedHashpower = 0
+        var convertedHashpowerName = 'hash'
+        if (response.nonce >= 2) {
+          convertedHashpowerName += "es"
+        }
+
+        if (response.nonce >= 1000) { // kH conversion
+          convertedHashpowerName = "kH"
+          convertedHashpower = Number((response.nonce / 1000).toFixed(0))
+        }
+        if (convertedHashpower >= 1000) { // MH conversion
+          convertedHashpowerName = "MH"
+          convertedHashpower = Number((convertedHashpower / 1000).toFixed(2))
+        }
+        if (convertedHashpower >= 1000) { // GH conversion      // NOTE: Doubt anybody will ever hit this until GPU mining is introduced, but for futureproofing!
+          convertedHashpowerName = "GH"
+          convertedHashpower = Number((convertedHashpower / 1000).toFixed(4))
+        }
+
+        if (convertedHashpower >= 2) {
+          convertedHashpowerName += "s"
+        }
+
+        document.getElementById("miningStatus").innerHTML = "Mined block with " + convertedHashpower.toFixed(0) + " " + convertedHashpowerName
+		    walletNotify('Wallet Income Earned', 'You mined Block '+response.index+', earning you '+reward.toPrecision()+' CXD', coreImgSpin)
+		    getBalance()
         setTimeout(mineBlock, miningBreakTime)
       }).fail(function(response) {
         console.log("Error "+response.getCode()+" on POST "+hostUrl+'miner/mine')
+        getBalance()
       })
     } else {
       getBalance()
@@ -596,19 +636,30 @@ setInterval(() => {
     }
   }
 
-  function walletNotify (title, message, icon) {
-    notifier.notify(
-		{
-			title: title,
-			message: message,
-			sound: true,
-			icon: icon,
-			wait: false
-		},
-			function(error, response) {
-			console.log(response)
-			}
-		)
+  function walletNotify (title, message, icon, shouldWait) {
+    if (shouldWait && shouldWait === 'wait') {
+      notifier.notify({
+			   title: title,
+			   message: message,
+			   sound: true,
+			   icon: icon,
+			   wait: true
+		  },
+			 function(error, response) {
+			     console.log(response)
+			 })
+    } else {
+      notifier.notify({
+			   title: title,
+			   message: message,
+			   sound: true,
+			   icon: icon,
+			   wait: false
+		  },
+			 function(error, response) {
+			     console.log(response)
+			 })
+    }
   }
 
   function loadCore(){
@@ -737,7 +788,7 @@ setInterval(() => {
   </div>
   <p oncontextmenu="return false" id="nodeStatus"></p>
   <br>
-  <h5>Mining<br>
+  <h5 id="miningStatus">Mining<br></h5>
   <label class="switch">
   <input id="miningSwitch" onclick="toggleMining()" type="checkbox" title="Toggle Automining">
   <span class="slider round"></span>
