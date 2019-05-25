@@ -58,6 +58,7 @@ THANK YOU!~ <3
   var balanceDecimals = 6
   var lastBlockHashes = 0
   var hashrate = 0
+  var connResponded = 0
   const clipboardy = require('clipboardy')
   const req = require('requestify')
   const fs = require('fs')
@@ -212,6 +213,7 @@ THANK YOU!~ <3
       dataType: 'json'
     }).then(function(response) {
       console.log("Blockchain: "+response.body)
+      connResponded++
 	  if (JSON.stringify(response.body).includes("transaction")) {
 		let receiver = to
 		if (receiver === address) {
@@ -319,20 +321,37 @@ document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer
   var hostUrl
   const defaultHost = 'localhost'
 
+function connectToBackend () {
   fs.readFile("bin/ip.pref", 'utf8', function(err, contents) {
     if (!err) {
       host = contents.replace(/(\r\n|\n|\r)/gm,"")
       hostUrl = 'http://' + host + ':' + port + "/"
       console.log("Connecting to " + hostUrl + " for REST Wallet GUI Control")
-      setTimeout(checkWallet, 5500)
+      testBackendConnection()
+      if (connResponded > 0) {
+        checkWallet()
+      } else {
+        console.log("Failed to connect, retrying in 1 second")
+        setTimeout(connectToBackend, 1000)
+      }
     } else {
       console.log("Error loading IP Preference - " + err)
       console.log("Defaulting to: " + defaultHost)
       hostUrl = 'http://' + defaultHost + ':' + port + "/"
       console.log("Connecting to " + hostUrl + " for REST Wallet GUI Control")
-      setTimeout(checkWallet, 5500)
+      testBackendConnection()
+      if (connResponded > 0) {
+        checkWallet()
+      } else {
+        console.log("Failed to connect, retrying in 1 second")
+        setTimeout(connectToBackend, 1000)
+      }
     }
   })
+}
+
+// Start initial connection attempt
+connectToBackend()
 
   console.log(appdataPath);
   if (fs.existsSync(appdataPath)) {
@@ -408,8 +427,24 @@ rpc.on('ready', () => {
   }, 16)
 })
 
-  //CORE TERMINATION
+  //CORE CONNECTIVITY CHECK
+  function testBackendConnection () {
+    try {
+      req.get(hostUrl + 'ping').then(res => {
+        console.log(JSON.stringify(res))
+        if (res.body === "pong") {
+          connResponded++
+          return true
+        } else return false
+      })
+    } catch (err) {
+      return false
+    }
+  }
 
+  setInterval
+
+  //CORE TERMINATION
   function terminate(){
     setTimeout(function(){
       document.getElementById("titleImg").src=coreImgOffline;
@@ -486,6 +521,7 @@ rpc.on('ready', () => {
         console.log('Key: ' + key)
         req.post(hostUrl+'operator/wallets', {password: key}).then(function(response) {
           console.log("Blockchain: "+response.body)
+          connResponded++
           fs.writeFile('bin/data/1/wallet.json', response.body, function(err) {
             if (err) {
               console.log("ERROR saving WalletID: "+err)
@@ -505,6 +541,7 @@ rpc.on('ready', () => {
     	              dataType: 'json'
                   }).then(function(response) {
                     console.log("Blockchain: "+response.body)
+                    connResponded++
                     fs.writeFile('bin/data/1/addresses.json', response.body, function(err) {
                       if (err) {
                         console.log("ERROR saving Address: "+err)
@@ -542,6 +579,7 @@ rpc.on('ready', () => {
   function getBalance () {
     req.get(hostUrl+'operator/'+address+'/balance').then(function(response) {
       console.log("Blockchain Balance: "+response.body)
+      connResponded++
 	     response = JSON.parse(response.body)
        if(response.balance){
          document.getElementById("nodeStatus").innerHTML = Number(parseFloat(response.balance).toFixed(balanceDecimals)).toPrecision()+' CXD';
@@ -571,6 +609,7 @@ function mineBlock () {
         req.request(hostUrl+'miner/mine', {method: 'POST', body: {rewardAddress: address, feeAddress: address}, dataType: 'json', timeout: (160000)}).then(function(response) {
             console.log(response)
             response = JSON.parse(response.body)
+            connResponded++
             var i = 0,
                 transactionLength = response.transactions.length,
                 reward = 0
