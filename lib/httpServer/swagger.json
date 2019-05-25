@@ -595,13 +595,13 @@
                 }
             }
         },
-        "/miner/mine": {
+        "/miner/toggle": {
             "post": {
                 "tags": [
                     "miner"
                 ],
-                "summary": "Mine a new block",
-                "description": "Mine a new block and add it to the end of the blockchain.",
+                "summary": "Toggles built-in miner",
+                "description": "Mines new blocks and adds them to the end of the blockchain.",
                 "parameters": [
                     {
                         "in": "body",
@@ -630,7 +630,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/Block"
+                            "success": "boolean"
                         }
                     }
                 }
