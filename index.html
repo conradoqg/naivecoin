@@ -317,15 +317,20 @@ document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer
   var host
   var port = '3001'
   var hostUrl
+  const defaultHost = 'localhost'
 
   fs.readFile("bin/ip.pref", 'utf8', function(err, contents) {
     if (!err) {
       host = contents.replace(/(\r\n|\n|\r)/gm,"")
-      hostUrl = 'http://'+host+':'+port+"/"
-      console.log("Connecting to "+hostUrl+" for REST Wallet GUI Control")
+      hostUrl = 'http://' + host + ':' + port + "/"
+      console.log("Connecting to " + hostUrl + " for REST Wallet GUI Control")
       setTimeout(checkWallet, 5500)
     } else {
-      console.log("Error loading IP Preference - "+err)
+      console.log("Error loading IP Preference - " + err)
+      console.log("Defaulting to: " + defaultHost)
+      hostUrl = 'http://' + host + ':' + port + "/"
+      console.log("Connecting to " + hostUrl + " for REST Wallet GUI Control")
+      setTimeout(checkWallet, 5500)
     }
   })
 
