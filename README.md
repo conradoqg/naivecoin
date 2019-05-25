@@ -90,10 +90,10 @@ If any issues are discovered within the project, you are free to correct and For
 
 If you contribute code to this project, you are implicitly allowing your code to be distributed under the Apache 2.0 License. You are also implicitly verifying that all code is your original work.
 
-Copyright (c) 2018, Eupharia. (Apache 2.0 License)
+Copyright (c) 2018-2019, JSKitty. (Apache 2.0 License)
 
 This project contains a modified version of [Naivecoin](https://github.com/conradoqg/naivecoin) by [conradoqg](https://github.com/conradoqg)
 
-Copyright (c) 2015-2015, Conrado Quilles Gomes. (Apache 2.0 License)
+Copyright (c) 2015-2019, Conrado Quilles Gomes. (Apache 2.0 License)
 
 [GitHub license](https://github.com/Concord-Ecosystem/Concord-Core/blob/master/LICENSE)
