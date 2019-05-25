@@ -328,7 +328,7 @@ document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer
     } else {
       console.log("Error loading IP Preference - " + err)
       console.log("Defaulting to: " + defaultHost)
-      hostUrl = 'http://' + host + ':' + port + "/"
+      hostUrl = 'http://' + defaultHost + ':' + port + "/"
       console.log("Connecting to " + hostUrl + " for REST Wallet GUI Control")
       setTimeout(checkWallet, 5500)
     }
