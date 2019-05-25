@@ -13,7 +13,7 @@
   },
   "main": "main.js",
   "scripts": {
-    "start": "cd lib && start launch.bat",
+    "start": "cd lib && start launch.bat && exit",
     "compose:up": "docker-compose up",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc --reporter=lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --colors test/",
