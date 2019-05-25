@@ -316,38 +316,20 @@ document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer
   appdata = appdata.replace('\\','/');
   appdata = appdata.replace('\\','/');
   var appdataPath = appdata+'/Concord Core/';
-  var host
+  var host = 'localhost'
   var port = '3001'
   var hostUrl
-  const defaultHost = 'localhost'
 
 function connectToBackend () {
-  fs.readFile("bin/ip.pref", 'utf8', function(err, contents) {
-    if (!err) {
-      host = contents.replace(/(\r\n|\n|\r)/gm,"")
-      hostUrl = 'http://' + host + ':' + port + "/"
-      console.log("Connecting to " + hostUrl + " for REST Wallet GUI Control")
-      testBackendConnection()
-      if (connResponded > 0) {
-        checkWallet()
-      } else {
-        console.log("Failed to connect, retrying in 1 second")
-        setTimeout(connectToBackend, 1000)
-      }
-    } else {
-      console.log("Error loading IP Preference - " + err)
-      console.log("Defaulting to: " + defaultHost)
-      hostUrl = 'http://' + defaultHost + ':' + port + "/"
-      console.log("Connecting to " + hostUrl + " for REST Wallet GUI Control")
-      testBackendConnection()
-      if (connResponded > 0) {
-        checkWallet()
-      } else {
-        console.log("Failed to connect, retrying in 1 second")
-        setTimeout(connectToBackend, 1000)
-      }
-    }
-  })
+  hostUrl = 'http://' + host + ':' + port + "/"
+  console.log("Connecting to " + hostUrl + " for REST Wallet GUI Control")
+  testBackendConnection()
+  if (connResponded > 0) {
+    checkWallet()
+  } else {
+    console.log("Failed to connect, retrying in 1 second")
+    setTimeout(connectToBackend, 1000)
+  }
 }
 
 // Start initial connection attempt
@@ -477,12 +459,18 @@ rpc.on('ready', () => {
             }
           });
         }
-        console.log('Shutting down Core Safely');
-        setTimeout(function(){
-          xShutdown = 1;
-          app.quit();
-          process.exit();
-        },30);
+        console.log('Shutting down Core Safely')
+        req.request(hostUrl + 'stop', {method: 'POST'}).then(function(response) {
+            console.log(response)
+            xShutdown = 1
+            app.quit()
+            process.exit()
+        }).fail(function(response) {
+            console.log("Error " + response.getCode() + " on POST " + hostUrl + 'stop\n\nDetails: ' + response.body)
+            xShutdown = 1
+            app.quit()
+            process.exit()
+        })
       }
     });
   }
@@ -589,72 +577,15 @@ rpc.on('ready', () => {
      })
   }
 
-  var shouldMine = 0
-  var isMining = 0
   var miningBreakTime = Number(document.getElementById("miningBreakInput").value) * 1000
 
 function toggleMining () {
-    if (shouldMine === 0) {
-        shouldMine = 1
-        nodeType = 2
-    } else {
-        shouldMine = 0
-        nodeType = 0
-        document.getElementById("miningStatus").innerHTML = "Mining"
-    }
-    mineBlock()
-}
-function mineBlock () {
-    if (shouldMine === 1 && isMining === 0) {
-        req.request(hostUrl+'miner/mine', {method: 'POST', body: {rewardAddress: address, feeAddress: address}, dataType: 'json', timeout: (160000)}).then(function(response) {
-            console.log(response)
-            response = JSON.parse(response.body)
-            connResponded++
-            var i = 0,
-                transactionLength = response.transactions.length,
-                reward = 0
-            for (i = 0; i<transactionLength; i++) {
-                if (response.transactions[i].type === 'reward') {
-                    reward = Number(response.transactions[i].data.outputs[0].amount)
-                }
-            }
-            response.nonce++
-            var convertedHashpower = 0
-            var convertedHashpowerName = 'hash'
-            if (response.nonce >= 2) {
-                convertedHashpowerName += "es"
-            }
-
-            if (response.nonce >= 1000) { // kH conversion
-                convertedHashpowerName = "kH"
-                convertedHashpower = Number((response.nonce / 1000).toFixed(0))
-            }
-            if (convertedHashpower >= 1000) { // MH conversion
-                convertedHashpowerName = "MH"
-                convertedHashpower = Number((convertedHashpower / 1000).toFixed(2))
-            }
-            if (convertedHashpower >= 1000) { // GH conversion      // NOTE: Doubt anybody will ever hit this until GPU mining is introduced, but for futureproofing!
-                convertedHashpowerName = "GH"
-                convertedHashpower = Number((convertedHashpower / 1000).toFixed(4))
-            }
-
-            if (convertedHashpower >= 2) {
-                convertedHashpowerName += "s"
-            }
-
-            document.getElementById("miningStatus").innerHTML = "Mined block with " + convertedHashpower.toFixed(0) + " " + convertedHashpowerName
-            walletNotify('Wallet Income Earned', 'You mined Block '+response.index+', earning you '+reward.toPrecision()+' CXD', coreImgSpin)
-            getBalance()
-            isMining = 0;
-            setTimeout(mineBlock, miningBreakTime)
-        }).fail(function(response) {
-            console.log("Error "+response.getCode()+" on POST "+hostUrl+'miner/mine')
-            setTimeout(mineBlock, miningBreakTime)
-            getBalance()
-        })
-    } else {
-        getBalance()
-    }
+  req.request(hostUrl + 'miner/toggle', {method: 'POST', body: {rewardAddress: address, feeAddress: address}, dataType: 'json'}).then(function(response) {
+      console.log(response)
+  }).fail(function(response) {
+      console.log("Error " + response.getCode() + " on POST " + hostUrl + 'miner/toggle\n\nDetails: ' + response.body)
+      getBalance()
+  })
 }
 
 
