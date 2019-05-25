@@ -8,10 +8,14 @@ styleguides, eventually this will be entire styled
 under the Standard JS Styleguide and is automatically
 linted per-commit or push.
 
-This project was entirely programmed by Eupharia, Owner
+This project was mostly programmed by JSKitty, Creator
 and Lead Developer of Concord (Doesn't mean this is perfect
 by any means!) and is based on Naivecoin/Naivechain, by two
-amazing open-source GitHub developers
+amazing open-source GitHub developers.
+
+Contributions done by FabiClawZ (Fabian Felix Selbach) have
+kept the project alive and functional in it's most important
+algorithms.
 
 THANK YOU!~ <3
 
@@ -351,55 +355,53 @@ document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer
   var d;
   var term = 0;
   var updateNeeded = 0;
-  var titleImgSrc = document.getElementById('titleImg');
+  var titleImgSrc = document.getElementById('titleImg')
   if(titleImgSrc && titleImgSrc.style) {
     titleImgSrc.style.height = '250px';
     titleImgSrc.style.width = '250px';
   }
+
 async function setActivity() {
-var versionz = nodeVer.replace('Concord','');
-versionz = versionz.replace('Core','');
-versionz = versionz.replace(' ','');
-versionz = versionz.replace(' ','');
-var networkType = '';
-var nodeName = '';
-if(isNetworkChecked == 1){
-networkType = 'Lightnet';
-}else{
-networkType = 'Core Chain'
-}
+  var networkType = ''
+  var nodeName = ''
 
-if(nodeType == 0){
-   nodeName = 'Lightnode';
-}else if(nodeType == 1){
-   nodeName = 'Masternode';
-}else if(nodeType == 2){
-   nodeName = 'Validator';
-}
-rpc.setActivity({
-  details: nodeName,
-  state: 'Network: '+networkType,
-  startTimestamp,
-  largeImageKey: 'concordcore',
-  largeImageText: 'Concord Core',
-  smallImageKey: 'concordcore',
-  smallImageText: nodeName,
-  instance: false,
-});
+  if (isNetworkChecked == 1) {
+    networkType = 'Lightnet'
+  } else {
+    networkType = 'Core Chain'
+  }
+
+  if (nodeType === 0) {
+     nodeName = 'Lightnode'
+  } else if (nodeType === 1) {
+     nodeName = 'Masternode'
+  } else if (nodeType === 2) {
+     nodeName = 'Validator'
+  }
+  rpc.setActivity({
+    details: nodeName,
+    state: 'Network: ' + networkType,
+    startTimestamp,
+    largeImageKey: 'concordcore',
+    largeImageText: 'Concord Core',
+    smallImageKey: 'concordcore',
+    smallImageText: nodeName,
+    instance: false,
+  })
 }
 
 
 
-rpc.login({clientId:'423599777436008458'}).catch(console.error);
+rpc.login({clientId: '581806156977274908'}).catch(console.error)
 rpc.on('ready', () => {
-setActivity();
-rpcLogged = 1;
+  setActivity()
+  rpcLogged = 1
 
-// activity can only be set every 15 seconds
-setInterval(() => {
-  setActivity();
-}, 15e3);
-});
+  // activity can only be set every 15 seconds
+  setInterval(() => {
+    setActivity()
+  }, 16)
+})
 
   //CORE TERMINATION
 
