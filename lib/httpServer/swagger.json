@@ -630,7 +630,43 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "success": "boolean"
+                            "type": "object",
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/miner/status": {
+            "get": {
+                "tags": [
+                    "miner"
+                ],
+                "summary": "Read miner status",
+                "description": "Show current status of internal miner. This includes the last mined block, whether the miner is currently mining or not and its current hashrate.",
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Status",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "lastBlock": {
+                                    "$ref": "#/definitions/Block"
+                                },
+                                "isMining": {
+                                    "type": "boolean"
+                                },
+                                "currentHashrate": {
+                                    "type": "integer"
+                                }
+                            }
                         }
                     }
                 }
