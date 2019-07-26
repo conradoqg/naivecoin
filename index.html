@@ -602,9 +602,9 @@ function toggleMining () {
       if(term == 0){
         document.getElementById("titleImg").src=coreImgOnline;
         document.getElementById("settings").style.display = "block";
+		getBalance()
         if(updateNeeded == 0){
           document.getElementById("peersBox").style.visibility = 'visible';
-            document.getElementById("nodeStatus").innerHTML = Number(parseFloat(balance).toFixed(balanceDecimals)).toPrecision()+' CXD';
         } else {
           document.getElementById("peersBox").style.visibility = 'hidden';
         }
@@ -781,8 +781,20 @@ function toggleMining () {
    setTimeout(function(){introText.innerHTML += 'o';},2900);
    setTimeout(function(){introText.innerHTML += 'm';},2950);
    setTimeout(function(){introText.innerHTML += 'e';},3000);
-   setTimeout(function(){document.getElementById("introText").style.display = "none";document.getElementById("titleImg").style.display = "block";},11950);
-   setTimeout(function(){document.getElementById("introMaster").style.display = "none";document.getElementById("nodeStatus").style.display = "block";document.getElementById("menu").style.display = "block";loadCore();setTimeout(checkNodeStatus, 1000)},15250);
+   
+   setTimeout(function(){
+	document.getElementById("introText").style.display = "none";
+	document.getElementById("titleImg").style.display = "block";
+   }, 11950);
+   
+   setTimeout(function(){
+	document.getElementById("introMaster").style.display = "none";
+	document.getElementById("nodeStatus").style.display = "block";
+	document.getElementById("menu").style.display = "block";
+	loadCore();
+	setInterval(checkNodeStatus, 1000)
+   }, 15250);
+   
    document.getElementById("update").style.display = "none";
   </script>
 

@@ -25,24 +25,24 @@ Object.keys(interfaces).forEach((interface) => {
 });
 
 let peers = argv.peers ? argv.peers : [];
-for(let iface of outwardInterfaces){
+/*for(let iface of outwardInterfaces){
     for(let ipstruct of iface){
         let ip = ipstruct.family == 'IPv6' ? '[' + ipstruct.address + ']' : ipstruct.address;
         peers.push('http://' + ip + ':' + (argv.port ? argv.port : '3001'));
     }
-}
+}*/
 console.log('Retrieving public IP');
 (async () =>{
 
     try{
         let publicV4 = await publicIp.v4();
-        if(peers.indexOf('http://' + publicV4 + ':' + (argv.port ? argv.port : '3001'))<0) peers.push('http://' + publicV4 + ':' + (argv.port ? argv.port : '3001'));
+        //if(peers.indexOf('http://' + publicV4 + ':' + (argv.port ? argv.port : '3001'))<0) peers.push('http://' + publicV4 + ':' + (argv.port ? argv.port : '3001'));
     }catch(error){
         console.log('error getting ipv4');
     }
     try{
         let publicV6 = await publicIp.v6();
-        if(peers.indexOf('http://' + publicV6 + ':' + (argv.port ? argv.port : '3001'))<0) peers.push('http://' + publicV6 + ':' + (argv.port ? argv.port : '3001'));
+        //if(peers.indexOf('http://' + publicV6 + ':' + (argv.port ? argv.port : '3001'))<0) peers.push('http://' + publicV6 + ':' + (argv.port ? argv.port : '3001'));
     }catch(error){
         console.log('error getting ipv4');
     }
