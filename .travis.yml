@@ -2,5 +2,4 @@ language: node_js
 node_js:
   - "8"
   - "node"
-script: npm run coveralls
-install: travis_wait 1 mvn install
+script: travis_wait 1 npm run coveralls
