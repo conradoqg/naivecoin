@@ -107,12 +107,6 @@ THANK YOU!~ <3
   </div>
 <div id="optionsMenu" style="display:none" class="centerText">
   <h3 id="optionInfo">Options and Preferences</h3>
-  <h5>CSP Network<br> </br>
-  <label class="switch">
-  <input id="networkChecker" onclick="changeNetwork()" type="checkbox">
-  <span class="slider round"></span>
-  </label>
-  </h5>
   <h5>Seconds between mining sessions</h5>
   <input id="miningBreakInput" type="text" value="0" placeholder="Time in Seconds" class="miningBreakInput">
   <br>
@@ -120,18 +114,6 @@ THANK YOU!~ <3
   <br>
   <h6 id="changelogButton" class="changelogButton" onclick="openChangelog()">Changelog</h6>
   <script>
-  var isNetworkChecked;
-    fs.readFile("pref2.pref", 'utf8', function(err, contents) {
-          if(!err){
-            console.log('CSP Hard-link is enabled')
-            isNetworkChecked = 1;
-            document.getElementById("networkChecker").checked = true
-          }else{
-            console.log('CSP Hard-link is disabled')
-            isNetworkChecked = 0;
-            document.getElementById("networkChecker").checked = false
-          }
-        })
         fs.readFile("pref3.pref", 'utf8', function(err, contents) {
           if(!err){
             console.log('Masternode Enabled');
@@ -144,23 +126,6 @@ THANK YOU!~ <3
           }
         })
     document.getElementById("optionsMenu").style.display = "none"
-    function changeNetwork(){
-      isNetworkChecked = document.getElementById("networkChecker").checked
-      if(isNetworkChecked == 1){
-        fs.writeFile('pref2.pref', 'true', function(err) {
-          if(err){
-            console.log('Error writing pref2-file')
-            document.getElementById("optionInfo").innerHTML = 'Error Saving - Please open Core as Administrator'
-          }else{
-            document.getElementById("optionInfo").innerHTML = 'Switched Networking to CSP'
-          }
-        })
-      }else{
-        fs.unlinkSync('pref2.pref')
-        document.getElementById("optionInfo").innerHTML = 'Switched Networking to Core Chain'
-        isNetworkChecked = 0
-      }
-    }
   </script>
 </div>
 <div id="sendMenu" style="display:none" class="centerText">
@@ -368,21 +333,13 @@ connectToBackend()
   }
 
 async function setActivity() {
-  var networkType = ''
+  var networkType = 'Core Chain'
   var nodeName = ''
-
-  if (isNetworkChecked == 1) {
-    networkType = 'Lightnet'
-  } else {
-    networkType = 'Core Chain'
-  }
 
   if (nodeType === 0) {
      nodeName = 'Lightnode'
-  } else if (nodeType === 1) {
-     nodeName = 'Masternode'
   } else if (nodeType === 2) {
-     nodeName = 'Validator'
+     nodeName = 'Miner'
   }
   rpc.setActivity({
     details: nodeName,
@@ -471,6 +428,11 @@ rpc.on('ready', () => {
             app.quit()
             process.exit()
         })
+        setTimeout(function(){
+          // Just incase the backend doesn't respond, we'll suicide
+          app.quit()
+          process.exit()
+        }, 1000)
       }
     });
   }
@@ -597,17 +559,24 @@ function toggleMining () {
 
 
   function checkNodeStatus(){
-  if(updateNeeded == 0){
-    if(stopStatus == 0){
-      if(term == 0){
-        document.getElementById("titleImg").src=coreImgOnline;
-        document.getElementById("settings").style.display = "block";
-		getBalance()
-        if(updateNeeded == 0){
-          document.getElementById("peersBox").style.visibility = 'visible';
-        } else {
-          document.getElementById("peersBox").style.visibility = 'hidden';
-        }
+    if(updateNeeded == 0){
+      if(stopStatus == 0){
+        if(term == 0){
+          document.getElementById("titleImg").src=coreImgOnline;
+          document.getElementById("settings").style.display = "block";
+          getBalance()
+          req.get(hostUrl+'node/peers').then(function(response) {
+            connResponded++
+            response = JSON.parse(response.body)
+            document.getElementById("peersAmount").innerHTML = '<small><img class="peersImage" src="img/concordNodes.png"></img>' + response.length + '</small>';
+          }).fail(function(response) {
+            console.log("Error "+response.getCode()+" on GET "+hostUrl+'node/peers')
+          })
+          //if(updateNeeded == 0){
+            document.getElementById("peersBox").style.visibility = 'visible';
+          //} else {
+          //  document.getElementById("peersBox").style.visibility = 'hidden';
+          //}
         }else if(term == 1){
           terminate();
         }
