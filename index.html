@@ -148,7 +148,7 @@ THANK YOU!~ <3
     var password = '' //document.getElementById('sendPassword').value     // NOTE: Will be enabled once password-based transactions are finished, for now, local and automatic authentication
 
     if (password === '') {
-      fs.readFile("bin/data/1/key.priv", 'utf8', function(err, contents) {
+      fs.readFile(appdataPath +   "1/key.priv", 'utf8', function(err, contents) {
         if (err) {
           walletNotify('Private Key Error', 'Your private key couldn\'t be found locally. Please double-check your files!', coreImgOffline)
           return
@@ -263,24 +263,13 @@ document.getElementById("changelogVer").innerHTML = "Changelog for "+nodeVer
   var notification;
   var path = require('path');
   var desktopPath = require('path').join(require('os').homedir(), 'Desktop');
-  desktopPath = desktopPath.replace('\\','/');
-  desktopPath = desktopPath.replace('\\','/');
-  desktopPath = desktopPath.replace('\\','/');
-  desktopPath = desktopPath.replace('\\','/');
-  desktopPath = desktopPath.replace('\\','/');
+  desktopPath = desktopPath.replace(/\\/g,'/')
   console.log(desktopPath);
   const { DownloaderHelper } = require('node-downloader-helper');
   var userName = process.env['USERPROFILE'].split(path.sep)[2];
   var loginId = path.join("domainName",userName);
   var appdata = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : '/var/local');
-  appdata = appdata.replace('\\','/');
-  appdata = appdata.replace('\\','/');
-  appdata = appdata.replace('\\','/');
-  appdata = appdata.replace('\\','/');
-  appdata = appdata.replace('\\','/');
-  appdata = appdata.replace('\\','/');
-  appdata = appdata.replace('\\','/');
-  var appdataPath = appdata+'/Concord Core/';
+  var appdataPath = appdata.replace(/\\/g,'/') + '/Concord Core/';
   var host = 'localhost'
   var port = '3001'
   var hostUrl
@@ -398,53 +387,34 @@ rpc.on('ready', () => {
   }
 
   function exitCore(){
-  if(term == 0){
-    var write = 'off';
-  }else{
-    var write = 'on';
-  }
-    fs.writeFile('lockfile.lock', write, function(err) {
-      if(err){
-        console.log('Error writing lock-file');
-      } else {
-        if(write == 1){
-          fs.exists('safelock.lock', (exists) => {
-            if(exists){
-              fs.unlinkSync('safelock.lock');
-            } else {
-              console.log('No safelock found');
-            }
-          });
-        }
-        console.log('Shutting down Core Safely')
-        req.request(hostUrl + 'stop', {method: 'POST'}).then(function(response) {
-            console.log(response)
-            xShutdown = 1
-            app.quit()
-            process.exit()
-        }).fail(function(response) {
-            console.log("Error " + response.getCode() + " on POST " + hostUrl + 'stop\n\nDetails: ' + response.body)
-            xShutdown = 1
-            app.quit()
-            process.exit()
-        })
-        setTimeout(function(){
-          // Just incase the backend doesn't respond, we'll suicide
-          app.quit()
-          process.exit()
-        }, 1000)
-      }
-    });
+    console.log('Shutting down Core Safely')
+    req.request(hostUrl + 'stop', {method: 'POST'}).then(function(response) {
+        console.log(response)
+        xShutdown = 1
+        app.quit()
+        process.exit()
+    }).fail(function(response) {
+        console.log("Error " + response.getCode() + " on POST " + hostUrl + 'stop\n\nDetails: ' + response.body)
+        xShutdown = 1
+        app.quit()
+        process.exit()
+    })
+    setTimeout(function(){
+      // Just incase the backend doesn't respond, we'll suicide
+      xShutdown = 1
+      app.quit()
+      process.exit()
+    }, 1000)
   }
 
 
   //CONCORD NODE API --> GUI FUNCTIONS
 
   function checkWallet () {
-    fs.exists('bin/data/1/wallet.json', (exists) => {
+    fs.exists(appdataPath + '1/wallet.json', (exists) => {
       if (exists) {
         console.log("Wallet.json found, reading and importing")
-        fs.readFile("bin/data/1/wallet.json", 'utf8', function(err, contents) {
+        fs.readFile(appdataPath + "1/wallet.json", 'utf8', function(err, contents) {
           if (err) {
             console.log("ERROR reading wallet.json")
             return
@@ -452,7 +422,7 @@ rpc.on('ready', () => {
             contents = JSON.parse(contents)
             walletID = contents.id
             console.log("Wallet '"+walletID+"' loaded, searching for addresses")
-            fs.readFile("bin/data/1/addresses.json", 'utf8', function(err, contents) {
+            fs.readFile(appdataPath + "1/addresses.json", 'utf8', function(err, contents) {
               if (err) {
                 console.log("ERROR reading addresses.json")
                 return
@@ -472,7 +442,7 @@ rpc.on('ready', () => {
         req.post(hostUrl+'operator/wallets', {password: key}).then(function(response) {
           console.log("Blockchain: "+response.body)
           connResponded++
-          fs.writeFile('bin/data/1/wallet.json', response.body, function(err) {
+          fs.writeFile(appdataPath + '1/wallet.json', response.body, function(err) {
             if (err) {
               console.log("ERROR saving WalletID: "+err)
               return
@@ -492,14 +462,14 @@ rpc.on('ready', () => {
                   }).then(function(response) {
                     console.log("Blockchain: "+response.body)
                     connResponded++
-                    fs.writeFile('bin/data/1/addresses.json', response.body, function(err) {
+                    fs.writeFile(appdataPath + '1/addresses.json', response.body, function(err) {
                       if (err) {
                         console.log("ERROR saving Address: "+err)
                         return
                       } else {
                         response.body = JSON.parse(response.body)
                         address = response.body.address
-                        fs.writeFile('bin/data/1/key.priv', key, function(err) {
+                        fs.writeFile(appdataPath + '1/key.priv', key, function(err) {
                             if (err) {
                               walletNotify('Private Key Error', 'Your newly generated Private Key had a saving issue. This means authenticating transactions will fail, please delete your local wallet files and restart', coreImgOffline, 'wait')
                             } else {

@@ -1,10 +1,11 @@
-const {app, Menu, BrowserWindow, Tray, Notification} = require('electron')
+const {app, Menu, BrowserWindow, shell, Tray, Notification} = require('electron')
 
 let win
 let tray = null
 var term = 0
 
 function createWindow () {
+  shell.openItem(app.getAppPath() + '\\lib\\launch.bat');
 	   //  tray = new Tray('concordLogoSmall.ico')
   const contextMenu = Menu.buildFromTemplate([])
   // tray.setToolTip('Concord Core')
