@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "body-parser": "^1.17.1",
-    "bupnp": "^0.2.3",
+    "bupnp": "^0.2.6",
     "cli-color": "^1.2.0",
     "clipboardy": "^1.2.3",
     "crypto-random-string": "^1.0.0",
