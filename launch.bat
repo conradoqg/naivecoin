@@ -1,4 +1,3 @@
 @echo off
-title Concord Core Node Setup
+title Concord Core
 npm start
-pause
