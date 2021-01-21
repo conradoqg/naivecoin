@@ -1,4 +1,5 @@
 # savulcoin
+![travis](https://travis-ci.com/LinkNotZelda8/SavulCoin.svg?branch=master)
 
 ## sık sorulabilecek sorular
 
