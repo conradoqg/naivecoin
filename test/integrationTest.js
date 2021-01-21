@@ -16,7 +16,7 @@ describe('Integration Test', () => {
     const name1 = 'integrationTest1';
     const name2 = 'integrationTest2';
 
-    const createNaivecoin = (name, host, port, peers, removeData = true) => {
+    const createsavulcoin = (name, host, port, peers, removeData = true) => {
         if (removeData) fs.removeSync('data/' + name + '/');
         let blockchain = new Blockchain(name);
         let operator = new Operator(name, blockchain);
@@ -30,7 +30,7 @@ describe('Integration Test', () => {
     let context = {};
 
     step('start server 1', () => {
-        return createNaivecoin(name1, 'localhost', 3001, [])
+        return createsavulcoin(name1, 'localhost', 3001, [])
             .then((httpServer) => {
                 context.httpServer1 = httpServer;
             });
@@ -161,7 +161,7 @@ describe('Integration Test', () => {
     });
 
     step('start server 2', () => {
-        return createNaivecoin(name2, 'localhost', 3002, [{ url: 'http://localhost:3001' }])
+        return createsavulcoin(name2, 'localhost', 3002, [{ url: 'http://localhost:3001' }])
             .then((httpServer) => {
                 context.httpServer2 = httpServer;
             });
@@ -326,7 +326,7 @@ describe('Integration Test', () => {
                     return context.httpServer1.stop();
                 })
                 .then(() => {
-                    return createNaivecoin(name1, 'localhost', 3001, [], false)
+                    return createsavulcoin(name1, 'localhost', 3001, [], false)
                         .then((httpServer) => {
                             context.httpServer1 = httpServer;
                         });

@@ -3,7 +3,7 @@
     "info": {
         "description": "Visualize the blockchain by accessing <a href='/blockchain' target='_blank'>here</a>.",
         "version": "0.0.1",
-        "title": "Naivecoin API"
+        "title": "savulcoin API"
     },
     "basePath": "/",
     "schemes": [

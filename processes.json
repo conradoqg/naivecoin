@@ -2,7 +2,7 @@
     "apps": [
         {
             "name": "1",
-            "script": "./bin/naivecoin.js",
+            "script": "./bin/savulcoin.js",
             "watch": true,
             "interpreter_args": "--debug=7001",            
             "env": {
@@ -12,7 +12,7 @@
         },
         {
             "name": "2",
-            "script": "./bin/naivecoin.js",
+            "script": "./bin/savulcoin.js",
             "watch": true,
             "interpreter_args": "--debug=7002",            
             "env": {

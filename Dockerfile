@@ -1,9 +1,9 @@
 FROM node:6
 
-VOLUME /naivecoin
+VOLUME /savulcoin
 
-WORKDIR /naivecoin
+WORKDIR /savulcoin
 
-ENTRYPOINT node bin/naivecoin.js
+ENTRYPOINT node bin/savulcoin.js
 
 EXPOSE 3001

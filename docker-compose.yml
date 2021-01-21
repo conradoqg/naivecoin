@@ -10,7 +10,7 @@ services:
     ports:
     - "3001:3001"
     volumes:
-    - ./:/naivecoin
+    - ./:/savulcoin
   node2:
     environment:      
       - HOST=0.0.0.0
@@ -22,7 +22,7 @@ services:
     ports:
     - "3002:3001"
     volumes:
-    - ./:/naivecoin
+    - ./:/savulcoin
     links:
       - node1:node1
   node3:
@@ -36,6 +36,6 @@ services:
     ports:
     - "3003:3001"
     volumes:
-    - ./:/naivecoin
+    - ./:/savulcoin
     links:
       - node2:node2
