@@ -16,4 +16,9 @@ const argv = require('yargs')
     .alias('h', 'help')
     .argv;
 
-savulcoin(argv.host, argv.port, argv.peers, argv.logLevel, argv.name);
+const DEFAULT_PEERS = [
+    "n1.savulcoin.yapsavun.com",
+    "n2.savulcoin.yapsavun.com"
+]
+
+savulcoin(argv.host, argv.port, argv.peers !== undefined ? [...argv.peers, ...DEFAULT_PEERS] : DEFAULT_PEERS, argv.logLevel, argv.name);
