@@ -564,6 +564,20 @@
                 }
             }
         },
+        "/node/heartbeat": {
+            "post": {
+                "tags":[
+                    "node"
+                ],
+                "summary": "Node heartbeat",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "Alive"
+                    }
+                }
+            }
+        },
         "/node/transactions/{transactionId}/confirmations": {
             "get": {
                 "tags": [
