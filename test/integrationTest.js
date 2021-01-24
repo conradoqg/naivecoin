@@ -372,6 +372,15 @@ describe('Integration Test', () => {
                 });
         });
 
+        step('respond to heartbeat', () => {
+            return Promise.resolve()
+            .then(() => {
+                return supertest(context.httpServer1.app)
+                    .post(`/node/heartbeat`)
+                    .expect(200);
+            });
+        });
+
         step('create a new transaction with more value than funds', () => {
             return Promise.resolve()
                 .then(() => {
