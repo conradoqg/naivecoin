@@ -1,5 +1,5 @@
 # savulcoin
-![travis](https://travis-ci.com/LinkNotZelda8/SavulCoin.svg?branch=master)
+![travis](https://travis-ci.com/LinkNotZelda8/SavulCoin.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/LinkNotZelda8/SavulCoin/badge.svg?branch=master)](https://coveralls.io/github/LinkNotZelda8/SavulCoin?branch=master)
 
 ## sık sorulabilecek sorular
 
