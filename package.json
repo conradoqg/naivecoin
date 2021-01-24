@@ -1,12 +1,12 @@
 {
   "name": "savulcoin",
-  "version": "0.0.2",
-  "description": "savulcoin, a cryptocurrency demonstration",
+  "version": "0.1.0",
+  "description": "savulcoin, people's coin",
   "homepage": "https://github.com/conradoqg/savulcoin",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/conradoqg/savulcoin.git"
+    "url": "https://github.com/LinkNotZelda8/SavulCoin.git"
   },
   "bin": {
     "savulcoin": "bin/savulcoin.js"
