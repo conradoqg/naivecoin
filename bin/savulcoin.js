@@ -15,6 +15,7 @@ const argv = require('yargs')
     .describe('proxyUrl', 'URL of the proxy. (null by default)')
     .describe('minerMode', 'Mine automatically forever (false by default)')
     .describe('rewardAddress', 'Miner mode reward address')
+    .describe('ignoreLocalhost', 'Ignore localhost peers for security')
     .help('h')
     .alias('h', 'help')
     .argv;
@@ -25,4 +26,4 @@ const DEFAULT_PEERS = [
 ]
 
 let peers = argv.peers !== undefined ? [...argv.peers, ...DEFAULT_PEERS] : DEFAULT_PEERS;
-savulcoin(argv.host, argv.port, peers, argv.logLevel, argv.name, argv.proxyUrl, argv.minerMode, argv.rewardAddress);
+savulcoin(argv.host, argv.port, peers, argv.logLevel, argv.name, argv.proxyUrl, argv.minerMode, argv.rewardAddress, argv.ignoreLocalhost);
