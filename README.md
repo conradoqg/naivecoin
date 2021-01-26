@@ -16,7 +16,6 @@ bu repoyu klonlayıp mining yapıp savulcoin kazanabilirsin.
 birazdan bunu anlatacağım.
 
 ## kurulum
-
 ### adım 0
 linux bir makine edin ve içine npm kur.
 ```
