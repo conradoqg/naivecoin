@@ -17,6 +17,7 @@
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc --reporter=lcov --reporter=text --clean node node_modules/mocha/bin/_mocha -u bdd --colors test/",
     "test": "_mocha -u bdd --colors test/",
+    "nexebuild": "sh ./nexe-build.sh",
     "diagrams": "mmdc -i doc/blockchain.mmd -o doc/blockchain.png -b transparent && mmdc -i doc/components.mmd -o doc/components.png -b transparent"
   },
   "dependencies": {

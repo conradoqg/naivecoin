@@ -6,3 +6,4 @@ coverage
 yarn.lock
 .vscode
 data
+build/*

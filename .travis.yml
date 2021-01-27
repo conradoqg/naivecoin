@@ -3,26 +3,18 @@ node_js:
   - "8"
   - "node"
 
-jobs:
-  include:
-    - stage: build
-      script: npm i -g nexe@3.3.7
-      script: nexe bin/savulcoin.js --output savulcoin-linux-x64 --target linux-x64-14.15.3
-      script: nexe bin/savulcoin.js --output savulcoin-linux-x86 --target linux-x86-14.15.3
-      script: nexe bin/savulcoin.js --output savulcoin-windows-x64.exe --target windows-x64-14.15.3
-      script: nexe bin/savulcoin.js --output savulcoin-windows-x86.exe --target windows-x86-14.15.3
-      script: nexe bin/savulcoin.js --output savulcoin-mac-x64 --target mac-x64-14.15.3
-      script: nexe bin/savulcoin.js --output savulcoin-mac-x86 --target mac-x86-14.15.3
+script: npm run coveralls && npm run nexebuild
 
 deploy:
   provider: releases
   api_key: "$OAUTH_KEY"
   file: 
-    - savulcoin-linux-x64
-    - savulcoin-linux-x86
-    - savulcoin-windows-x64
-    - savulcoin-windows-x86
-    - savulcoin-mac-x64
-    - savulcoin-mac-x86
+    - ./build/savulcoin-linux-x64
+    - ./build/savulcoin-linux-x86
+    - ./build/savulcoin-windows-x64
+    - ./build/savulcoin-windows-x86
+    - ./build/savulcoin-mac-x64
   
   skip_cleanup: true
+  on:
+    tags: true
