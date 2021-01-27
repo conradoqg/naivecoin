@@ -1,6 +1,5 @@
 language: node_js
 node_js:
-  - "8"
   - "node"
 
 script: npm run coveralls && npm run nexebuild
@@ -16,5 +15,3 @@ deploy:
     - ./build/savulcoin-mac-x64
   
   skip_cleanup: true
-  on:
-    tags: true
