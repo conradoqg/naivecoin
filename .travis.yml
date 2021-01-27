@@ -10,8 +10,8 @@ deploy:
   file: 
     - ./build/savulcoin-linux-x64
     - ./build/savulcoin-linux-x86
-    - ./build/savulcoin-windows-x64
-    - ./build/savulcoin-windows-x86
+    - ./build/savulcoin-windows-x64.exe
+    - ./build/savulcoin-windows-x86.exe
     - ./build/savulcoin-mac-x64
   
   skip_cleanup: true
