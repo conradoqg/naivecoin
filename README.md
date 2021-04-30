@@ -103,7 +103,7 @@ A block is added to the block list if:
 
 A transaction inside a block is valid if:
 1. The transaction hash is correct (calculated transaction hash == transaction.hash);
-2. The signature of all input transactions are correct (transaction data is signed by the public key of the address);
+2. The signature of all input transactions are correct (transaction data signature can be verified with the public key of the address);
 3. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
 4. The transaction isn't already in the blockchain
 5. All input transactions are unspent in the blockchain.
@@ -123,7 +123,7 @@ Transactions is a list of unconfirmed transactions. Nothing special about it. In
 A transaction is added to the transaction list if:
 1. It's not already in the transaction list;
 2. The transaction hash is correct (calculated transaction hash == transaction.hash);
-3. The signature of all input transactions are correct (transaction data is signed by the public key of the address);
+3. The signature of all input transactions are correct (transaction data signature can be verified with the public key of the address);
 4. The sum of input transactions are greater than output transactions, it needs to leave some room for the transaction fee;
 5. The transaction isn't already in the blockchain
 6. All input transactions are unspent in the blockchain;
