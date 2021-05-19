@@ -433,7 +433,7 @@ $ curl -X GET --header 'Content-Type: application/json' 'http://localhost:3001/o
 {"balance":9000000000}
 
 # Get address 2 balance
-$ curl -X GET --header 'Content-Type: application/json' 'http://localhost:3001/operator/c574de33acfd82f2146d2f45f37ce95b7bdca133b8ad310adbd46938c75992c8/balance'
+$ curl -X GET --header 'Content-Type: application/json' 'http://localhost:3001/operator/c3c96504e432e35caa94c30034e70994663988ab80f94e4b526829c99958afa8/balance'
 {"balance":1000000000}
 
 # Get unspent transactions for address 1
