@@ -22,7 +22,7 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "cli-color": "^1.2.0",
-    "elliptic": "^6.4.0",
+    "elliptic": "^6.5.4",
     "es6-error": "^4.0.2",
     "express": "^4.16.2",
     "fs-extra": "^5.0.0",
